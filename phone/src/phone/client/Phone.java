@@ -1,5 +1,7 @@
 package phone.client;
 
+import phone.client.service.GreetingService;
+import phone.client.service.GreetingServiceAsync;
 import phone.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;

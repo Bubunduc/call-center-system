@@ -1,6 +1,6 @@
 package phone.server;
 
-import phone.client.GreetingService;
+import phone.client.service.GreetingService;
 import phone.shared.FieldVerifier;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
