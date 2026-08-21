@@ -1,0 +1,107 @@
+# ========== GWT Specific ==========
+# GWT Compiled output (игнорируем скомпилированный JavaScript)
+war/*/
+!war/WEB-INF/
+war/WEB-INF/classes/
+war/WEB-INF/deploy/
+war/WEB-INF/lib/
+.gwt/
+gwt-unitCache/
+www-test/
+.codeserver/
+
+# GWT generated files (генерируются при компиляции)
+*.nocache.js
+*.cache.js
+*.cache.html
+*.gwt.rpc
+symbolMaps/
+rpcPolicyManifest/
+
+# ========== Eclipse IDE ==========
+# Настройки Eclipse (обычно игнорируются для командной работы)
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+# Eclipse Core
+.project
+.classpath
+
+# Eclipse JDT
+.externalToolBuilders/
+*.apt_generated
+*.apt_generated_test/
+
+# Eclipse CDT
+.cproject
+.project
+
+# ========== Java ==========
+# Compiled class files
+*.class
+target/
+build/
+
+# ========== Maven (если используется) ==========
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# ========== Gradle (если используется) ==========
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# ========== Jetty (встроенный сервер GWT) ==========
+jetty/
+jetty-*.log
+
+# ========== OS Specific ==========
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Linux
+.directory
+*~
+
+# ========== Logs & Temp ==========
+*.log
+*.tmp
+logs/
+temp/
+tmp/
+
+# ========== Environment ==========
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
