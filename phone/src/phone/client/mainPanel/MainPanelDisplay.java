@@ -1,8 +1,7 @@
-package phone.client.queue;
+package phone.client.mainPanel;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public interface QueueDisplay {
-	
+public interface MainPanelDisplay {
 	Widget asWidget();
 }

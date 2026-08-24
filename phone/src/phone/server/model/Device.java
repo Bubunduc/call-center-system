@@ -8,12 +8,17 @@ public class Device implements Serializable {
 
 	private Long id;
 
-	private String name;
+	private Long roomId;
 
-	public Device(Long id, String name) {
-		super();
+	private String deviceName;
+	
+	private String operatorName;
+
+	public Device(Long id, Long roomId, String deviceName, String operatorName) {
 		this.id = id;
-		this.name = name;
+		this.roomId = roomId;
+		this.deviceName = deviceName;
+		this.operatorName = operatorName;
 	}
 
 	public Long getId() {
@@ -24,17 +29,39 @@ public class Device implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public Long getRoomId() {
+		return roomId;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setRoomId(Long roomId) {
+		this.roomId = roomId;
+	}
+
+	public String getDeviceName() {
+		return deviceName;
+	}
+
+	public void setDeviceName(String deviceName) {
+		this.deviceName = deviceName;
+	}
+
+	public String getOperatorName() {
+		return operatorName;
+	}
+
+	public void setOperatorName(String operatorName) {
+		this.operatorName = operatorName;
 	}
 
 	@Override
 	public String toString() {
-		return "Device [id=" + id + ", name=" + name + "]";
+		return "Device [id=" + id + ", roomId=" + roomId + ", deviceName=" + deviceName + ", operatorName="
+				+ operatorName + "]";
 	}
+	
+	
+	
+	
 
+	
 }

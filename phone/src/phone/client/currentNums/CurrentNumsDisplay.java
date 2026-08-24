@@ -1,5 +1,11 @@
 package phone.client.currentNums;
 
-public interface CurrentNumsDisplay {
+import com.google.gwt.user.client.ui.Widget;
 
+import phone.client.event.click.CurrentNumButtonClickHandler;
+
+public interface CurrentNumsDisplay {
+	
+	void setCurrentNumButtonClickHandler(CurrentNumButtonClickHandler handler);
+	Widget asWidget();
 }
