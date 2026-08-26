@@ -1,5 +1,5 @@
 package phone.server.servlet;
 
-public class RoomsServlet {
+public class DeviceServlet {
 
 }

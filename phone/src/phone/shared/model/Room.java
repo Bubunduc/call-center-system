@@ -1,4 +1,4 @@
-package phone.server.model;
+package phone.shared.model;
 
 import java.io.Serializable;
 

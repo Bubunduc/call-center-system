@@ -1,4 +1,4 @@
-package phone.server.model;
+package phone.shared.model;
 
 import java.io.Serializable;
 
@@ -10,14 +10,14 @@ public class Device implements Serializable {
 
 	private Long roomId;
 
-	private String deviceName;
-	
+	private String deviceNumber;
+
 	private String operatorName;
 
-	public Device(Long id, Long roomId, String deviceName, String operatorName) {
+	public Device(Long id, Long roomId, String deviceNumber, String operatorName) {
 		this.id = id;
 		this.roomId = roomId;
-		this.deviceName = deviceName;
+		this.deviceNumber = deviceNumber;
 		this.operatorName = operatorName;
 	}
 
@@ -37,12 +37,12 @@ public class Device implements Serializable {
 		this.roomId = roomId;
 	}
 
-	public String getDeviceName() {
-		return deviceName;
+	public String getDeviceNumber() {
+		return deviceNumber;
 	}
 
-	public void setDeviceName(String deviceName) {
-		this.deviceName = deviceName;
+	public void setDeviceNumber(String deviceNumber) {
+		this.deviceNumber = deviceNumber;
 	}
 
 	public String getOperatorName() {
@@ -55,13 +55,8 @@ public class Device implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Device [id=" + id + ", roomId=" + roomId + ", deviceName=" + deviceName + ", operatorName="
+		return "Device [id=" + id + ", roomId=" + roomId + ", deviceNumber=" + deviceNumber + ", operatorName="
 				+ operatorName + "]";
 	}
-	
-	
-	
-	
 
-	
 }

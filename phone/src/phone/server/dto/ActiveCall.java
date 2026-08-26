@@ -1,23 +1,22 @@
 package phone.server.dto;
 
 public class ActiveCall {
-	private String deviceName;
+	private String deviceNumber;
 	private String operatorName;
 	private String phoneNumber;
-
-	public ActiveCall(String deviceName, String operatorName, String phoneNumber) {
-		super();
-		this.deviceName = deviceName;
+	
+	public ActiveCall(String deviceNumber, String operatorName, String phoneNumber) {	
+		this.deviceNumber = deviceNumber;
 		this.operatorName = operatorName;
 		this.phoneNumber = phoneNumber;
 	}
 
-	public String getDeviceName() {
-		return deviceName;
+	public String getDeviceNumber() {
+		return deviceNumber;
 	}
 
-	public void setDeviceName(String deviceName) {
-		this.deviceName = deviceName;
+	public void setDeviceNumber(String deviceNumber) {
+		this.deviceNumber = deviceNumber;
 	}
 
 	public String getOperatorName() {
@@ -38,8 +37,11 @@ public class ActiveCall {
 
 	@Override
 	public String toString() {
-		return "ActiveCall [deviceName=" + deviceName + ", operatorName=" + operatorName + ", phoneNumber="
+		return "ActiveCall [deviceNumber=" + deviceNumber + ", operatorName=" + operatorName + ", phoneNumber="
 				+ phoneNumber + "]";
 	}
+
+	
+	
 
 }

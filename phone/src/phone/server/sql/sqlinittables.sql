@@ -1,0 +1,13 @@
+CREATE TABLE room (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+CREATE TABLE device (
+    id BIGSERIAL PRIMARY KEY,
+    device_number VARCHAR(50) NOT NULL UNIQUE,
+    room_id BIGINT NOT NULL,
+    operator_name VARCHAR(255) NOT NULL,
+
+    FOREIGN KEY (room_id) REFERENCES room(id) ON DELETE CASCADE
+);
+

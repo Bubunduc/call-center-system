@@ -10,12 +10,21 @@
     <servlet-name>greetServlet</servlet-name>
     <servlet-class>phone.server.GreetingServiceImpl</servlet-class>
   </servlet>
-  
+ 
   <servlet-mapping>
     <servlet-name>greetServlet</servlet-name>
     <url-pattern>/phone/greet</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+        <servlet-name>roomServlet</servlet-name>
+        <servlet-class>phone.server.servlet.RoomServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>roomServlet</servlet-name>
+        <url-pattern>/api/rooms</url-pattern>
+    </servlet-mapping>
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Phone.html</welcome-file>
