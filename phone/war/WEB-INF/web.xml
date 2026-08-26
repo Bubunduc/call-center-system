@@ -25,6 +25,16 @@
         <servlet-name>roomServlet</servlet-name>
         <url-pattern>/api/rooms</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>queueServlet</servlet-name>
+        <servlet-class>phone.server.servlet.QueueServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>queueServlet</servlet-name>
+        <url-pattern>/api/queue</url-pattern>
+    </servlet-mapping>
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Phone.html</welcome-file>

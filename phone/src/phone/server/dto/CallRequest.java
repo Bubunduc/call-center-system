@@ -1,14 +1,13 @@
 package phone.server.dto;
 
-import java.sql.Timestamp;
-
 public class CallRequest {
 	private String phoneNumber;
-	private Timestamp timestamp;
 
-	public CallRequest(String phoneNumber, Timestamp timestamp) {
+	public CallRequest() {
+	}
+
+	public CallRequest(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
-		this.timestamp = timestamp;
 	}
 
 	public String getPhoneNumber() {
@@ -19,17 +18,9 @@ public class CallRequest {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public Timestamp getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(Timestamp timestamp) {
-		this.timestamp = timestamp;
-	}
-
 	@Override
 	public String toString() {
-		return "CallRequest [phoneNumber=" + phoneNumber + ", timestamp=" + timestamp + "]";
+		return "CallRequest [phoneNumber=" + phoneNumber + "]";
 	}
 
 }
