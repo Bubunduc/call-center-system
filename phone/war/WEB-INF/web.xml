@@ -1,43 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
               http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-         version="2.5"
-         xmlns="http://java.sun.com/xml/ns/javaee">
+	version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
 
-  <!-- Servlets -->
-  <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>phone.server.GreetingServiceImpl</servlet-class>
-  </servlet>
- 
-  <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/phone/greet</url-pattern>
-  </servlet-mapping>
-  
-  <servlet>
-        <servlet-name>roomServlet</servlet-name>
-        <servlet-class>phone.server.servlet.RoomServlet</servlet-class>
-    </servlet>
+	<!-- Servlets -->
+	<servlet>
+		<servlet-name>greetServlet</servlet-name>
+		<servlet-class>phone.server.GreetingServiceImpl</servlet-class>
+	</servlet>
 
-    <servlet-mapping>
-        <servlet-name>roomServlet</servlet-name>
-        <url-pattern>/api/rooms</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>queueServlet</servlet-name>
-        <servlet-class>phone.server.servlet.QueueServlet</servlet-class>
-    </servlet>
+	<servlet-mapping>
+		<servlet-name>greetServlet</servlet-name>
+		<url-pattern>/phone/greet</url-pattern>
+	</servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>queueServlet</servlet-name>
-        <url-pattern>/api/queue</url-pattern>
-    </servlet-mapping>
-  <!-- Default page to serve -->
-  <welcome-file-list>
-    <welcome-file>Phone.html</welcome-file>
-  </welcome-file-list>
+	<servlet>
+		<servlet-name>roomServlet</servlet-name>
+		<servlet-class>phone.server.servlet.RoomServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>roomServlet</servlet-name>
+		<url-pattern>/api/rooms</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>queueServlet</servlet-name>
+		<servlet-class>phone.server.servlet.QueueServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>queueServlet</servlet-name>
+		<url-pattern>/api/queue</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>callServlet</servlet-name>
+		<servlet-class>phone.server.servlet.CallServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>callServlet</servlet-name>
+		<url-pattern>/api/calls</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>deviceServlet</servlet-name>
+		<servlet-class>phone.server.servlet.DeviceServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>deviceServlet</servlet-name>
+		<url-pattern>/api/rooms/devices</url-pattern>
+	</servlet-mapping>
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>Phone.html</welcome-file>
+	</welcome-file-list>
 
 </web-app>

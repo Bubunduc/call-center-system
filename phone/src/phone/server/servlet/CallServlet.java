@@ -14,18 +14,20 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import phone.server.ApplicationContext;
-import phone.server.dto.CallRequest;
+import phone.server.dto.AnswerCallRequest;
+import phone.server.dto.EndCallRequest;
 import phone.server.sevice.TelephonyService;
+import phone.shared.exception.InvalidDeviceStateException;
 import phone.shared.exception.TelephonyException;
 
-@WebServlet("/api/queue")
-public class QueueServlet extends HttpServlet {
+@WebServlet("/api/calls")
+public class CallServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
 	private final TelephonyService service = ApplicationContext.getTelephonyService();
 
-	// Добавить входящий звонок в очередь (вызов начался, но никто не взял трубку)
+	// Сигнал "кто-то взял трубку аппарата" - ответили на звонок.
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("application/json");
@@ -34,26 +36,27 @@ public class QueueServlet extends HttpServlet {
 		Gson gson = new Gson();
 		PrintWriter out = resp.getWriter();
 		try (BufferedReader reader = req.getReader()) {
-			CallRequest callRequest = gson.fromJson(reader, CallRequest.class);
+			AnswerCallRequest callRequest = gson.fromJson(reader, AnswerCallRequest.class);
 
-			if (!validateCallRequest(callRequest, out,resp)) {
-				return;
-			}
-			service.addToQueue(callRequest);
-			resp.setStatus(HttpServletResponse.SC_OK); // 200 OK
-			out.print("{\"status\": \"success\", \"message\": \"Звонок добавлен в очередь\"}");
+			service.answerCall(callRequest);
+			resp.setStatus(HttpServletResponse.SC_OK); // 200
+			out.print("{\"status\": \"success\", \"message\": \"Звонок принят\"}");
 
 		} catch (TelephonyException e) {
+			resp.setStatus(HttpServletResponse.SC_NOT_FOUND); // 404
+			resp.getWriter().print("{\"error\": \"" + e.getMessage() + "\"}");
+
+		} catch (InvalidDeviceStateException e) {
 			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			resp.getWriter().print("{\"error\": \"" + e.getMessage() + "\"}");
 
 		} catch (Exception e) {
 			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 500
-			resp.getWriter().print("{\"error\": \"Внутренняя ошибка сервера\"}");
+			resp.getWriter().print("{\"error\": "+e.getMessage()+"}");
 		}
 	}
 
-	// Удалить звонок из очереди (отменить входящий звонок)
+	// Сигнал "Звонок окончен" - положили трубку. (Удалить из активных)
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("application/json");
@@ -62,16 +65,17 @@ public class QueueServlet extends HttpServlet {
 		Gson gson = new Gson();
 		PrintWriter out = resp.getWriter();
 		try (BufferedReader reader = req.getReader()) {
-			CallRequest callRequest = gson.fromJson(reader, CallRequest.class);
+			EndCallRequest callRequest = gson.fromJson(reader, EndCallRequest.class);
 
-			if (!validateCallRequest(callRequest, out,resp)) {
-				return;
-			}
-			service.removeFromQueue(callRequest);
+			service.endCall(callRequest);
 			resp.setStatus(HttpServletResponse.SC_OK); // 200
-			out.print("{\"status\": \"success\", \"message\": \"Звонок удален из очереди\"}");
+			out.print("{\"status\": \"success\", \"message\": \"Звонок окончен\"}");
 
 		} catch (TelephonyException e) {
+			resp.setStatus(HttpServletResponse.SC_NOT_FOUND); // 404
+			resp.getWriter().print("{\"error\": \"" + e.getMessage() + "\"}");
+
+		} catch (InvalidDeviceStateException e) {
 			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); // 400
 			resp.getWriter().print("{\"error\": \"" + e.getMessage() + "\"}");
 
@@ -81,11 +85,11 @@ public class QueueServlet extends HttpServlet {
 		}
 	}
 
-	// Посмотреть всю очередь (только входящие, для которых никто не взял трубку)
+	// Посмотреть все активные звонки - кто с кем разговаривает.
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
-		String responseJson = gsonPretty.toJson(service.getNumsList());
+		String responseJson = gsonPretty.toJson(service.getActiveCallsList());
 
 		resp.setContentType("application/json");
 		resp.setCharacterEncoding("UTF-8");
@@ -94,15 +98,5 @@ public class QueueServlet extends HttpServlet {
 			out.print(responseJson);
 			out.flush();
 		}
-	}
-
-	private boolean validateCallRequest(CallRequest callRequest, PrintWriter out, HttpServletResponse resp) {
-		if ((callRequest == null) || (callRequest.getPhoneNumber() == null)
-				|| (callRequest.getPhoneNumber().isEmpty())) {
-			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); // 400 Bad Request
-			out.print("{\"error\": \"Неверный формат данных или отсутствует номер телефона\"}");
-			return false;
-		}
-		return true;
 	}
 }

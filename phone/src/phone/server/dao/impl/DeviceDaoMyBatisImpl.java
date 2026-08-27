@@ -19,4 +19,21 @@ public class DeviceDaoMyBatisImpl implements DeviceDao {
 		}
 	}
 
+	@Override
+	public Device findByDeviceNumber(String number) {
+		try (SqlSession session = MyBatisUtil.getSqlSessionFactory().openSession()) {
+			DeviceMapper mapper = session.getMapper(DeviceMapper.class);
+			return mapper.findByDeviceNumber(number);
+		}
+	}
+
+	@Override
+	public List<Device> findAllByRoomId(Long id) {
+		try (SqlSession session = MyBatisUtil.getSqlSessionFactory().openSession()) {
+			DeviceMapper mapper = session.getMapper(DeviceMapper.class);
+			return mapper.findAllByRoomId(id);
+		}
+	}
+	
+
 }

@@ -6,4 +6,6 @@ import phone.shared.model.Device;
 
 public interface DeviceMapper {
 	List<Device> findAll();
+	Device findByDeviceNumber(String number);
+	List<Device> findAllByRoomId(Long id);
 }

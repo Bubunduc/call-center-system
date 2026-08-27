@@ -4,8 +4,8 @@ public class ActiveCall {
 	private String deviceNumber;
 	private String operatorName;
 	private String phoneNumber;
-	
-	public ActiveCall(String deviceNumber, String operatorName, String phoneNumber) {	
+
+	public ActiveCall(String deviceNumber, String operatorName, String phoneNumber) {
 		this.deviceNumber = deviceNumber;
 		this.operatorName = operatorName;
 		this.phoneNumber = phoneNumber;
@@ -40,8 +40,5 @@ public class ActiveCall {
 		return "ActiveCall [deviceNumber=" + deviceNumber + ", operatorName=" + operatorName + ", phoneNumber="
 				+ phoneNumber + "]";
 	}
-
-	
-	
 
 }
