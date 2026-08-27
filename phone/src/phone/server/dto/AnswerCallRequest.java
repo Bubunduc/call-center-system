@@ -8,6 +8,11 @@ public class AnswerCallRequest {
 	public AnswerCallRequest() {
 	}
 
+	public AnswerCallRequest(String deviceNumber, String phoneNumber) {
+		this.deviceNumber = deviceNumber;
+		this.phoneNumber = phoneNumber;
+	}
+
 	public String getDeviceNumber() {
 		return deviceNumber;
 	}

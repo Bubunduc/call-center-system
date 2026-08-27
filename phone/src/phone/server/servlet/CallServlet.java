@@ -32,11 +32,13 @@ public class CallServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("application/json");
 		resp.setCharacterEncoding("UTF-8");
-
-		Gson gson = new Gson();
+		
+		String deviceNumber = req.getParameter("deviceNumber");
+		String phoneNumber = req.getParameter("phoneNumber");
+		
 		PrintWriter out = resp.getWriter();
 		try (BufferedReader reader = req.getReader()) {
-			AnswerCallRequest callRequest = gson.fromJson(reader, AnswerCallRequest.class);
+			AnswerCallRequest callRequest = new AnswerCallRequest(deviceNumber,phoneNumber);
 
 			service.answerCall(callRequest);
 			resp.setStatus(HttpServletResponse.SC_OK); // 200
@@ -62,10 +64,11 @@ public class CallServlet extends HttpServlet {
 		resp.setContentType("application/json");
 		resp.setCharacterEncoding("UTF-8");
 
-		Gson gson = new Gson();
+		String deviceNumber = req.getParameter("deviceNumber");
+		
 		PrintWriter out = resp.getWriter();
 		try (BufferedReader reader = req.getReader()) {
-			EndCallRequest callRequest = gson.fromJson(reader, EndCallRequest.class);
+			EndCallRequest callRequest = new EndCallRequest(deviceNumber);
 
 			service.endCall(callRequest);
 			resp.setStatus(HttpServletResponse.SC_OK); // 200

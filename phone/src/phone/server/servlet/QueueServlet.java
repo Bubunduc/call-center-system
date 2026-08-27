@@ -30,11 +30,14 @@ public class QueueServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("application/json");
 		resp.setCharacterEncoding("UTF-8");
-
-		Gson gson = new Gson();
+		
+		String phoneNumber = req.getParameter("phoneNumber");
+		
+		
+		
 		PrintWriter out = resp.getWriter();
 		try (BufferedReader reader = req.getReader()) {
-			CallRequest callRequest = gson.fromJson(reader, CallRequest.class);
+			CallRequest callRequest = new CallRequest(phoneNumber);
 
 			if (!validateCallRequest(callRequest, out,resp)) {
 				return;
@@ -59,10 +62,10 @@ public class QueueServlet extends HttpServlet {
 		resp.setContentType("application/json");
 		resp.setCharacterEncoding("UTF-8");
 
-		Gson gson = new Gson();
+		String phoneNumber = req.getParameter("phoneNumber");
 		PrintWriter out = resp.getWriter();
 		try (BufferedReader reader = req.getReader()) {
-			CallRequest callRequest = gson.fromJson(reader, CallRequest.class);
+			CallRequest callRequest = new CallRequest(phoneNumber);
 
 			if (!validateCallRequest(callRequest, out,resp)) {
 				return;
