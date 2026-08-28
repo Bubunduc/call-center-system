@@ -30,7 +30,18 @@ public class QueueView implements QueueDisplay {
         panel.add(headPanel);
         panel.add(queueTable);
     }
-
+    
+    @Override
+    public void clearQueue() {
+    	queueTable.clear();
+    }
+    
+    @Override
+    public void addNumber(String number) {
+    	int row = queueTable.getRowCount();
+    	queueTable.setText(row, 0, number);
+    }
+    
     @Override
     public Widget asWidget() {
         return panel;

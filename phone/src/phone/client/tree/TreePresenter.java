@@ -1,8 +1,12 @@
 package phone.client.tree;
 
+import java.util.List;
+
 import com.google.gwt.user.client.ui.HasWidgets;
 
 import phone.client.event.click.TreeButtonClickHandler;
+import phone.shared.dto.DeviceResponse;
+import phone.shared.dto.RoomResponse;
 
 public class TreePresenter {
 	private TreeDisplay view;
@@ -26,5 +30,9 @@ public class TreePresenter {
 
 		container.add(view.asWidget());
 
+	}
+	
+	public void loadNode(RoomResponse room,List<DeviceResponse> devices) {
+		view.showNode(room,devices);
 	}
 }

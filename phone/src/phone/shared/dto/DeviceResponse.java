@@ -1,4 +1,4 @@
-package phone.server.dto;
+package phone.shared.dto;
 
 import phone.shared.model.Device;
 

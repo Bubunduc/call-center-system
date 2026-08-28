@@ -1,5 +1,7 @@
 package phone.client.tree;
 
+import java.util.List;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -8,6 +10,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import phone.client.event.click.TreeButtonClickHandler;
+import phone.shared.dto.DeviceResponse;
+import phone.shared.dto.RoomResponse;
 
 public class TreeView implements TreeDisplay {
 
@@ -60,6 +64,12 @@ public class TreeView implements TreeDisplay {
 	public void setTreeButtonClickHandler(TreeButtonClickHandler handler) {
 		this.buttonHandler = handler;
 
+	}
+
+	@Override
+	public void showNode(RoomResponse room, List<DeviceResponse> devices) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

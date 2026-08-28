@@ -6,17 +6,18 @@ import java.util.List;
 import phone.server.client.AtsClient;
 import phone.server.dao.DeviceDao;
 import phone.server.dao.RoomDao;
-import phone.server.dto.ActiveCall;
 import phone.server.dto.AnswerCallRequest;
 import phone.server.dto.CallRequest;
-import phone.server.dto.DeviceResponse;
+import phone.server.dto.CallResponse;
 import phone.server.dto.EndCallRequest;
-import phone.server.dto.PhoneResponse;
 import phone.server.storage.PhoneStorage;
+import phone.shared.dto.ActiveCall;
+import phone.shared.dto.DeviceResponse;
+import phone.shared.dto.PhoneResponse;
+import phone.shared.dto.RoomResponse;
 import phone.shared.exception.InvalidDeviceStateException;
 import phone.shared.exception.TelephonyException;
 import phone.shared.model.Device;
-import phone.shared.model.Room;
 
 public class TelephonyService {
 
@@ -32,8 +33,8 @@ public class TelephonyService {
 		this.phoneStorage = phonestorage;
 	}
 
-	public List<Room> getAllRooms() {
-		return roomdao.findAll();
+	public List<RoomResponse> getAllRooms() {
+		return RoomResponse.toDto(roomdao.findAll());
 	}
 
 	public List<Device> getAllDevices() {
@@ -97,4 +98,8 @@ public class TelephonyService {
 		return result;
 		
 	} 
+	
+	public void sendToAts(CallResponse action) throws Exception {
+		atsclient.sendAction(action);
+	}
 }

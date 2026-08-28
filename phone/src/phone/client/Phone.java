@@ -12,6 +12,10 @@ import phone.client.mainPanel.MainPanelView;
 import phone.client.queue.QueueDisplay;
 import phone.client.queue.QueuePresenter;
 import phone.client.queue.QueueView;
+import phone.client.request.ActiveCallsClient;
+import phone.client.request.DeviceClient;
+import phone.client.request.QueueClient;
+import phone.client.request.RoomClient;
 import phone.client.tree.TreeDisplay;
 import phone.client.tree.TreePresenter;
 import phone.client.tree.TreeView;
@@ -32,6 +36,11 @@ public class Phone implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 
+		ActiveCallsClient activeCallsClient = new ActiveCallsClient();
+		QueueClient queueClient = new QueueClient();
+		DeviceClient deviceClient = new DeviceClient();
+		RoomClient roomClient = new RoomClient();
+		
 		TreeDisplay treeView = new TreeView();
 		TreePresenter treePresenter = new TreePresenter(treeView);
 
@@ -43,7 +52,7 @@ public class Phone implements EntryPoint {
 
 		MainPanelDisplay mainPanelView = new MainPanelView(treeView, queueView, currentNumsView);
 		MainPanelPresenter mainPanelPresenter = new MainPanelPresenter(currentNumsPresenter, queuePresenter,
-				treePresenter, mainPanelView);
+				treePresenter, mainPanelView, activeCallsClient, queueClient, roomClient, deviceClient);
 		mainPanelPresenter.go(RootPanel.get("mainContainer"));
 	}
 }

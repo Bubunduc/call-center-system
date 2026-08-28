@@ -8,8 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
 
-import phone.server.dto.ActiveCall;
 import phone.server.dto.CallRequest;
+import phone.shared.dto.ActiveCall;
 import phone.shared.exception.InvalidDeviceStateException;
 import phone.shared.exception.TelephonyException;
 import phone.shared.model.Device;

@@ -1,4 +1,4 @@
-package phone.server.dto;
+package phone.shared.dto;
 
 public class ActiveCall {
 	private String deviceNumber;
