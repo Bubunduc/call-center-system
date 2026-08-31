@@ -1,71 +1,131 @@
 package phone.client.currentNums;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import phone.client.event.click.CurrentNumButtonClickHandler;
+import phone.client.event.select.ActiveCallSelectionHandler;
 
 public class CurrentNumsView implements CurrentNumsDisplay {
-    private FlowPanel mainPanel;
-    private Label currentCalls;
-    private Button endCall;
-    private FlowPanel headPanel;
-    private FlexTable numsTable;
-    private CurrentNumButtonClickHandler buttonHandler;
-    
-    public CurrentNumsView() {
-        initPanel();
-    }
-    
-    private void initPanel() {
-        mainPanel = new FlowPanel();
-        mainPanel.setStyleName("active-calls-container"); 
-        
-        headPanel = new FlowPanel();
-        headPanel.setStyleName("header-panel"); 
-        
-        currentCalls = new Label("Текущие звонки:");
-        
-        endCall = new Button("Окончить");
-        endCall.setStyleName("response-button blue-background btn-answer");
-        endCall.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                if (buttonHandler != null) {
-                    buttonHandler.onClick();
-                }
-            }
-        });
-        
-        numsTable = new FlexTable();
-        numsTable.setStyleName("active-calls-box gray-background");
-        
-        headPanel.add(currentCalls);
-        headPanel.add(endCall);
-        
-        mainPanel.add(headPanel);
-        mainPanel.add(numsTable);
-    }
+	private FlowPanel mainPanel;
+	private Label currentCalls;
+	private Button endCall;
+	private FlowPanel headPanel;
+	private FlexTable numsTable;
+	private ActiveCallSelectionHandler selectionHandler;
+	private CurrentNumButtonClickHandler buttonHandler;
 
-    @Override
-    public Widget asWidget() {
-        return mainPanel;
-    }
+	private final Map<Integer, String> rowToDeviceId;
 
-    @Override
-    public void setCurrentNumButtonClickHandler(CurrentNumButtonClickHandler handler) {
-        this.buttonHandler = handler;
-    }
-    @Override
-    public void addActiveCall(String id, String name,String phone){
-    	int lastRow = numsTable.getRowCount();
-    	numsTable.setText(lastRow, 0, id);
-    	numsTable.setText(lastRow,1, name);
-    	numsTable.setText(lastRow,2, " "+phone);
-    }
+	public CurrentNumsView() {
+		rowToDeviceId = new HashMap<Integer, String>();
+		initPanel();
+	}
+
+	private void initPanel() {
+		mainPanel = new FlowPanel();
+		mainPanel.setStyleName("active-calls-container");
+
+		headPanel = new FlowPanel();
+		headPanel.setStyleName("header-panel");
+
+		currentCalls = new Label("Текущие звонки:");
+
+		endCall = new Button("Окончить");
+		endCall.setStyleName("response-button blue-background btn-answer");
+		endCall.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (buttonHandler != null) {
+					buttonHandler.onClick();
+				}
+			}
+		});
+
+		numsTable = new FlexTable();
+		numsTable.setStyleName("active-calls-box gray-background");
+		numsTable.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				HTMLTable.Cell cell = numsTable.getCellForEvent(event);
+
+				if (cell == null) {
+					return;
+				}
+
+				int rowIndex = cell.getRowIndex();
+
+				String deviceId = rowToDeviceId.get(rowIndex);
+
+				if (deviceId == null) {
+					return;
+				}
+
+				selectionHandler.onSelected(deviceId);
+
+			}
+		});
+		
+		headPanel.add(currentCalls);
+		headPanel.add(endCall);
+
+		mainPanel.add(headPanel);
+		mainPanel.add(numsTable);
+	}
+
+	@Override
+	public Widget asWidget() {
+		return mainPanel;
+	}
+
+	@Override
+	public void setCurrentNumButtonClickHandler(CurrentNumButtonClickHandler handler) {
+		this.buttonHandler = handler;
+	}
+
+	@Override
+	public void addActiveCall(String id, String name, String phone) {
+		Integer lastRow = numsTable.getRowCount();
+
+		numsTable.setText(lastRow, 0, id);
+		numsTable.setText(lastRow, 1, name);
+		numsTable.setText(lastRow, 2, phone);
+
+		rowToDeviceId.put(lastRow, id);
+	}
+	@Override
+	public void colorSelectedRow(String id) {
+
+		for (Map.Entry<Integer, String> entry : rowToDeviceId.entrySet()) {
+			
+			int rowIndex = entry.getKey();
+			String deviceId = entry.getValue();
+			
+			
+			int cellCount = numsTable.getCellCount(rowIndex);
+
+			for (int column = 0; column < cellCount; column++) {
+
+				if (id != null && id.equals(deviceId)) {
+
+					numsTable.getCellFormatter().addStyleName(rowIndex, column, "selectedRow");
+
+				} else {
+
+					numsTable.getCellFormatter().removeStyleName(rowIndex, column, "selectedRow");
+				}
+			}
+		}
+	}
 }

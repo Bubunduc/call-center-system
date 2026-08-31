@@ -8,5 +8,6 @@ public interface CurrentNumsDisplay {
 	
 	void setCurrentNumButtonClickHandler(CurrentNumButtonClickHandler handler);
 	void addActiveCall(String id, String name,String phone);
+	void colorSelectedRow(String id);
 	Widget asWidget();
 }
