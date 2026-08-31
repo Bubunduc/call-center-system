@@ -1,11 +1,11 @@
 package phone.server.storage;
 
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
 import phone.server.dto.CallRequest;
@@ -15,11 +15,11 @@ import phone.shared.exception.TelephonyException;
 import phone.shared.model.Device;
 
 public class PhoneStorage {
-	private final Deque<CallRequest> callsQueue;
+	private final Queue<CallRequest> callsQueue;
 	private final Map<String, ActiveCall> activeCalls;
 
 	public PhoneStorage() {
-		callsQueue = new ConcurrentLinkedDeque<CallRequest>();
+		callsQueue = new ConcurrentLinkedQueue<CallRequest>();
 		activeCalls = new ConcurrentHashMap<String, ActiveCall>();
 	}
 
@@ -27,7 +27,7 @@ public class PhoneStorage {
 		if (isExistsInQueue(call)) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " уже существует");
 		}
-		callsQueue.addFirst(call);
+		callsQueue.add(call);
 	}
 
 	public boolean isExistsInQueue(CallRequest call) {

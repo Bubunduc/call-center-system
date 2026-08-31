@@ -2,6 +2,8 @@ package phone.client.currentNums;
 
 import com.google.gwt.user.client.ui.HasWidgets;
 
+import phone.shared.dto.DeviceResponse;
+
 public class CurrentNumsPresenter {
 	
 	CurrentNumsDisplay view;
@@ -15,5 +17,10 @@ public class CurrentNumsPresenter {
 
 		container.add(view.asWidget());
 
+	}
+	
+	public void loadData(DeviceResponse response) {
+		
+		view.addActiveCall(response.getDeviceNumber(),response.getOperatorName(),response.getIncomingNumber());
 	}
 }

@@ -68,7 +68,26 @@ public class TreeView implements TreeDisplay {
 
 	@Override
 	public void showNode(RoomResponse room, List<DeviceResponse> devices) {
-		// TODO Auto-generated method stub
+		FlowPanel roomPanel = new FlowPanel();
+		Label roomName = new Label(room.getName());
+		roomPanel.add(roomName);
+		
+		roomPanel.getElement().setAttribute("room-id", room.getId().toString());
+
+		for (DeviceResponse device : devices) {
+			FlowPanel nodePanel = new FlowPanel();
+			Label nodeName = new Label(device.getDeviceNumber()+ " " + device.getOperatorName());
+			
+			nodePanel.getElement().setAttribute("room-device-id", device.getDeviceNumber());
+			nodePanel.setStyleName("node-panel");
+			
+			nodePanel.add(nodeName);
+			
+			roomPanel.add(nodePanel);
+			
+		}
+		
+		treePanel.add(roomPanel);
 		
 	}
 

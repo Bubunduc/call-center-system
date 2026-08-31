@@ -29,19 +29,18 @@ private final String ROUTE = "/rooms";
                 @Override
                 public void onResponseReceived(Request request, Response response) {
                     if (response.getStatusCode() < 200 || response.getStatusCode() >= 300) {
-                        callback.onFailure(new Exception("Ошибка сервера, код ответа: " + response.getStatusCode()));
+                        callback.onFailure(new Exception(response.getText()));
                         return;
                     }
 
                     try {
                         String jsonText = response.getText();
-                        
                         List<RoomResponse> resultList = parseJsonToDtoList(jsonText);
 
                         callback.onSuccess(resultList);
 
                     } catch (Exception e) {
-                        callback.onFailure(new Exception("Ошибка парсинга JSON: " + e.getMessage(), e));
+                    	callback.onFailure(new Exception(response.getText()));
                     }
                 }
 
@@ -69,7 +68,7 @@ private final String ROUTE = "/rooms";
 	        for (int i = 0; i < jsonArray.size(); i++) {
 	        	
 	            JSONObject object = jsonArray.get(i).isObject();
-	            if (object != null && object.containsKey("phoneNumber")) {
+	            if (object != null && object.containsKey("id")) {
 	            	
 	                JSONValue idValue = object.get("id");
 	                JSONValue nameValue = object.get("name");

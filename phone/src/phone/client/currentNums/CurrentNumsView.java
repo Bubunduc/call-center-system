@@ -61,4 +61,11 @@ public class CurrentNumsView implements CurrentNumsDisplay {
     public void setCurrentNumButtonClickHandler(CurrentNumButtonClickHandler handler) {
         this.buttonHandler = handler;
     }
+    @Override
+    public void addActiveCall(String id, String name,String phone){
+    	int lastRow = numsTable.getRowCount();
+    	numsTable.setText(lastRow, 0, id);
+    	numsTable.setText(lastRow,1, name);
+    	numsTable.setText(lastRow,2, " "+phone);
+    }
 }

@@ -7,5 +7,6 @@ import phone.client.event.click.CurrentNumButtonClickHandler;
 public interface CurrentNumsDisplay {
 	
 	void setCurrentNumButtonClickHandler(CurrentNumButtonClickHandler handler);
+	void addActiveCall(String id, String name,String phone);
 	Widget asWidget();
 }
