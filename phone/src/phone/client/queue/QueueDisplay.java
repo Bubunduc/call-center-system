@@ -8,5 +8,7 @@ public interface QueueDisplay {
 	
 	void addNumber(String number);
 	
+	void pushQueue();
+	
 	Widget asWidget();
 }

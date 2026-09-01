@@ -15,8 +15,8 @@ public class ClientPhoneStore {
 	private final Map<String, DeviceInfo> deviceMap;
 	private final Map<String, ActiveCall> activeCallMap;
 	private final Queue<String> phonesQueue;
-	private String selectedTreeDevice;
-	private String selectedActiveCallDevice;
+	private String selectedTreeDeviceId;
+	private String selectedActiveCallId;
 
 	public ClientPhoneStore() {
 
@@ -32,21 +32,36 @@ public class ClientPhoneStore {
 	public void addActiveCall(ActiveCall call) {
 		activeCallMap.put(call.getDeviceNumber(), call);
 	}
+	
+	public boolean isDeviceBuisy(String id) {
+		for (ActiveCall call :  activeCallMap.values()) {
+			if(call.getDeviceNumber().equals(id)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	public String getSelectedTreeDeviceId() {
+		return selectedTreeDeviceId;
+	}
+	
 
-	public String getSelectedTreeDevice() {
-		return selectedTreeDevice;
+	public void setSelectedTreeDeviceId(String selectedTreeDevice) {
+		this.selectedTreeDeviceId = selectedTreeDevice;
 	}
 
-	public void setSelectedTreeDevice(String selectedTreeDevice) {
-		this.selectedTreeDevice = selectedTreeDevice;
+	public String getSelectedActiveCallId() {
+		return selectedActiveCallId;
 	}
 
-	public String getSelectedActiveCallDevice() {
-		return selectedActiveCallDevice;
+	public void setSelectedActiveCallId(String selectedActiveCallDevice) {
+		this.selectedActiveCallId = selectedActiveCallDevice;
 	}
-
-	public void setSelectedActiveCallDevice(String selectedActiveCallDevice) {
-		this.selectedActiveCallDevice = selectedActiveCallDevice;
+	
+	public DeviceInfo getSelectedDevice() {
+		return deviceMap.get(selectedTreeDeviceId);
 	}
 	
 	public void addToQueue(String phone) {
@@ -69,5 +84,8 @@ public class ClientPhoneStore {
 		for(PhoneResponse phone : phones) {
 			addToQueue(phone.getPhoneNumber());
 		}
+	}
+	public String getNext() {
+		return phonesQueue.peek();
 	}
 	}

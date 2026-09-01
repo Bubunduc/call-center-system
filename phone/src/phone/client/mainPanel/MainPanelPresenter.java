@@ -54,25 +54,25 @@ public class MainPanelPresenter {
 		loadData();
 		bind();
 	}
-	
+
 	private void bind() {
 		bindActiveCalls();
 		bindTree();
 	}
-	
+
 	public void go(HasWidgets container) {
 
 		container.add(view.asWidget());
 
 	}
-	
+
 	private void loadData() {
 
 		queueClient.getQueue(URL, new AsyncCallback<List<PhoneResponse>>() {
 
 			@Override
 			public void onSuccess(List<PhoneResponse> result) {
-				
+
 				store.addToQueueList(result);
 				queuePresenter.loadData(result);
 
@@ -116,7 +116,8 @@ public class MainPanelPresenter {
 				for (DeviceResponse i : result) {
 					store.addDevice(new DeviceInfo(i.getDeviceNumber(), i.getOperatorName()));
 					if (i.getIncomingNumber() != null) {
-						store.addActiveCall(new ActiveCall(i.getDeviceNumber(), i.getOperatorName(), i.getIncomingNumber()));
+						store.addActiveCall(
+								new ActiveCall(i.getDeviceNumber(), i.getOperatorName(), i.getIncomingNumber()));
 						currentNumsPresenter.loadData(i);
 					}
 				}
@@ -131,45 +132,94 @@ public class MainPanelPresenter {
 			}
 		});
 	}
+
 	private void bindActiveCalls() {
 		view.setCurrentNumButtonClickHandler(new CurrentNumButtonClickHandler() {
-			
+
 			@Override
 			public void onClick() {
-				// TODO Auto-generated method stub
-				
+				final String selectedCallId = store.getSelectedActiveCallId();
+				activeCallsClient.endCall(URL, selectedCallId, new AsyncCallback<Void>() {
+					
+					@Override
+					public void onSuccess(Void result) {
+						currentNumsPresenter.removeActiveCall(selectedCallId);
+						store.setSelectedActiveCallId(null);
+						Window.alert("Звонок успешно окончен");
+					}
+					
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert(caught.getMessage());
+						
+					}
+				});
+
 			}
 		});
 		view.setCurrentNumSelectionHandler(new ActiveCallSelectionHandler() {
-			
+
 			@Override
 			public void onSelected(String id) {
-				store.setSelectedActiveCallDevice(id);
+				store.setSelectedActiveCallId(id);
 				currentNumsPresenter.colorRow(id);
 			}
 		});
 	}
-	
+
 	private void bindTree() {
 		view.setTreeButtonClickHandler(new TreeButtonClickHandler() {
-			
+
 			@Override
 			public void onClick() {
-				// TODO Auto-generated method stub
-				
+				final String number = store.getNext();
+				if (number == null) {
+					Window.alert("Очередь звонков пуста");
+					return;
+				}
+				final DeviceInfo selectedDevice = store.getSelectedDevice();
+				if (selectedDevice == null) {
+					Window.alert("Сначала выберите устройство");
+					return;
+				}
+				if (store.isDeviceBuisy(selectedDevice.getId())) {
+					Window.alert("Текущий оператор уже с кем то разговаривает");
+					return;
+				}
+				activeCallsClient.acceptCall(URL, selectedDevice.getId(), number, new AsyncCallback<Void>() {
+
+					@Override
+					public void onSuccess(Void result) {
+						store.pushQueue();
+						queuePresenter.pushQueue();
+
+						ActiveCall newCall = new ActiveCall(selectedDevice.getId(), selectedDevice.getOperatorName(),
+								number);
+						store.addActiveCall(newCall);
+						currentNumsPresenter.addActiveCall(newCall);
+						Window.alert("Звонок успешно принят");
+					}
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert(caught.getMessage());
+
+					}
+				});
+
 			}
 		});
 		view.setTreeSelectionHandler(new TreeDeviceSelectionHandler() {
-			
+
 			@Override
 			public void onSelected(String id) {
-				String prevId = store.getSelectedTreeDevice();
+				String prevId = store.getSelectedTreeDeviceId();
 				if (prevId != null) {
 					treePresenter.uncolorNode(prevId);
 				}
-				store.setSelectedTreeDevice(id);
+				store.setSelectedTreeDeviceId(id);
 				treePresenter.colorNode(id);
-				
+
 			}
 		});
 	}

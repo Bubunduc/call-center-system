@@ -23,4 +23,7 @@ public class QueuePresenter {
 			view.addNumber(number.getPhoneNumber());
 		}
 	}
+	public void pushQueue() {
+		view.pushQueue();
+	}
 }

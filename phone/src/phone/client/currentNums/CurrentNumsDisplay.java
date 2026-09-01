@@ -8,6 +8,8 @@ import phone.client.event.select.ActiveCallSelectionHandler;
 public interface CurrentNumsDisplay {
 
 	void addActiveCall(String id, String name, String phone);
+	
+	void removeActiveCall(String id);
 
 	void colorSelectedRow(String id);
 

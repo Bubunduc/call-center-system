@@ -115,6 +115,38 @@ public class CurrentNumsView implements CurrentNumsDisplay {
 
 		rowToDeviceId.put(lastRow, id);
 	}
+	
+	@Override
+	public void removeActiveCall(String id) {
+	    if (id == null || id.isEmpty()) {
+	        return;
+	    }
+	    Integer targetRow = null;
+	    for (Map.Entry<Integer, String> entry : rowToDeviceId.entrySet()) {
+	        if (id.equals(entry.getValue())) {
+	            targetRow = entry.getKey();
+	            break;
+	        }
+	    }
+
+	    if (targetRow == null) {
+	        return;
+	    }
+
+	    numsTable.removeRow(targetRow);
+	    rebuildRowToDeviceIdMap();
+	}
+
+	private void rebuildRowToDeviceIdMap() {
+	    rowToDeviceId.clear();
+	    int rowCount = numsTable.getRowCount();
+
+	    for (int row = 0; row < rowCount; row++) {
+	        String deviceId = numsTable.getText(row, 0);
+	        rowToDeviceId.put(row, deviceId);
+	    }
+	}
+	
 	@Override
 	public void colorSelectedRow(String id) {
 
@@ -139,5 +171,7 @@ public class CurrentNumsView implements CurrentNumsDisplay {
 			}
 		}
 	}
+
+	
 
 }
