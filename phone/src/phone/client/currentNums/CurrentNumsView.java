@@ -77,6 +77,10 @@ public class CurrentNumsView implements CurrentNumsDisplay {
 			}
 		});
 		
+		numsTable.setCellPadding(0);
+		numsTable.setCellSpacing(0);
+		numsTable.setBorderWidth(0);
+		
 		headPanel.add(currentCalls);
 		headPanel.add(endCall);
 
@@ -93,6 +97,13 @@ public class CurrentNumsView implements CurrentNumsDisplay {
 	public void setCurrentNumButtonClickHandler(CurrentNumButtonClickHandler handler) {
 		this.buttonHandler = handler;
 	}
+	
+	@Override
+	public void setCurrentNumSelectionHandler(ActiveCallSelectionHandler selectionHandler) {
+		this.selectionHandler = selectionHandler;
+		
+	}
+	
 
 	@Override
 	public void addActiveCall(String id, String name, String phone) {
@@ -119,13 +130,14 @@ public class CurrentNumsView implements CurrentNumsDisplay {
 
 				if (id != null && id.equals(deviceId)) {
 
-					numsTable.getCellFormatter().addStyleName(rowIndex, column, "selectedRow");
+					numsTable.getCellFormatter().addStyleName(rowIndex, column, "selected-row");
 
 				} else {
 
-					numsTable.getCellFormatter().removeStyleName(rowIndex, column, "selectedRow");
+					numsTable.getCellFormatter().removeStyleName(rowIndex, column, "selected-row");
 				}
 			}
 		}
 	}
+
 }

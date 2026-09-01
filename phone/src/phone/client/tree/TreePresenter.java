@@ -14,18 +14,7 @@ public class TreePresenter {
 	public TreePresenter(TreeDisplay view) {
 		this.view = view;
 	}
-	
-	public void bind() {
-		view.setTreeButtonClickHandler(new TreeButtonClickHandler() {
-			
-			@Override
-			public void onClick() {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-	}
-	
+
 	public void go(HasWidgets container) {
 
 		container.add(view.asWidget());
@@ -34,5 +23,13 @@ public class TreePresenter {
 	
 	public void loadNode(RoomResponse room,List<DeviceResponse> devices) {
 		view.showNode(room,devices);
+	}
+	
+	public void colorNode(String id) {
+		view.colorNode(id);
+	}
+	
+	public void uncolorNode(String id) {
+		view.uncolorNode(id);
 	}
 }

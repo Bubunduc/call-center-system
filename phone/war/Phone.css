@@ -103,6 +103,20 @@ h1 {
   height: 200px;
   border: 1px solid #000;
   box-sizing: border-box;
+  overflow-y: auto;
+}
+
+
+.active-calls-box td {
+  border: none !important;
+  padding: 2px 16px 2px 0 !important; 
+  vertical-align: top !important;      
+  font-size: 14px;
+}
+
+
+.active-calls-box td:last-child {
+  padding-right: 0 !important;
 }
 
 .upper-right-panel {
@@ -131,4 +145,8 @@ h1 {
 
 .node-panel{
 	padding-left: 34px;
+}
+
+.selected-row{
+	background-color: #17a9bd !important;
 }

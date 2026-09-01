@@ -23,4 +23,8 @@ public class CurrentNumsPresenter {
 		
 		view.addActiveCall(response.getDeviceNumber(),response.getOperatorName(),response.getIncomingNumber());
 	}
+	
+	public void colorRow(String id) {
+		view.colorSelectedRow(id);
+	}
 }
