@@ -91,15 +91,56 @@ public class CallServlet extends HttpServlet {
 	// Посмотреть все активные звонки - кто с кем разговаривает.
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
-		String responseJson = gsonPretty.toJson(service.getActiveCallsList());
+	    String acceptHeader = req.getHeader("Accept");
+	    
+	    // Проверяем, запрашивает ли клиент SSE (EventSource отправляет Accept: text/event-stream)
+	    if (acceptHeader != null && acceptHeader.contains("text/event-stream")) {
+	        handleSseRequest(req, resp);
+	    } else {
+	        handleJsonResponse(req, resp);
+	    }
+	}
 
-		resp.setContentType("application/json");
-		resp.setCharacterEncoding("UTF-8");
+	// 1. Обычный JSON-ответ
+	private void handleJsonResponse(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	    Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
+	    String responseJson = gsonPretty.toJson(service.getActiveCallsList());
 
-		try (PrintWriter out = resp.getWriter()) {
-			out.print(responseJson);
-			out.flush();
-		}
+	    resp.setContentType("application/json");
+	    resp.setCharacterEncoding("UTF-8");
+
+	    try (PrintWriter out = resp.getWriter()) {
+	        out.print(responseJson);
+	        out.flush();
+	    }
+	}
+
+	// 2. Обработка SSE-потока
+	private void handleSseRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		//обязательные для sse заголовки
+	    resp.setContentType("text/event-stream");
+	    resp.setCharacterEncoding("UTF-8");
+	    resp.setHeader("Cache-Control", "no-cache");
+	    resp.setHeader("Connection", "keep-alive");
+
+	    PrintWriter out = resp.getWriter();
+	    Gson gson = new Gson();
+
+	    // Цикл удержания соединения
+	    while (!out.checkError()) { // checkError() вернет true, если клиент отключился
+	        try {
+	            String json = gson.toJson(service.getActiveCallsList());
+
+	            // Формат SSE: обязательно "data: " в начале и два "\n\n" в конце!
+	            out.print("data: " + json + "\n\n");
+	            out.flush();
+
+	            // Интервал обновления
+	            Thread.sleep(2000); 
+	        } catch (InterruptedException e) {
+	            Thread.currentThread().interrupt();
+	            break;
+	        }
+	    }
 	}
 }

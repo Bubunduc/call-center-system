@@ -24,6 +24,7 @@ import phone.shared.dto.DeviceResponse;
 import phone.shared.dto.PhoneResponse;
 import phone.shared.dto.RoomResponse;
 
+
 public class MainPanelPresenter {
 
 	private final CurrentNumsPresenter currentNumsPresenter;
@@ -222,5 +223,8 @@ public class MainPanelPresenter {
 
 			}
 		});
+	}
+	private void bindSSE() {
+		
 	}
 }

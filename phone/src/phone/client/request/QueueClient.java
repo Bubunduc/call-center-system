@@ -3,6 +3,7 @@ package phone.client.request;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -55,7 +56,46 @@ public class QueueClient {
             callback.onFailure(e);
         }
     }
-	
+	/**
+	 * Подписка на SSE поток
+	 * @return JavaScriptObject (ссылка на EventSource), чтобы можно было вызвать stopSseStream()
+	 */
+	public JavaScriptObject subscribeToQueueStream(String url, final AsyncCallback<List<PhoneResponse>> callback) {
+		return createSseStream(url + ROUTE, callback);
+	}
+
+	/**
+	 * Закрыть SSE соединение
+	 */
+	public native void stopSseStream(JavaScriptObject eventSource) /*-{
+		if (eventSource) {
+			eventSource.close();
+		}
+	}-*/;
+
+	private native JavaScriptObject createSseStream(String url, AsyncCallback<List<PhoneResponse>> callback) /*-{
+		var self = this;
+		var source = new EventSource(url);
+
+		source.onmessage = $entry(function(event) {
+			try {
+				var jsonText = event.data;
+				// Вызываем наш Java метод парсинга
+				var resultList = self.@phone.client.request.QueueClient::parseJsonToDtoList(Ljava/lang/String;)(jsonText);
+				callback.@com.google.gwt.user.client.rpc.AsyncCallback::onSuccess(Ljava/lang/Object;)(resultList);
+			} catch (e) {
+				var exception = @java.lang.Exception::new(Ljava/lang/String;)("Ошибка парсинга SSE: " + e);
+				callback.@com.google.gwt.user.client.rpc.AsyncCallback::onFailure(Ljava/lang/Throwable;)(exception);
+			}
+		});
+
+		source.onerror = $entry(function(event) {
+			var exception = @java.lang.Exception::new(Ljava/lang/String;)("Ошибка SSE соединения");
+			callback.@com.google.gwt.user.client.rpc.AsyncCallback::onFailure(Ljava/lang/Throwable;)(exception);
+		});
+
+		return source;
+	}-*/;
 	private List<PhoneResponse> parseJsonToDtoList(String jsonText) {
 	    List<PhoneResponse> list = new ArrayList<PhoneResponse>();
 
