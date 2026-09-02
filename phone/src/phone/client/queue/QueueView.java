@@ -1,6 +1,5 @@
 package phone.client.queue;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -34,7 +33,7 @@ public class QueueView implements QueueDisplay {
 
 	@Override
 	public void clearQueue() {
-		queueTable.clear();
+		queueTable.removeAllRows();	
 	}
 
 	@Override
@@ -45,14 +44,16 @@ public class QueueView implements QueueDisplay {
 
 	@Override
 	public void pushQueue() {
-	    if (queueTable.getRowCount() > 0) {
-	        queueTable.removeRow(0);
-	    }
+		if (queueTable.getRowCount() > 0) {
+			queueTable.removeRow(0);
+		}
 	}
-
+	
 	@Override
 	public Widget asWidget() {
 		return panel;
 	}
+
+	
 
 }

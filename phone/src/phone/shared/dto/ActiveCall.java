@@ -1,5 +1,7 @@
 package phone.shared.dto;
 
+import java.util.Objects;
+
 public class ActiveCall {
 	private String deviceNumber;
 	private String operatorName;
@@ -39,6 +41,24 @@ public class ActiveCall {
 	public String toString() {
 		return "ActiveCall [deviceNumber=" + deviceNumber + ", operatorName=" + operatorName + ", phoneNumber="
 				+ phoneNumber + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(deviceNumber, operatorName, phoneNumber);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ActiveCall other = (ActiveCall) obj;
+		return Objects.equals(deviceNumber, other.deviceNumber) && Objects.equals(operatorName, other.operatorName)
+				&& Objects.equals(phoneNumber, other.phoneNumber);
 	}
 
 }

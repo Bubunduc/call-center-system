@@ -19,12 +19,10 @@ public class MainPanelView implements MainPanelDisplay {
 	private FlowPanel upperRightPanel;
 	private FlowPanel rightPanel;
 	private final TreeDisplay treeView;
-	private final QueueDisplay queueView;
 	private final CurrentNumsDisplay currentNumsView;
 
 	public MainPanelView(TreeDisplay treeView, QueueDisplay queueView, CurrentNumsDisplay currentNumsView) {
 		this.treeView = treeView;
-		this.queueView = queueView;
 		this.currentNumsView = currentNumsView;
 
 		mainPanel = new FlowPanel();

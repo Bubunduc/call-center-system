@@ -17,13 +17,16 @@ public class QueuePresenter {
 		if (data == null) {
 			return;
 		}
-		
-		view.clearQueue();
 		for(PhoneResponse number : data) {
 			view.addNumber(number.getPhoneNumber());
 		}
 	}
 	public void pushQueue() {
 		view.pushQueue();
+	}
+	
+	public void refreshQueue(List<PhoneResponse> data) {
+		view.clearQueue();
+		loadData(data);
 	}
 }

@@ -2,6 +2,7 @@ package phone.client.mainPanel;
 
 import java.util.List;
 
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -24,7 +25,6 @@ import phone.shared.dto.DeviceResponse;
 import phone.shared.dto.PhoneResponse;
 import phone.shared.dto.RoomResponse;
 
-
 public class MainPanelPresenter {
 
 	private final CurrentNumsPresenter currentNumsPresenter;
@@ -37,6 +37,7 @@ public class MainPanelPresenter {
 	private final DeviceClient deviceClient;
 	private final ClientPhoneStore store;
 
+	private Timer refreshTimer;
 	private final String URL = "http://127.0.0.1:8888/api";
 
 	public MainPanelPresenter(CurrentNumsPresenter currentNumsPresenter, QueuePresenter queuePresenter,
@@ -54,6 +55,7 @@ public class MainPanelPresenter {
 
 		loadData();
 		bind();
+		startPooling();
 	}
 
 	private void bind() {
@@ -140,19 +142,23 @@ public class MainPanelPresenter {
 			@Override
 			public void onClick() {
 				final String selectedCallId = store.getSelectedActiveCallId();
+				if (selectedCallId == null) {
+					Window.alert("Сначала выберите звонок");
+				}
 				activeCallsClient.endCall(URL, selectedCallId, new AsyncCallback<Void>() {
-					
+
 					@Override
 					public void onSuccess(Void result) {
 						currentNumsPresenter.removeActiveCall(selectedCallId);
+						store.removeActiveCall(selectedCallId);
 						store.setSelectedActiveCallId(null);
 						Window.alert("Звонок успешно окончен");
 					}
-					
+
 					@Override
 					public void onFailure(Throwable caught) {
 						Window.alert(caught.getMessage());
-						
+
 					}
 				});
 
@@ -224,7 +230,58 @@ public class MainPanelPresenter {
 			}
 		});
 	}
-	private void bindSSE() {
-		
+
+	private void startPooling() {
+		refreshTimer = new Timer() {
+
+			@Override
+			public void run() {
+				refreshQueue();
+				refreshActiveCalls();
+
+			}
+		};
+
+		refreshTimer.scheduleRepeating(1000);
 	}
+
+	private void refreshQueue() {
+		queueClient.getQueue(URL, new AsyncCallback<List<PhoneResponse>>() {
+
+			@Override
+			public void onSuccess(List<PhoneResponse> result) {
+
+				if (store.updateQueue(result)) {
+					queuePresenter.refreshQueue(result);
+				}
+
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert(caught.getMessage());
+
+			}
+		});
+	}
+
+	private void refreshActiveCalls() {
+		activeCallsClient.getActiveCalls(URL, new AsyncCallback<List<ActiveCall>>() {
+
+			@Override
+			public void onSuccess(List<ActiveCall> result) {
+				if (store.updateAtiveCalls(result)) {
+					currentNumsPresenter.refreshData(result);
+				}
+
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert(caught.getMessage());
+
+			}
+		});
+	}
+
 }

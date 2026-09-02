@@ -16,6 +16,8 @@ public interface CurrentNumsDisplay {
 	void setCurrentNumSelectionHandler(ActiveCallSelectionHandler selectionHandler);
 
 	void setCurrentNumButtonClickHandler(CurrentNumButtonClickHandler handler);
+	
+	void clear();
 
 	Widget asWidget();
 

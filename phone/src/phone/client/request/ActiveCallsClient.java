@@ -1,21 +1,59 @@
 package phone.client.request;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import phone.shared.dto.ActiveCall;
-import phone.shared.dto.PhoneResponse;
 
 public class ActiveCallsClient {
 
 	private final String ROUTE = "/calls";
+	
+	public void getActiveCalls(String url,final AsyncCallback<List<ActiveCall>> callback) {
+
+		RequestBuilder request = new RequestBuilder(RequestBuilder.GET, url + ROUTE);
+
+		try {
+			request.sendRequest(null, new RequestCallback() {
+
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					if (response.getStatusCode() < 200 || response.getStatusCode() >= 300) {
+						callback.onFailure(new Exception("Ошибка сервера, код ответа: " + response.getStatusCode()));
+						return;
+					}
+
+					try {
+						String jsonText = response.getText();
+						List<ActiveCall> resultList = parseJsonToDtoList(jsonText);
+		
+						callback.onSuccess(resultList);
+
+					} catch (Exception e) {
+						callback.onFailure(new Exception("Ошибка парсинга JSON: " + e.getMessage(), e));
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					callback.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			callback.onFailure(e);
+		}
+	}
 
 	public void acceptCall(String url, String deviceNumber, String phoneNumber, final AsyncCallback<Void> callback) {
 		String requestUrl = url + ROUTE + "?deviceNumber=" + deviceNumber + "&phoneNumber=" + phoneNumber;
@@ -28,7 +66,7 @@ public class ActiveCallsClient {
 		RequestBuilder request = new RequestBuilder(RequestBuilder.DELETE, requestUrl);
 		changeStageReuqest(request, callback);
 	}
-	
+
 	private void changeStageReuqest(RequestBuilder request, final AsyncCallback<Void> callback) {
 		try {
 			request.sendRequest(null, new RequestCallback() {
@@ -52,44 +90,35 @@ public class ActiveCallsClient {
 			callback.onFailure(e);
 		}
 	}
-	/**
-	 * Подписка на SSE поток
-	 * @return JavaScriptObject (ссылка на EventSource), чтобы можно было вызвать stopSseStream()
-	 */
-	public JavaScriptObject subscribeToQueueStream(String url, final AsyncCallback<List<ActiveCall>> callback) {
-		return createSseStream(url + ROUTE, callback);
-	}
+//	private String deviceNumber;
+//	private String operatorName;
+//	private String phoneNumber;
+	private List<ActiveCall> parseJsonToDtoList(String json) {
+		List<ActiveCall> result = new ArrayList<ActiveCall>();
 
-	/**
-	 * Закрыть SSE соединение
-	 */
-	public native void stopSseStream(JavaScriptObject eventSource) /*-{
-		if (eventSource) {
-			eventSource.close();
+		JSONValue value = JSONParser.parseStrict(json);
+		JSONArray array = value.isArray();
+
+		if (array == null) {
+			return result;
 		}
-	}-*/;
 
-	private native JavaScriptObject createSseStream(String url, AsyncCallback<List<ActiveCall>> callback) /*-{
-		var self = this;
-		var source = new EventSource(url);
+		for (int i = 0; i < array.size(); i++) {
+			JSONObject object = array.get(i).isObject();
 
-		source.onmessage = $entry(function(event) {
-			try {
-				var jsonText = event.data;
-				// Вызываем наш Java метод парсинга
-				var resultList = self.@phone.client.request.QueueClient::parseJsonToDtoList(Ljava/lang/String;)(jsonText);
-				callback.@com.google.gwt.user.client.rpc.AsyncCallback::onSuccess(Ljava/lang/Object;)(resultList);
-			} catch (e) {
-				var exception = @java.lang.Exception::new(Ljava/lang/String;)("Ошибка парсинга SSE: " + e);
-				callback.@com.google.gwt.user.client.rpc.AsyncCallback::onFailure(Ljava/lang/Throwable;)(exception);
+			if (object == null) {
+				continue;
 			}
-		});
 
-		source.onerror = $entry(function(event) {
-			var exception = @java.lang.Exception::new(Ljava/lang/String;)("Ошибка SSE соединения");
-			callback.@com.google.gwt.user.client.rpc.AsyncCallback::onFailure(Ljava/lang/Throwable;)(exception);
-		});
+			String deviceNumber = object.get("deviceNumber").isString().stringValue();
 
-		return source;
-	}-*/;
+			String operatorName = object.get("operatorName").isString().stringValue();
+
+			String incomingNumber = object.get("phoneNumber").isString().stringValue();
+
+			result.add(new ActiveCall(deviceNumber, operatorName, incomingNumber));
+		}
+
+		return result;
+	}
 }

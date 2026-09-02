@@ -76,11 +76,11 @@ public class CurrentNumsView implements CurrentNumsDisplay {
 
 			}
 		});
-		
+
 		numsTable.setCellPadding(0);
 		numsTable.setCellSpacing(0);
 		numsTable.setBorderWidth(0);
-		
+
 		headPanel.add(currentCalls);
 		headPanel.add(endCall);
 
@@ -97,13 +97,12 @@ public class CurrentNumsView implements CurrentNumsDisplay {
 	public void setCurrentNumButtonClickHandler(CurrentNumButtonClickHandler handler) {
 		this.buttonHandler = handler;
 	}
-	
+
 	@Override
 	public void setCurrentNumSelectionHandler(ActiveCallSelectionHandler selectionHandler) {
 		this.selectionHandler = selectionHandler;
-		
+
 	}
-	
 
 	@Override
 	public void addActiveCall(String id, String name, String phone) {
@@ -115,47 +114,46 @@ public class CurrentNumsView implements CurrentNumsDisplay {
 
 		rowToDeviceId.put(lastRow, id);
 	}
-	
+
 	@Override
 	public void removeActiveCall(String id) {
-	    if (id == null || id.isEmpty()) {
-	        return;
-	    }
-	    Integer targetRow = null;
-	    for (Map.Entry<Integer, String> entry : rowToDeviceId.entrySet()) {
-	        if (id.equals(entry.getValue())) {
-	            targetRow = entry.getKey();
-	            break;
-	        }
-	    }
+		if (id == null || id.isEmpty()) {
+			return;
+		}
+		Integer targetRow = null;
+		for (Map.Entry<Integer, String> entry : rowToDeviceId.entrySet()) {
+			if (id.equals(entry.getValue())) {
+				targetRow = entry.getKey();
+				break;
+			}
+		}
 
-	    if (targetRow == null) {
-	        return;
-	    }
+		if (targetRow == null) {
+			return;
+		}
 
-	    numsTable.removeRow(targetRow);
-	    rebuildRowToDeviceIdMap();
+		numsTable.removeRow(targetRow);
+		rebuildRowToDeviceIdMap();
 	}
 
 	private void rebuildRowToDeviceIdMap() {
-	    rowToDeviceId.clear();
-	    int rowCount = numsTable.getRowCount();
+		rowToDeviceId.clear();
+		int rowCount = numsTable.getRowCount();
 
-	    for (int row = 0; row < rowCount; row++) {
-	        String deviceId = numsTable.getText(row, 0);
-	        rowToDeviceId.put(row, deviceId);
-	    }
+		for (int row = 0; row < rowCount; row++) {
+			String deviceId = numsTable.getText(row, 0);
+			rowToDeviceId.put(row, deviceId);
+		}
 	}
-	
+
 	@Override
 	public void colorSelectedRow(String id) {
 
 		for (Map.Entry<Integer, String> entry : rowToDeviceId.entrySet()) {
-			
+
 			int rowIndex = entry.getKey();
 			String deviceId = entry.getValue();
-			
-			
+
 			int cellCount = numsTable.getCellCount(rowIndex);
 
 			for (int column = 0; column < cellCount; column++) {
@@ -172,6 +170,11 @@ public class CurrentNumsView implements CurrentNumsDisplay {
 		}
 	}
 
-	
+	@Override
+	public void clear() {
+		numsTable.removeAllRows();
+		rowToDeviceId.clear();
+
+	}
 
 }
