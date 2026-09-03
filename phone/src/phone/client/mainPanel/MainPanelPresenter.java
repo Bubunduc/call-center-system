@@ -144,6 +144,7 @@ public class MainPanelPresenter {
 				final String selectedCallId = store.getSelectedActiveCallId();
 				if (selectedCallId == null) {
 					Window.alert("Сначала выберите звонок");
+					return;
 				}
 				activeCallsClient.endCall(URL, selectedCallId, new AsyncCallback<Void>() {
 
@@ -272,6 +273,9 @@ public class MainPanelPresenter {
 			public void onSuccess(List<ActiveCall> result) {
 				if (store.updateAtiveCalls(result)) {
 					currentNumsPresenter.refreshData(result);
+					if (store.getSelectedActiveCallId() != null) {
+						currentNumsPresenter.colorRow(store.getSelectedActiveCallId());
+					}
 				}
 
 			}
