@@ -27,7 +27,19 @@ public class PhoneStorage {
 		if (isExistsInQueue(call)) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " уже существует");
 		}
+		if (isPhoneTalks(call)) {
+			throw new TelephonyException("Номер " + call.getPhoneNumber() + " уже разговаривает");
+		}
 		callsQueue.add(call);
+	}
+
+	public boolean isPhoneTalks(CallRequest call) {
+		for (ActiveCall activeCall : activeCalls.values()) {
+			if (activeCall.getPhoneNumber().equals(call.getPhoneNumber())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean isExistsInQueue(CallRequest call) {
@@ -87,20 +99,20 @@ public class PhoneStorage {
 		}
 		activeCalls.remove(deviceNumber);
 	}
-	
+
 	public String getPhoneFromActiveCall(String deviceNumber) {
 		return activeCalls.get(deviceNumber).getPhoneNumber();
 	}
-	
-	private boolean isDeviceActive (String deviceNumber) {
+
+	private boolean isDeviceActive(String deviceNumber) {
 		return activeCalls.containsKey(deviceNumber);
 	}
-	
+
 	public ActiveCall getActiveCallByDeviceNumber(String deviceNumber) {
-		if(isDeviceActive(deviceNumber)) {
+		if (isDeviceActive(deviceNumber)) {
 			return activeCalls.get(deviceNumber);
 		}
 		return null;
 	}
-	
+
 }

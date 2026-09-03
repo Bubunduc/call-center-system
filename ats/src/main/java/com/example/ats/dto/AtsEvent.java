@@ -69,7 +69,7 @@ public class AtsEvent {
 
 	@Override
 	public String toString() {
-		return "CallResponse [phoneNumber=" + phoneNumber + ", timeStamp=" + timeStamp + ", deviceNumber="
+		return "AtsEvent [phoneNumber=" + phoneNumber + ", timeStamp=" + timeStamp + ", deviceNumber="
 				+ deviceNumber + ", operatorName=" + operatorName + ", status=" + status + "]";
 	}
 

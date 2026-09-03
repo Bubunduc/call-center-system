@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<html lang="ru">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Панель АТС</title>
+
     <style>
-        /* Общий контейнер (рамка вокруг всего интерфейса) */
         .ats-container {
             border: 1px solid #000;
             padding: 20px;
@@ -16,7 +19,6 @@
             box-sizing: border-box;
         }
 
-        /* Верхняя панель (ввод и кнопки) */
         .top-section {
             display: flex;
             justify-content: space-between;
@@ -24,7 +26,6 @@
             margin-bottom: 20px;
         }
 
-        /* Группа ввода номера */
         .input-group {
             display: flex;
             align-items: center;
@@ -35,11 +36,11 @@
         .input-group input[type="text"] {
             padding: 5px;
             border: 1px solid #000;
-            width: 160px;
+            width: 170px;
             font-size: 14px;
+            font-family: monospace;
         }
 
-        /* Группа кнопок справа */
         .button-group {
             display: flex;
             flex-direction: column;
@@ -60,7 +61,11 @@
             background-color: #8c8c8c;
         }
 
-        /* Блок истории событий */
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
         .history-label {
             margin-bottom: 5px;
         }
@@ -68,11 +73,12 @@
         .history-table {
             width: 100%;
             border-collapse: collapse;
-            background-color: #cfe2f3; /* Голубой фон как на макете */
+            background-color: #cfe2f3;
             border: 1px solid #000;
         }
 
-        .history-table th, .history-table td {
+        .history-table th,
+        .history-table td {
             border: 1px solid #000;
             padding: 6px 8px;
             text-align: left;
@@ -80,67 +86,100 @@
             vertical-align: top;
         }
 
-        /* Задаем ширину левой колонки */
         .col-event {
             width: 25%;
         }
 
-        /* Фиксируем высоту пустой таблицы, чтобы выглядело как на макете */
         .empty-space td {
-            height: 250px; 
+            height: 250px;
+        }
+
+        .event-data-line {
+            margin-bottom: 3px;
+        }
+
+        .event-data-line:last-child {
+            margin-bottom: 0;
         }
     </style>
 </head>
+
 <body>
 
 <div class="ats-container">
-    
-    <!-- Форма для отправки вызова/отмены (адаптируйте th:action под ваш эндпоинт) -->
-    <form th:action="@{/ats/action}" method="post">
-        
-        <div class="top-section">
-            <div class="input-group">
-                <label for="phoneNumber">Введите номер телефона:</label>
-                <!-- Сохраняем введенный номер через Thymeleaf или выводим плейсхолдер -->
-                <input type="text" id="phoneNumber" name="phoneNumber" 
-                       th:value="${phoneNumber != null ? phoneNumber : '+7 999 123 45 67'}" />
-            </div>
 
-            <div class="button-group">
-                <button type="submit" name="action" value="call" class="btn">Позвонить</button>
-                <button type="submit" name="action" value="cancel" class="btn">Отменить</button>
-            </div>
+    <div class="top-section">
+
+        <div class="input-group">
+
+            <label for="phoneNumber">
+                Введите номер телефона:
+            </label>
+
+            <input
+                    type="text"
+                    id="phoneNumber"
+                    value="+7-___-___-__-__"
+                    maxlength="16"
+                    autocomplete="off"
+                    inputmode="numeric"
+            >
+
         </div>
 
-    </form>
+        <div class="button-group">
 
-    <!-- Таблица истории событий -->
+            <button
+                    type="button"
+                    id="callButton"
+                    class="btn">
+                Позвонить
+            </button>
+
+            <button
+                    type="button"
+                    id="cancelButton"
+                    class="btn">
+                Отменить
+            </button>
+
+        </div>
+
+    </div>
+
+
     <div class="history-section">
-        <div class="history-label">История событий:</div>
+
+        <div class="history-label">
+            История событий:
+        </div>
+
         <table class="history-table">
+
             <thead>
-                <tr>
-                    <th class="col-event">Событие:</th>
-                    <th>Данные:</th>
-                </tr>
+            <tr>
+                <th class="col-event">
+                    Событие:
+                </th>
+
+                <th>
+                    Данные:
+                </th>
+            </tr>
             </thead>
-            <tbody>
-                <!-- Динамический вывод событий с бэкенда через Thymeleaf -->
-                <tr th:each="event : ${eventHistory}">
-                    <td th:text="${event.type}">Начало звонка</td>
-                    <td th:text="${event.data}">+7 999 123 45 67</td>
-                </tr>
-                
-                <!-- Строка-распорка, чтобы таблица сохраняла высоту даже без данных -->
-                <tr class="empty-space" th:if="${#lists.isEmpty(eventHistory)}">
-                    <td></td>
-                    <td></td>
-                </tr>
+
+            <tbody id="eventHistory">
             </tbody>
+
         </table>
+
     </div>
 
 </div>
 
+
+<script src="/js/ats.js"></script>
+
 </body>
+
 </html>

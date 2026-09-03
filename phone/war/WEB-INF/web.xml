@@ -4,6 +4,26 @@
               http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
 
+
+	<!-- ============================= -->
+	<!-- CORS -->
+	<!-- ============================= -->
+
+	<filter>
+		<filter-name>CorsFilter</filter-name>
+
+		<filter-class>
+			phone.server.filter.CorsFilter
+		</filter-class>
+	</filter>
+
+
+	<filter-mapping>
+		<filter-name>CorsFilter</filter-name>
+
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
+
 	<!-- Servlets -->
 	<servlet>
 		<servlet-name>greetServlet</servlet-name>
@@ -44,7 +64,7 @@
 		<servlet-name>callServlet</servlet-name>
 		<url-pattern>/api/calls</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>deviceServlet</servlet-name>
 		<servlet-class>phone.server.servlet.DeviceServlet</servlet-class>
