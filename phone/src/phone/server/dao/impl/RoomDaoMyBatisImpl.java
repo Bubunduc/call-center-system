@@ -19,4 +19,12 @@ public class RoomDaoMyBatisImpl implements RoomDao {
 		}
 	}
 
+	@Override
+	public Room findRoomById(Long id) {
+		try (SqlSession session = MyBatisUtil.getSqlSessionFactory().openSession()) {
+			RoomMapper mapper = session.getMapper(RoomMapper.class);
+			return mapper.findRoomById(id);
+		}
+	}
+
 }

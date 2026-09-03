@@ -1,18 +1,25 @@
-package phone.server.dto;
+package com.example.ats.dto;
 
 import java.sql.Timestamp;
 
-import phone.server.enums.Status;
+import com.example.ats.enums.Status;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class CallResponse {
+public class AtsEvent {
 	private String phoneNumber;
+
 	private String deviceNumber;
+
 	private String operatorName;
+
+	@JsonFormat(pattern = "dd.MM.yyyy HH:mm:ss.SSS")
 	private Timestamp timeStamp;
 	private Status status;
 
-	public CallResponse(String phoneNumber, String deviceNumber, String operatorName, Timestamp timeStamp,
-			Status status) {
+	public AtsEvent() {
+	}
+
+	public AtsEvent(String phoneNumber, String deviceNumber, String operatorName, Timestamp timeStamp, Status status) {
 		this.phoneNumber = phoneNumber;
 		this.timeStamp = timeStamp;
 		this.deviceNumber = deviceNumber;

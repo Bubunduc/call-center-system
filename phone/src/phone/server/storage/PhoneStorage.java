@@ -88,6 +88,10 @@ public class PhoneStorage {
 		activeCalls.remove(deviceNumber);
 	}
 	
+	public String getPhoneFromActiveCall(String deviceNumber) {
+		return activeCalls.get(deviceNumber).getPhoneNumber();
+	}
+	
 	private boolean isDeviceActive (String deviceNumber) {
 		return activeCalls.containsKey(deviceNumber);
 	}

@@ -6,6 +6,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import phone.server.dto.CallResponse;
 
@@ -18,10 +19,12 @@ public class AtsClient {
 		URL url = new URL(URL);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-		Gson gson = new Gson();
-
+		
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.setDateFormat("dd.MM.yyyy HH:mm:ss.SSS");
+	    Gson gson = gsonBuilder.create();
 		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Content-Type", "application/json; utf-8");
+		conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
 		conn.setDoOutput(true);
 		conn.setConnectTimeout(5000);
 
@@ -39,6 +42,7 @@ public class AtsClient {
 			if (responseCode < 200 || responseCode >= 300) {
 
 				System.err.println("Сервер вернул ошибку: " + responseCode);
+				System.err.println(conn.getErrorStream());
 			}
 		} finally {
 

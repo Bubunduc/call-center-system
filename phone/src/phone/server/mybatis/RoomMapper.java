@@ -6,4 +6,5 @@ import phone.shared.model.Room;
 
 public interface RoomMapper {
 	List<Room> findAll();
+	Room findRoomById(Long id);
 }

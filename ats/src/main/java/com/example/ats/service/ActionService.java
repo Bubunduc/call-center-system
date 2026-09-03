@@ -1,5 +1,12 @@
 package com.example.ats.service;
 
-public interface ActionService {
+import java.util.List;
 
+import com.example.ats.dto.AtsEvent;
+
+public interface ActionService {
+	
+	List<AtsEvent> findAllSortedByTimeDesc();
+	void save(AtsEvent event);
+	
 }

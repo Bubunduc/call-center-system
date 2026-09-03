@@ -16,6 +16,10 @@
 		FROM room
 	</select>
 
-	
+	<select id="findRoomById" resultMap="RoomResultMap">
+		SELECT id, name
+		FROM room WHERE id =
+		#{id}
+	</select>
 
 </mapper>
