@@ -39,7 +39,7 @@ public class QueueView implements QueueDisplay {
 	@Override
 	public void addNumber(String number) {
 		int row = queueTable.getRowCount();
-		queueTable.setText(row, 0, number.replaceFirst("^8", "+7").replace("-", " "));
+		queueTable.setText(row, 0, number.replaceFirst("8", "+7").replace("-", " "));
 	}
 
 	@Override

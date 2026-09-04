@@ -111,7 +111,7 @@ public class ActiveCallsView implements ActiveCallsDisplay {
 		numsTable.setText(lastRow, 0, id);
 		numsTable.setText(lastRow, 1, name);
 		
-		numsTable.setText(lastRow, 2, phone.replaceFirst("^8", "+7").replace("-", " "));
+		numsTable.setText(lastRow, 2, phone.replaceFirst("8", "+7").replace("-", " "));
 
 		rowToDeviceId.put(lastRow, id);
 	}

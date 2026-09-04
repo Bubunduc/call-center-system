@@ -46,25 +46,25 @@ public class TelephonyService {
 		return devicedao.findAll();
 	}
 
-	public void addToQueue(CallRequest call) throws TelephonyException,Exception,InvalidPhoneFormatException {
-		
+	public void addToQueue(CallRequest call) throws TelephonyException, Exception, InvalidPhoneFormatException {
+
 		validateCallRequest(call);
-		phoneStorage.addCallQueue(call);	
+		phoneStorage.addCallQueue(call);
 		CallResponse toAtsData = new CallResponse(
-				call.getPhoneNumber(), 
+				call.getPhoneNumber(),
 				null, 
-				null, 
-				new Timestamp(System.currentTimeMillis()), 
+				null,
+				new Timestamp(System.currentTimeMillis()),
 				Status.INCOMING);
 		sendToAts(toAtsData);
 	}
 
-	public void removeFromQueue(CallRequest call) throws TelephonyException,Exception {
+	public void removeFromQueue(CallRequest call) throws TelephonyException, Exception {
 		phoneStorage.removeFromQueue(call);
 		CallResponse toAtsData = new CallResponse(
 				call.getPhoneNumber(), 
-				null, 
-				null, 
+				null,
+				null,
 				new Timestamp(System.currentTimeMillis()), 
 				Status.CANCELED);
 		sendToAts(toAtsData);
@@ -74,35 +74,35 @@ public class TelephonyService {
 		return PhoneResponse.toDto(phoneStorage.getPhoneNumberList());
 	}
 
-	public void answerCall(AnswerCallRequest request) throws TelephonyException, InvalidDeviceStateException, Exception {
+	public void answerCall(AnswerCallRequest request)
+			throws TelephonyException, InvalidDeviceStateException, Exception {
 		Device device = getDeviceByNumber(request.getDeviceNumber());
 		CallRequest numInQueue = new CallRequest(request.getPhoneNumber());
 		phoneStorage.answerCall(device, request.getPhoneNumber());
 		phoneStorage.removeFromQueue(numInQueue);
 
-		CallResponse toAtsData = new CallResponse(request.getPhoneNumber(),
+		CallResponse toAtsData = new CallResponse(
+				request.getPhoneNumber(), 
 				device.getDeviceNumber(),
-				device.getOperatorName(), 
+				device.getOperatorName(),
 				new Timestamp(System.currentTimeMillis()),
-				Status.ANSWERED
-				);
+				Status.ANSWERED);
 
 		sendToAts(toAtsData);
 	}
 
-	public void endCall(EndCallRequest request) throws TelephonyException, InvalidDeviceStateException,Exception {
+	public void endCall(EndCallRequest request) throws TelephonyException, InvalidDeviceStateException, Exception {
 		Device device = getDeviceByNumber(request.getDeviceNumber());
-		String phoneNum = phoneStorage.getPhoneFromActiveCall(device.getDeviceNumber());
-		
-		phoneStorage.endCall(device.getDeviceNumber());
-		
-		CallResponse toAtsData = new CallResponse(phoneNum,
+
+		ActiveCall activeCall = phoneStorage.endCall(device.getDeviceNumber());
+
+		CallResponse toAtsData = new CallResponse(
+				activeCall.getPhoneNumber(),
 				device.getDeviceNumber(),
-				device.getOperatorName(), 
+				device.getOperatorName(),
 				new Timestamp(System.currentTimeMillis()),
-				Status.HANG_UP
-				);
-		
+				Status.HANG_UP);
+
 		sendToAts(toAtsData);
 	}
 
@@ -119,7 +119,7 @@ public class TelephonyService {
 		return device;
 	}
 
-	public List<DeviceResponse> getDevicesStatusByRoom(Long roomId) throws TelephonyException{
+	public List<DeviceResponse> getDevicesStatusByRoom(Long roomId) throws TelephonyException {
 		Room room = roomdao.findRoomById(roomId);
 		if (room == null) {
 			throw new TelephonyException("Комнаты с таким id не существует");
@@ -146,7 +146,7 @@ public class TelephonyService {
 	private void sendToAts(CallResponse action) throws Exception {
 		atsclient.sendAction(action);
 	}
-	
+
 	private void validateCallRequest(CallRequest callRequest) throws InvalidPhoneFormatException {
 		String error = FieldVerifier.verifyIncomingPhone(callRequest);
 		if (error != null) {

@@ -93,11 +93,15 @@ public class PhoneStorage {
 		return new ArrayList<ActiveCall>(activeCalls.values());
 	}
 
-	public void endCall(String deviceNumber) throws InvalidDeviceStateException {
-		if (!isDeviceActive(deviceNumber)) {
-			throw new InvalidDeviceStateException("аппарат свободен и ни с кем не разговаривает");
+	public ActiveCall endCall(String deviceNumber) throws InvalidDeviceStateException {
+
+		ActiveCall activeCall = activeCalls.remove(deviceNumber);
+
+		if (activeCall == null) {
+			throw new InvalidDeviceStateException("Аппарат свободен и ни с кем не разговаривает");
 		}
-		activeCalls.remove(deviceNumber);
+
+		return activeCall;
 	}
 
 	public String getPhoneFromActiveCall(String deviceNumber) {
