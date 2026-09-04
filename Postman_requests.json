@@ -1,0 +1,293 @@
+{
+  "info": {
+    "_postman_id": "18974724-10ff-4fb3-bcc0-4147cb5820d2",
+    "name": "GWT Server",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "50347893",
+    "_collection_link": "https://go.postman.co/collection/50347893-18974724-10ff-4fb3-bcc0-4147cb5820d2?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "ATS",
+      "item": [
+        {
+          "name": "Получить события отсортированные по времени",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Отправить событие",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"phoneNumber\": \"8-909-589-45-3\",\r\n        \"deviceNumber\": null,\r\n        \"operatorName\": null,\r\n        \"timeStamp\": \"03.09.2026 13:55:13.933\",\r\n        \"status\": \"INCOMING\"\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8080/api/action",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "action"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Телефония",
+      "item": [
+        {
+          "name": "Принять звонок",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8888/api/calls?deviceNumber=100&phoneNumber=8-909-589-45-82",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8888",
+              "path": [
+                "api",
+                "calls"
+              ],
+              "query": [
+                {
+                  "key": "deviceNumber",
+                  "value": "100"
+                },
+                {
+                  "key": "phoneNumber",
+                  "value": "8-909-589-45-82"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getRooms",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8888/api/rooms",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8888",
+              "path": [
+                "api",
+                "rooms"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Добавить номер в очередь",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8888/api/queue?phoneNumber=8-909-589-45-82",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8888",
+              "path": [
+                "api",
+                "queue"
+              ],
+              "query": [
+                {
+                  "key": "phoneNumber",
+                  "value": "8-909-589-45-82"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Получить номера в очереди",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8888/api/queue",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8888",
+              "path": [
+                "api",
+                "queue"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Удалить номер из очереди",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"phoneNumber\" : \"+7 961 119 98 51\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8888/api/queue?phoneNumber=8-909-589-45-82",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8888",
+              "path": [
+                "api",
+                "queue"
+              ],
+              "query": [
+                {
+                  "key": "phoneNumber",
+                  "value": "8-909-589-45-82"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Окончить звонок",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8888/api/calls/end?deviceNumber=100",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8888",
+              "path": [
+                "api",
+                "calls",
+                "end"
+              ],
+              "query": [
+                {
+                  "key": "deviceNumber",
+                  "value": "100"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Просмотреть все активные звонки",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8888/api/calls",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8888",
+              "path": [
+                "api",
+                "calls"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Посмотреть статусы устройств в комнате",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8888/api/rooms/devices?roomId=1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8888",
+              "path": [
+                "api",
+                "rooms",
+                "devices"
+              ],
+              "query": [
+                {
+                  "key": "roomId",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
