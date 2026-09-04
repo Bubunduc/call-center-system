@@ -14,13 +14,14 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import phone.client.request.utils.JsonUtils;
 import phone.shared.dto.ActiveCall;
 
 public class ActiveCallsClient {
 
 	private final String ROUTE = "/calls";
-	
-	public void getActiveCalls(String url,final AsyncCallback<List<ActiveCall>> callback) {
+
+	public void getActiveCalls(String url, final AsyncCallback<List<ActiveCall>> callback) {
 
 		RequestBuilder request = new RequestBuilder(RequestBuilder.GET, url + ROUTE);
 
@@ -37,7 +38,7 @@ public class ActiveCallsClient {
 					try {
 						String jsonText = response.getText();
 						List<ActiveCall> resultList = parseJsonToDtoList(jsonText);
-		
+
 						callback.onSuccess(resultList);
 
 					} catch (Exception e) {
@@ -90,35 +91,44 @@ public class ActiveCallsClient {
 			callback.onFailure(e);
 		}
 	}
+
 //	private String deviceNumber;
 //	private String operatorName;
 //	private String phoneNumber;
-	private List<ActiveCall> parseJsonToDtoList(String json) {
-		List<ActiveCall> result = new ArrayList<ActiveCall>();
+	private List<ActiveCall> parseJsonToDtoList(String jsonText) {
+		List<ActiveCall> list = new ArrayList<ActiveCall>();
 
-		JSONValue value = JSONParser.parseStrict(json);
-		JSONArray array = value.isArray();
-
-		if (array == null) {
-			return result;
+		if (jsonText == null || jsonText.trim().isEmpty()) {
+			return list;
 		}
 
-		for (int i = 0; i < array.size(); i++) {
-			JSONObject object = array.get(i).isObject();
+		JSONValue jsonValue = JSONParser.parseStrict(jsonText);
+		JSONArray jsonArray = jsonValue.isArray();
+
+		if (jsonArray == null) {
+			return list;
+		}
+
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject object = jsonArray.get(i).isObject();
 
 			if (object == null) {
 				continue;
 			}
 
-			String deviceNumber = object.get("deviceNumber").isString().stringValue();
+			String deviceNumber = JsonUtils.getString(object, "deviceNumber");
 
-			String operatorName = object.get("operatorName").isString().stringValue();
+			String operatorName = JsonUtils.getString(object, "operatorName");
 
-			String incomingNumber = object.get("phoneNumber").isString().stringValue();
+			String phoneNumber = JsonUtils.getString(object, "phoneNumber");
 
-			result.add(new ActiveCall(deviceNumber, operatorName, incomingNumber));
+			if (deviceNumber == null || operatorName == null || phoneNumber == null) {
+				continue;
+			}
+
+			list.add(new ActiveCall(deviceNumber, operatorName, phoneNumber));
 		}
 
-		return result;
+		return list;
 	}
 }
