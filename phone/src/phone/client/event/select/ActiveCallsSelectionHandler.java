@@ -1,5 +1,5 @@
 package phone.client.event.select;
 
-public interface ActiveCallSelectionHandler {
+public interface ActiveCallsSelectionHandler {
 	void onSelected(String id);
 }

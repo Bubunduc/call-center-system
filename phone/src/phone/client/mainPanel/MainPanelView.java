@@ -4,10 +4,10 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-import phone.client.currentNums.CurrentNumsDisplay;
-import phone.client.event.click.CurrentNumButtonClickHandler;
+import phone.client.activeCalls.ActiveCallsDisplay;
+import phone.client.event.click.ActiveCallsButtonClickHandler;
 import phone.client.event.click.TreeButtonClickHandler;
-import phone.client.event.select.ActiveCallSelectionHandler;
+import phone.client.event.select.ActiveCallsSelectionHandler;
 import phone.client.event.select.TreeDeviceSelectionHandler;
 import phone.client.queue.QueueDisplay;
 import phone.client.tree.TreeDisplay;
@@ -19,11 +19,11 @@ public class MainPanelView implements MainPanelDisplay {
 	private FlowPanel upperRightPanel;
 	private FlowPanel rightPanel;
 	private final TreeDisplay treeView;
-	private final CurrentNumsDisplay currentNumsView;
+	private final ActiveCallsDisplay activeCallsView;
 
-	public MainPanelView(TreeDisplay treeView, QueueDisplay queueView, CurrentNumsDisplay currentNumsView) {
+	public MainPanelView(TreeDisplay treeView, QueueDisplay queueView, ActiveCallsDisplay activeCallsView) {
 		this.treeView = treeView;
-		this.currentNumsView = currentNumsView;
+		this.activeCallsView = activeCallsView;
 
 		mainPanel = new FlowPanel();
 		mainPanel.setStyleName("main-panel-flex");
@@ -40,7 +40,7 @@ public class MainPanelView implements MainPanelDisplay {
 		upperRightPanel.add(blueLabel);
 
 		rightPanel.add(upperRightPanel);
-		rightPanel.add(currentNumsView.asWidget());
+		rightPanel.add(activeCallsView.asWidget());
 		rightPanel.setStyleName("right-container");
 		
 		mainPanel.add(treeView.asWidget());
@@ -54,14 +54,14 @@ public class MainPanelView implements MainPanelDisplay {
 	}
 
 	@Override
-	public void setCurrentNumSelectionHandler(ActiveCallSelectionHandler selectionHandler) {
-		currentNumsView.setCurrentNumSelectionHandler(selectionHandler);
+	public void setActiveCallsSelectionHandler(ActiveCallsSelectionHandler selectionHandler) {
+		activeCallsView.setCurrentNumSelectionHandler(selectionHandler);
 		
 	}
 
 	@Override
-	public void setCurrentNumButtonClickHandler(CurrentNumButtonClickHandler handler) {
-		currentNumsView.setCurrentNumButtonClickHandler(handler);
+	public void setActiveCallsButtonClickHandler(ActiveCallsButtonClickHandler handler) {
+		activeCallsView.setCurrentNumButtonClickHandler(handler);
 		
 	}
 

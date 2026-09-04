@@ -1,5 +1,5 @@
 package phone.client.event.click;
 
-public interface CurrentNumButtonClickHandler {
+public interface ActiveCallsButtonClickHandler {
 	void onClick();
 }

@@ -25,10 +25,6 @@
 	</filter-mapping>
 
 	<!-- Servlets -->
-	<servlet>
-		<servlet-name>greetServlet</servlet-name>
-		<servlet-class>phone.server.GreetingServiceImpl</servlet-class>
-	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>greetServlet</servlet-name>

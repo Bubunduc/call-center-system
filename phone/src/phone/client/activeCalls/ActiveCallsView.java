@@ -1,4 +1,4 @@
-package phone.client.currentNums;
+package phone.client.activeCalls;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,21 +12,21 @@ import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-import phone.client.event.click.CurrentNumButtonClickHandler;
-import phone.client.event.select.ActiveCallSelectionHandler;
+import phone.client.event.click.ActiveCallsButtonClickHandler;
+import phone.client.event.select.ActiveCallsSelectionHandler;
 
-public class CurrentNumsView implements CurrentNumsDisplay {
+public class ActiveCallsView implements ActiveCallsDisplay {
 	private FlowPanel mainPanel;
 	private Label currentCalls;
 	private Button endCall;
 	private FlowPanel headPanel;
 	private FlexTable numsTable;
-	private ActiveCallSelectionHandler selectionHandler;
-	private CurrentNumButtonClickHandler buttonHandler;
+	private ActiveCallsSelectionHandler selectionHandler;
+	private ActiveCallsButtonClickHandler buttonHandler;
 
 	private final Map<Integer, String> rowToDeviceId;
 
-	public CurrentNumsView() {
+	public ActiveCallsView() {
 		rowToDeviceId = new HashMap<Integer, String>();
 		initPanel();
 	}
@@ -94,12 +94,12 @@ public class CurrentNumsView implements CurrentNumsDisplay {
 	}
 
 	@Override
-	public void setCurrentNumButtonClickHandler(CurrentNumButtonClickHandler handler) {
+	public void setCurrentNumButtonClickHandler(ActiveCallsButtonClickHandler handler) {
 		this.buttonHandler = handler;
 	}
 
 	@Override
-	public void setCurrentNumSelectionHandler(ActiveCallSelectionHandler selectionHandler) {
+	public void setCurrentNumSelectionHandler(ActiveCallsSelectionHandler selectionHandler) {
 		this.selectionHandler = selectionHandler;
 
 	}

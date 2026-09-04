@@ -3,9 +3,9 @@ package phone.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootPanel;
 
-import phone.client.currentNums.CurrentNumsDisplay;
-import phone.client.currentNums.CurrentNumsPresenter;
-import phone.client.currentNums.CurrentNumsView;
+import phone.client.activeCalls.ActiveCallsDisplay;
+import phone.client.activeCalls.ActiveCallsPresenter;
+import phone.client.activeCalls.ActiveCallsView;
 import phone.client.mainPanel.MainPanelDisplay;
 import phone.client.mainPanel.MainPanelPresenter;
 import phone.client.mainPanel.MainPanelView;
@@ -48,8 +48,8 @@ public class Phone implements EntryPoint {
 		QueueDisplay queueView = new QueueView();
 		QueuePresenter queuePresenter = new QueuePresenter(queueView);
 
-		CurrentNumsDisplay currentNumsView = new CurrentNumsView();
-		CurrentNumsPresenter currentNumsPresenter = new CurrentNumsPresenter(currentNumsView);
+		ActiveCallsDisplay currentNumsView = new ActiveCallsView();
+		ActiveCallsPresenter currentNumsPresenter = new ActiveCallsPresenter(currentNumsView);
 		
 		ClientPhoneStore store = new ClientPhoneStore();
 		

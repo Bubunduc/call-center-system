@@ -1,4 +1,4 @@
-package phone.client.currentNums;
+package phone.client.activeCalls;
 
 import java.util.List;
 
@@ -7,11 +7,11 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import phone.shared.dto.ActiveCall;
 import phone.shared.dto.DeviceResponse;
 
-public class CurrentNumsPresenter {
+public class ActiveCallsPresenter {
 
-	CurrentNumsDisplay view;
+	ActiveCallsDisplay view;
 
-	public CurrentNumsPresenter(CurrentNumsDisplay view) {
+	public ActiveCallsPresenter(ActiveCallsDisplay view) {
 
 		this.view = view;
 	}

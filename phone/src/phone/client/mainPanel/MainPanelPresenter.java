@@ -7,11 +7,11 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 
-import phone.client.currentNums.CurrentNumsPresenter;
+import phone.client.activeCalls.ActiveCallsPresenter;
 import phone.client.dto.DeviceInfo;
-import phone.client.event.click.CurrentNumButtonClickHandler;
+import phone.client.event.click.ActiveCallsButtonClickHandler;
 import phone.client.event.click.TreeButtonClickHandler;
-import phone.client.event.select.ActiveCallSelectionHandler;
+import phone.client.event.select.ActiveCallsSelectionHandler;
 import phone.client.event.select.TreeDeviceSelectionHandler;
 import phone.client.queue.QueuePresenter;
 import phone.client.request.ActiveCallsClient;
@@ -27,7 +27,7 @@ import phone.shared.dto.RoomResponse;
 
 public class MainPanelPresenter {
 
-	private final CurrentNumsPresenter currentNumsPresenter;
+	private final ActiveCallsPresenter activeCallsPresenter;
 	private final QueuePresenter queuePresenter;
 	private final TreePresenter treePresenter;
 	private final MainPanelDisplay view;
@@ -40,10 +40,10 @@ public class MainPanelPresenter {
 	private Timer refreshTimer;
 	private final String URL = "http://127.0.0.1:8888/api";
 
-	public MainPanelPresenter(CurrentNumsPresenter currentNumsPresenter, QueuePresenter queuePresenter,
+	public MainPanelPresenter(ActiveCallsPresenter activeCallsPresenter, QueuePresenter queuePresenter,
 			TreePresenter treePresenter, MainPanelDisplay view, ActiveCallsClient activeCallsClient,
 			QueueClient queueClient, RoomClient roomClient, DeviceClient deviceClient, ClientPhoneStore store) {
-		this.currentNumsPresenter = currentNumsPresenter;
+		this.activeCallsPresenter = activeCallsPresenter;
 		this.queuePresenter = queuePresenter;
 		this.treePresenter = treePresenter;
 		this.view = view;
@@ -121,7 +121,7 @@ public class MainPanelPresenter {
 					if (i.getIncomingNumber() != null) {
 						store.addActiveCall(
 								new ActiveCall(i.getDeviceNumber(), i.getOperatorName(), i.getIncomingNumber()));
-						currentNumsPresenter.loadData(i);
+						activeCallsPresenter.loadData(i);
 					}
 				}
 
@@ -137,7 +137,7 @@ public class MainPanelPresenter {
 	}
 
 	private void bindActiveCalls() {
-		view.setCurrentNumButtonClickHandler(new CurrentNumButtonClickHandler() {
+		view.setActiveCallsButtonClickHandler(new ActiveCallsButtonClickHandler() {
 
 			@Override
 			public void onClick() {
@@ -150,7 +150,7 @@ public class MainPanelPresenter {
 
 					@Override
 					public void onSuccess(Void result) {
-						currentNumsPresenter.removeActiveCall(selectedCallId);
+						activeCallsPresenter.removeActiveCall(selectedCallId);
 						store.removeActiveCall(selectedCallId);
 						store.setSelectedActiveCallId(null);
 						Window.alert("Звонок успешно окончен");
@@ -165,12 +165,12 @@ public class MainPanelPresenter {
 
 			}
 		});
-		view.setCurrentNumSelectionHandler(new ActiveCallSelectionHandler() {
+		view.setActiveCallsSelectionHandler(new ActiveCallsSelectionHandler() {
 
 			@Override
 			public void onSelected(String id) {
 				store.setSelectedActiveCallId(id);
-				currentNumsPresenter.colorRow(id);
+				activeCallsPresenter.colorRow(id);
 			}
 		});
 	}
@@ -204,7 +204,7 @@ public class MainPanelPresenter {
 						ActiveCall newCall = new ActiveCall(selectedDevice.getId(), selectedDevice.getOperatorName(),
 								number);
 						store.addActiveCall(newCall);
-						currentNumsPresenter.addActiveCall(newCall);
+						activeCallsPresenter.addActiveCall(newCall);
 						Window.alert("Звонок успешно принят");
 					}
 
@@ -272,9 +272,9 @@ public class MainPanelPresenter {
 			@Override
 			public void onSuccess(List<ActiveCall> result) {
 				if (store.updateAtiveCalls(result)) {
-					currentNumsPresenter.refreshData(result);
+					activeCallsPresenter.refreshData(result);
 					if (store.getSelectedActiveCallId() != null) {
-						currentNumsPresenter.colorRow(store.getSelectedActiveCallId());
+						activeCallsPresenter.colorRow(store.getSelectedActiveCallId());
 					}
 				}
 
