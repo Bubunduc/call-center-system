@@ -37,8 +37,16 @@ public class DeviceServlet extends HttpServlet {
 			return;
 		}
 
-		Long roomId = Long.parseLong(roomIdParam);
+		
+		final Long roomId;
 		try {
+			try {
+			    roomId = Long.parseLong(roomIdParam);
+			} catch (NumberFormatException e) {
+			    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			    resp.getWriter().print("{\"error\": \"Указан некорректный roomId\"}");
+			    return;
+			}
 			String responseJson = gsonPretty.toJson(service.getDevicesStatusByRoom(roomId));
 
 			resp.setContentType("application/json");

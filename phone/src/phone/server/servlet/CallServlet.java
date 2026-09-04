@@ -54,7 +54,7 @@ public class CallServlet extends HttpServlet {
 
 		} catch (Exception e) {
 			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 500
-			resp.getWriter().print("{\"error\": "+e.getMessage()+"}");
+			resp.getWriter().print("{\"error\": \"" + e.getMessage() + "\"}");
 		}
 	}
 

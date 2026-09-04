@@ -13,7 +13,7 @@ import phone.server.dto.CallResponse;
 import phone.server.dto.EndCallRequest;
 import phone.server.enums.Status;
 import phone.server.storage.PhoneStorage;
-import phone.shared.FieldVerifier;
+import phone.server.validation.PhoneValidator;
 import phone.shared.dto.ActiveCall;
 import phone.shared.dto.DeviceResponse;
 import phone.shared.dto.PhoneResponse;
@@ -148,7 +148,7 @@ public class TelephonyService {
 	}
 
 	private void validateCallRequest(CallRequest callRequest) throws InvalidPhoneFormatException {
-		String error = FieldVerifier.verifyIncomingPhone(callRequest);
+		String error = PhoneValidator.verifyIncomingPhone(callRequest);
 		if (error != null) {
 			throw new InvalidPhoneFormatException(error);
 		}
