@@ -1,11 +1,24 @@
 package phone.client.request.utils;
 
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
 public final class JsonUtils {
 
 	private JsonUtils() {
+	}
+
+	public static JSONArray parseArray(String jsonText) {
+		if (jsonText == null || jsonText.trim().isEmpty()) {
+			return null;
+		}
+
+		JSONValue jsonValue = JSONParser.parseStrict(jsonText);
+		JSONArray jsonArray = jsonValue.isArray();
+
+		return jsonArray;
 	}
 
 	public static String getString(JSONObject object, String fieldName) {

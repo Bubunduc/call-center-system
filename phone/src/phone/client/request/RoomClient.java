@@ -10,8 +10,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import phone.client.request.utils.JsonUtils;
@@ -58,12 +56,7 @@ public class RoomClient {
 	private List<RoomResponse> parseJsonToDtoList(String jsonText) {
 		List<RoomResponse> list = new ArrayList<RoomResponse>();
 
-		if (jsonText == null || jsonText.trim().isEmpty()) {
-			return list;
-		}
-
-		JSONValue jsonValue = JSONParser.parseStrict(jsonText);
-		JSONArray jsonArray = jsonValue.isArray();
+		JSONArray jsonArray = JsonUtils.parseArray(jsonText);
 
 		if (jsonArray == null) {
 			return list;
