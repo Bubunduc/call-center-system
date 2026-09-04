@@ -15,7 +15,7 @@ import com.google.gson.GsonBuilder;
 
 import phone.server.ApplicationContext;
 import phone.server.dto.CallRequest;
-import phone.server.sevice.TelephonyService;
+import phone.server.service.TelephonyService;
 import phone.shared.exception.InvalidPhoneFormatException;
 import phone.shared.exception.TelephonyException;
 

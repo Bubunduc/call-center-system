@@ -5,7 +5,7 @@ import phone.server.dao.DeviceDao;
 import phone.server.dao.RoomDao;
 import phone.server.dao.impl.DeviceDaoMyBatisImpl;
 import phone.server.dao.impl.RoomDaoMyBatisImpl;
-import phone.server.sevice.TelephonyService;
+import phone.server.service.TelephonyService;
 import phone.server.storage.PhoneStorage;
 
 public final class ApplicationContext {

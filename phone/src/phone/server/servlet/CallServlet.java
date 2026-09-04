@@ -16,7 +16,7 @@ import com.google.gson.GsonBuilder;
 import phone.server.ApplicationContext;
 import phone.server.dto.AnswerCallRequest;
 import phone.server.dto.EndCallRequest;
-import phone.server.sevice.TelephonyService;
+import phone.server.service.TelephonyService;
 import phone.shared.exception.InvalidDeviceStateException;
 import phone.shared.exception.TelephonyException;
 

@@ -55,7 +55,7 @@ public class MainPanelPresenter {
 
 		loadData();
 		bind();
-		startPooling();
+		startPolling();
 	}
 
 	private void bind() {
@@ -190,7 +190,7 @@ public class MainPanelPresenter {
 					Window.alert("Сначала выберите устройство");
 					return;
 				}
-				if (store.isDeviceBuisy(selectedDevice.getId())) {
+				if (store.isDeviceBusy(selectedDevice.getId())) {
 					Window.alert("Текущий оператор уже с кем то разговаривает");
 					return;
 				}
@@ -232,7 +232,7 @@ public class MainPanelPresenter {
 		});
 	}
 
-	private void startPooling() {
+	private void startPolling() {
 		refreshTimer = new Timer() {
 
 			@Override
@@ -271,7 +271,7 @@ public class MainPanelPresenter {
 
 			@Override
 			public void onSuccess(List<ActiveCall> result) {
-				if (store.updateAtiveCalls(result)) {
+				if (store.updateActiveCalls(result)) {
 					activeCallsPresenter.refreshData(result);
 					if (store.getSelectedActiveCallId() != null) {
 						activeCallsPresenter.colorRow(store.getSelectedActiveCallId());

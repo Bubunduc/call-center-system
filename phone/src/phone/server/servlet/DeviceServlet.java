@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import phone.server.ApplicationContext;
-import phone.server.sevice.TelephonyService;
+import phone.server.service.TelephonyService;
 import phone.shared.exception.TelephonyException;
 
 @WebServlet("/api/rooms/devices")

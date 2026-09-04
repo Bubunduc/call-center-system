@@ -1,4 +1,4 @@
-package phone.server.sevice;
+package phone.server.service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

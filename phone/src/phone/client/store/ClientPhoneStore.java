@@ -38,7 +38,7 @@ public class ClientPhoneStore {
 		activeCallMap.remove(deviceNumber);
 	}
 
-	public boolean isDeviceBuisy(String id) {
+	public boolean isDeviceBusy(String id) {
 		for (ActiveCall call : activeCallMap.values()) {
 			if (call.getDeviceNumber().equals(id)) {
 				return true;
@@ -112,7 +112,7 @@ public class ClientPhoneStore {
 
 	}
 
-	public boolean updateAtiveCalls(List<ActiveCall> calls) {
+	public boolean updateActiveCalls(List<ActiveCall> calls) {
 		ActiveCall selectedCall = activeCallMap.get(selectedActiveCallId);
 		Map<String, ActiveCall> newMap = toActiveCallsMap(calls);
 		if (!activeCallMap.equals(newMap)) {

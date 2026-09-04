@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import phone.server.ApplicationContext;
-import phone.server.sevice.TelephonyService;
+import phone.server.service.TelephonyService;
 
 @WebServlet("/api/rooms")
 public class RoomServlet extends HttpServlet {
