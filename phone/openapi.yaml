@@ -1,0 +1,440 @@
+openapi: 3.0.3
+
+info:
+  title: Telephony Service API
+  version: 1.0.0
+  description: >
+    REST API микросервиса «Телефония». API управляет очередью входящих звонков,
+    активными разговорами, комнатами и телефонными аппаратами.
+
+servers:
+  - url: http://127.0.0.1:8888/api
+    description: Локальный сервер Телефонии
+
+tags:
+  - name: Queue
+    description: Очередь входящих звонков
+  - name: Calls
+    description: Активные звонки
+  - name: Rooms
+    description: Комнаты и телефонные аппараты
+
+paths:
+  /queue:
+    post:
+      tags:
+        - Queue
+      summary: Добавить входящий звонок в очередь
+      description: >
+        Добавляет входящий звонок в очередь. Звонок остаётся в очереди,
+        пока на него не ответит внутренний аппарат.
+      operationId: addCallToQueue
+      parameters:
+        - name: phoneNumber
+          in: query
+          required: true
+          description: Номер входящего телефона
+          schema:
+            type: string
+            pattern: '^8-\d{3}-\d{3}-\d{2}-\d{2}$'
+          example: 8-909-589-45-82
+      responses:
+        '200':
+          description: Звонок поставлен в очередь
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                status: success
+                message: Звонок добавлен в очередь
+        '400':
+          description: >
+            Номер уже находится в очереди, уже участвует в разговоре
+            или имеет неверный формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                alreadyExists:
+                  summary: Номер уже существует
+                  value:
+                    error: Номер 8-909-589-45-82 уже существует
+                alreadyTalking:
+                  summary: Номер уже участвует в разговоре
+                  value:
+                    error: Номер 8-909-589-45-82 уже разговаривает
+                invalidFormat:
+                  summary: Неверный формат номера
+                  value:
+                    error: Номер телефона не соответствует формату вида 8-xxx-xxx-xx-xx
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      tags:
+        - Queue
+      summary: Удалить звонок из очереди
+      description: Отменяет входящий звонок и удаляет указанный номер из очереди.
+      operationId: removeCallFromQueue
+      parameters:
+        - name: phoneNumber
+          in: query
+          required: true
+          description: Номер входящего телефона
+          schema:
+            type: string
+          example: 8-909-589-45-82
+      responses:
+        '200':
+          description: Звонок удалён из очереди
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                status: success
+                message: Звонок удален из очереди
+        '400':
+          description: Номер не найден в очереди
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Номер 8-909-589-45-82 не существует
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      tags:
+        - Queue
+      summary: Получить всю очередь звонков
+      description: Возвращает входящие звонки, на которые ещё никто не ответил.
+      operationId: getQueue
+      responses:
+        '200':
+          description: Список входящих номеров в очереди
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PhoneResponse'
+              example:
+                - phoneNumber: 8-909-589-45-82
+                - phoneNumber: 8-951-147-25-89
+
+  /calls:
+    post:
+      tags:
+        - Calls
+      summary: Ответить на входящий звонок
+      description: >
+        Связывает входящий звонок из очереди с выбранным внутренним аппаратом
+        и переводит его в активные звонки.
+      operationId: answerCall
+      parameters:
+        - name: deviceNumber
+          in: query
+          required: true
+          description: Номер внутреннего аппарата
+          schema:
+            type: string
+          example: '100'
+        - name: phoneNumber
+          in: query
+          required: true
+          description: Номер входящего телефона
+          schema:
+            type: string
+          example: 8-909-589-45-82
+      responses:
+        '200':
+          description: Звонок принят
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                status: success
+                message: Звонок принят
+        '400':
+          description: Внутренний аппарат занят
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Внутренний аппарат занят
+        '404':
+          description: >
+            Внутренний аппарат не существует или входящий номер
+            не найден в очереди
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                deviceNotFound:
+                  summary: Аппарат не найден
+                  value:
+                    error: Номер внутреннего аппарата не существует
+                phoneNotFound:
+                  summary: Входящий звонок не найден
+                  value:
+                    error: Номер входящего не найден в очереди
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      tags:
+        - Calls
+      summary: Завершить активный звонок
+      description: >
+        Завершает разговор выбранного внутреннего аппарата
+        и удаляет звонок из списка активных.
+      operationId: endCall
+      parameters:
+        - name: deviceNumber
+          in: query
+          required: true
+          description: Номер внутреннего аппарата
+          schema:
+            type: string
+          example: '100'
+      responses:
+        '200':
+          description: Звонок окончен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                status: success
+                message: Звонок окончен
+        '400':
+          description: Аппарат свободен и ни с кем не разговаривает
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Аппарат свободен и ни с кем не разговаривает
+        '404':
+          description: Внутренний аппарат не существует
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Номер внутреннего аппарата не существует
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      tags:
+        - Calls
+      summary: Получить все активные звонки
+      description: Возвращает информацию о том, какой оператор с каким номером разговаривает.
+      operationId: getActiveCalls
+      responses:
+        '200':
+          description: Список активных звонков
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ActiveCall'
+              example:
+                - deviceNumber: '100'
+                  operatorName: Вася
+                  phoneNumber: 8-909-589-45-82
+
+  /rooms:
+    get:
+      tags:
+        - Rooms
+      summary: Получить список комнат
+      description: Возвращает идентификатор и имя каждой комнаты.
+      operationId: getRooms
+      responses:
+        '200':
+          description: Список комнат
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoomResponse'
+              example:
+                - id: 1
+                  name: Главный зал
+                - id: 2
+                  name: Офис
+                - id: 3
+                  name: Переговорная
+
+  /rooms/devices:
+    get:
+      tags:
+        - Rooms
+      summary: Получить статусы аппаратов в комнате
+      description: >
+        Возвращает все аппараты выбранной комнаты. Если аппарат участвует
+        в разговоре, incomingNumber содержит номер входящего звонка.
+        Для свободного аппарата incomingNumber равен null.
+      operationId: getDevicesByRoom
+      parameters:
+        - name: roomId
+          in: query
+          required: true
+          description: Идентификатор комнаты
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+          example: 1
+      responses:
+        '200':
+          description: Список аппаратов комнаты и их текущих состояний
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceResponse'
+              example:
+                - deviceNumber: '100'
+                  operatorName: Вася
+                  incomingNumber: 8-909-589-45-82
+                - deviceNumber: '101'
+                  operatorName: Коля
+                  incomingNumber: null
+        '400':
+          description: Параметр roomId отсутствует или имеет неверный формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingRoomId:
+                  summary: Параметр отсутствует
+                  value:
+                    error: Не указан параметр roomId
+                invalidRoomId:
+                  summary: Неверное значение roomId
+                  value:
+                    error: Указан некорректный roomId
+        '404':
+          description: Комната с указанным идентификатором не существует
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Комнаты с таким id не существует
+
+components:
+  schemas:
+    PhoneResponse:
+      type: object
+      required:
+        - phoneNumber
+      properties:
+        phoneNumber:
+          type: string
+          description: Номер входящего телефона
+          example: 8-909-589-45-82
+
+    ActiveCall:
+      type: object
+      required:
+        - deviceNumber
+        - operatorName
+        - phoneNumber
+      properties:
+        deviceNumber:
+          type: string
+          description: Номер внутреннего аппарата
+          example: '100'
+        operatorName:
+          type: string
+          description: Имя оператора
+          example: Вася
+        phoneNumber:
+          type: string
+          description: Номер входящего телефона
+          example: 8-909-589-45-82
+
+    RoomResponse:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Идентификатор комнаты
+          example: 1
+        name:
+          type: string
+          description: Имя комнаты
+          example: Главный зал
+
+    DeviceResponse:
+      type: object
+      required:
+        - deviceNumber
+        - operatorName
+      properties:
+        deviceNumber:
+          type: string
+          description: Номер внутреннего аппарата
+          example: '100'
+        operatorName:
+          type: string
+          description: Имя оператора
+          example: Вася
+        incomingNumber:
+          type: string
+          nullable: true
+          description: >
+            Номер входящего звонка, если аппарат занят разговором.
+            Для свободного аппарата null.
+          example: 8-909-589-45-82
+
+    SuccessResponse:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Операция выполнена успешно
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: Описание ошибки
+
+  responses:
+    InternalServerError:
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: Внутренняя ошибка сервера

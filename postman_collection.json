@@ -64,7 +64,7 @@
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8888/api/calls?deviceNumber=100&phoneNumber=8-909-589-45-82",
+              "raw": "http://127.0.0.1:8888/api/calls?deviceNumber=202&phoneNumber=8-950-123-11-47",
               "protocol": "http",
               "host": [
                 "127",
@@ -80,11 +80,11 @@
               "query": [
                 {
                   "key": "deviceNumber",
-                  "value": "100"
+                  "value": "202"
                 },
                 {
                   "key": "phoneNumber",
-                  "value": "8-909-589-45-82"
+                  "value": "8-950-123-11-47"
                 }
               ]
             }
@@ -120,7 +120,7 @@
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8888/api/queue?phoneNumber=8-909-589-45-82",
+              "raw": "http://127.0.0.1:8888/api/queue?phoneNumber=8-950-123-11-17",
               "protocol": "http",
               "host": [
                 "127",
@@ -136,7 +136,7 @@
               "query": [
                 {
                   "key": "phoneNumber",
-                  "value": "8-909-589-45-82"
+                  "value": "8-950-123-11-17"
                 }
               ]
             }
@@ -171,17 +171,8 @@
           "request": {
             "method": "DELETE",
             "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"phoneNumber\" : \"+7 961 119 98 51\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
             "url": {
-              "raw": "http://127.0.0.1:8888/api/queue?phoneNumber=8-909-589-45-82",
+              "raw": "http://127.0.0.1:8888/api/queue?phoneNumber=8-950-123-11-17",
               "protocol": "http",
               "host": [
                 "127",
@@ -197,7 +188,7 @@
               "query": [
                 {
                   "key": "phoneNumber",
-                  "value": "8-909-589-45-82"
+                  "value": "8-950-123-11-17"
                 }
               ]
             }
@@ -210,7 +201,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8888/api/calls/end?deviceNumber=100",
+              "raw": "http://127.0.0.1:8888/api/calls?deviceNumber=101",
               "protocol": "http",
               "host": [
                 "127",
@@ -221,13 +212,12 @@
               "port": "8888",
               "path": [
                 "api",
-                "calls",
-                "end"
+                "calls"
               ],
               "query": [
                 {
                   "key": "deviceNumber",
-                  "value": "100"
+                  "value": "101"
                 }
               ]
             }
