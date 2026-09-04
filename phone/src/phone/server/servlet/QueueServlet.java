@@ -16,6 +16,7 @@ import com.google.gson.GsonBuilder;
 import phone.server.ApplicationContext;
 import phone.server.dto.CallRequest;
 import phone.server.sevice.TelephonyService;
+import phone.shared.exception.InvalidPhoneFormatException;
 import phone.shared.exception.TelephonyException;
 
 @WebServlet("/api/queue")
@@ -30,18 +31,14 @@ public class QueueServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("application/json");
 		resp.setCharacterEncoding("UTF-8");
-		
+
 		String phoneNumber = req.getParameter("phoneNumber");
-		
-		
-		
+
 		PrintWriter out = resp.getWriter();
+
 		try (BufferedReader reader = req.getReader()) {
 			CallRequest callRequest = new CallRequest(phoneNumber);
 
-			if (!validateCallRequest(callRequest, out,resp)) {
-				return;
-			}
 			service.addToQueue(callRequest);
 			resp.setStatus(HttpServletResponse.SC_OK); // 200 OK
 			out.print("{\"status\": \"success\", \"message\": \"Звонок добавлен в очередь\"}");
@@ -50,6 +47,9 @@ public class QueueServlet extends HttpServlet {
 			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			resp.getWriter().print("{\"error\": \"" + e.getMessage() + "\"}");
 
+		} catch (InvalidPhoneFormatException e) {
+			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			resp.getWriter().print("{\"error\": \"" + e.getMessage() + "\"}");
 		} catch (Exception e) {
 			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 500
 			resp.getWriter().print("{\"error\": \"Внутренняя ошибка сервера\"}");
@@ -67,9 +67,6 @@ public class QueueServlet extends HttpServlet {
 		try (BufferedReader reader = req.getReader()) {
 			CallRequest callRequest = new CallRequest(phoneNumber);
 
-			if (!validateCallRequest(callRequest, out,resp)) {
-				return;
-			}
 			service.removeFromQueue(callRequest);
 			resp.setStatus(HttpServletResponse.SC_OK); // 200
 			out.print("{\"status\": \"success\", \"message\": \"Звонок удален из очереди\"}");
@@ -97,15 +94,5 @@ public class QueueServlet extends HttpServlet {
 			out.print(responseJson);
 			out.flush();
 		}
-	}
-
-	private boolean validateCallRequest(CallRequest callRequest, PrintWriter out, HttpServletResponse resp) {
-		if ((callRequest == null) || (callRequest.getPhoneNumber() == null)
-				|| (callRequest.getPhoneNumber().isEmpty())) {
-			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); // 400 Bad Request
-			out.print("{\"error\": \"Неверный формат данных или отсутствует номер телефона\"}");
-			return false;
-		}
-		return true;
 	}
 }

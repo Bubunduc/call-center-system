@@ -13,11 +13,13 @@ import phone.server.dto.CallResponse;
 import phone.server.dto.EndCallRequest;
 import phone.server.enums.Status;
 import phone.server.storage.PhoneStorage;
+import phone.shared.FieldVerifier;
 import phone.shared.dto.ActiveCall;
 import phone.shared.dto.DeviceResponse;
 import phone.shared.dto.PhoneResponse;
 import phone.shared.dto.RoomResponse;
 import phone.shared.exception.InvalidDeviceStateException;
+import phone.shared.exception.InvalidPhoneFormatException;
 import phone.shared.exception.TelephonyException;
 import phone.shared.model.Device;
 import phone.shared.model.Room;
@@ -44,9 +46,10 @@ public class TelephonyService {
 		return devicedao.findAll();
 	}
 
-	public void addToQueue(CallRequest call) throws TelephonyException,Exception {
-		phoneStorage.addCallQueue(call);
+	public void addToQueue(CallRequest call) throws TelephonyException,Exception,InvalidPhoneFormatException {
 		
+		validateCallRequest(call);
+		phoneStorage.addCallQueue(call);	
 		CallResponse toAtsData = new CallResponse(
 				call.getPhoneNumber(), 
 				null, 
@@ -142,5 +145,12 @@ public class TelephonyService {
 
 	private void sendToAts(CallResponse action) throws Exception {
 		atsclient.sendAction(action);
+	}
+	
+	private void validateCallRequest(CallRequest callRequest) throws InvalidPhoneFormatException {
+		String error = FieldVerifier.verifyIncomingPhone(callRequest);
+		if (error != null) {
+			throw new InvalidPhoneFormatException(error);
+		}
 	}
 }

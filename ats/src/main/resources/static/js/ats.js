@@ -3,57 +3,35 @@ const callButton = document.getElementById("callButton");
 const cancelButton = document.getElementById("cancelButton");
 const eventHistory = document.getElementById("eventHistory");
 
-
 const PHONE_TEMPLATE = "+7-___-___-__-__";
 
+/*
+ * Формат, который видит пользователь:
+ * +7-960-119-98-57
+ */
 const PHONE_REGEX =
     /^\+7-\d{3}-\d{3}-\d{2}-\d{2}$/;
 
-
-/*
- * Микросервис Телефонии.
- */
 const QUEUE_URL =
     "http://127.0.0.1:8888/api/queue";
 
-
-/*
- * Микросервис АТС.
- *
- * Страница работает на localhost:8080,
- * поэтому адрес относительно текущего сервера.
- */
 const ACTION_URL =
     "/api/action";
 
-
 let phoneDigits = "";
-
 let historyLoading = false;
 
 
-
 /*
  * =========================
- * ВВОД НОМЕРА ТЕЛЕФОНА
+ * МАСКА НОМЕРА
  * =========================
  */
 
-
-/*
- * Формируем номер:
- *
- * +7-___-___-__-__
- *
- * +7-960-___-__-__
- *
- * +7-960-119-98-57
- */
 function updatePhoneInput() {
 
     const digits =
         phoneDigits.padEnd(10, "_");
-
 
     phoneInput.value =
         "+7-" +
@@ -65,49 +43,33 @@ function updatePhoneInput() {
         "-" +
         digits.substring(8, 10);
 
-
-    /*
-     * Курсор всегда ставим в конец.
-     */
     setTimeout(function () {
-
         phoneInput.setSelectionRange(
             phoneInput.value.length,
             phoneInput.value.length
         );
-
     }, 0);
 }
 
 
-
-/*
- * Пользователь вводит только цифры.
- */
 phoneInput.addEventListener(
     "keydown",
     function (event) {
 
-        /*
-         * Ctrl-комбинации не блокируем.
-         */
         if (event.ctrlKey || event.metaKey) {
             return;
         }
 
-
         /*
-         * Цифры от 0 до 9.
+         * Ввод цифр
          */
         if (/^\d$/.test(event.key)) {
 
             event.preventDefault();
 
-
             if (phoneDigits.length >= 10) {
                 return;
             }
-
 
             phoneDigits += event.key;
 
@@ -116,15 +78,12 @@ phoneInput.addEventListener(
             return;
         }
 
-
         /*
-         * Backspace удаляет
-         * последнюю введённую цифру.
+         * Удаление последней цифры
          */
         if (event.key === "Backspace") {
 
             event.preventDefault();
-
 
             if (phoneDigits.length > 0) {
 
@@ -134,16 +93,14 @@ phoneInput.addEventListener(
                         phoneDigits.length - 1
                     );
 
-
                 updatePhoneInput();
             }
 
             return;
         }
 
-
         /*
-         * Delete очищает весь номер.
+         * Очистка номера
          */
         if (event.key === "Delete") {
 
@@ -156,29 +113,15 @@ phoneInput.addEventListener(
             return;
         }
 
-
-        /*
-         * Tab разрешаем.
-         */
         if (event.key === "Tab") {
             return;
         }
 
-
-        /*
-         * Все остальные символы запрещаем.
-         */
         event.preventDefault();
     }
 );
 
 
-
-/*
- * При клике курсор ставим в конец,
- * чтобы пользователь не мог писать
- * внутри шаблона.
- */
 phoneInput.addEventListener(
     "click",
     function () {
@@ -191,10 +134,6 @@ phoneInput.addEventListener(
 );
 
 
-
-/*
- * Аналогично при получении фокуса.
- */
 phoneInput.addEventListener(
     "focus",
     function () {
@@ -213,16 +152,11 @@ phoneInput.addEventListener(
 );
 
 
-
 /*
- * Поддержка вставки номера.
- *
- * Можно вставить:
+ * Поддержка вставки:
  *
  * 9601199857
- *
  * +79601199857
- *
  * 89601199857
  */
 phoneInput.addEventListener(
@@ -231,24 +165,12 @@ phoneInput.addEventListener(
 
         event.preventDefault();
 
-
         let text =
             event.clipboardData.getData("text");
-
 
         let digits =
             text.replace(/\D/g, "");
 
-
-        /*
-         * Если вставили номер:
-         *
-         * 79601199857
-         * или
-         * 89601199857
-         *
-         * убираем первую цифру.
-         */
         if (
             digits.length === 11 &&
             (digits.startsWith("7") ||
@@ -258,15 +180,12 @@ phoneInput.addEventListener(
             digits = digits.substring(1);
         }
 
-
         phoneDigits =
             digits.substring(0, 10);
-
 
         updatePhoneInput();
     }
 );
-
 
 
 /*
@@ -275,11 +194,9 @@ phoneInput.addEventListener(
  * =========================
  */
 
-
 callButton.addEventListener(
     "click",
     function () {
-
         sendQueueRequest("POST");
     }
 );
@@ -288,18 +205,15 @@ callButton.addEventListener(
 cancelButton.addEventListener(
     "click",
     function () {
-
         sendQueueRequest("DELETE");
     }
 );
 
 
-
 /*
- * Получаем готовый номер.
+ * Получаем номер в клиентском формате:
  *
- * Если введены не все 10 цифр,
- * запрос не отправляем.
+ * +7-960-119-98-57
  */
 function getPhoneNumber() {
 
@@ -314,10 +228,8 @@ function getPhoneNumber() {
         return null;
     }
 
-
     const phoneNumber =
         phoneInput.value;
-
 
     if (!PHONE_REGEX.test(phoneNumber)) {
 
@@ -331,50 +243,59 @@ function getPhoneNumber() {
         return null;
     }
 
-
     return phoneNumber;
 }
 
 
+/*
+ * Преобразуем клиентский формат:
+ *
+ * +7-960-119-98-57
+ *
+ * в серверный:
+ *
+ * 8-960-119-98-57
+ */
+function toServerPhoneNumber(phoneNumber) {
+
+    return phoneNumber.replace(
+        /^\+7/,
+        "8"
+    );
+}
+
 
 /*
  * =========================
- * POST / DELETE В ТЕЛЕФОНИЮ
+ * POST / DELETE
  * =========================
  */
-
 
 function sendQueueRequest(method) {
 
     const phoneNumber =
         getPhoneNumber();
 
-
     if (phoneNumber === null) {
         return;
     }
 
-
     /*
-     * Формируем URL:
-     *
-     * /api/queue?phoneNumber=...
-     *
-     * URLSearchParams автоматически
-     * корректно закодирует "+".
+     * В интерфейсе остаётся +7,
+     * а на сервер отправляется 8.
      */
+    const serverPhoneNumber =
+        toServerPhoneNumber(phoneNumber);
+
     const url =
         new URL(QUEUE_URL);
 
-
     url.searchParams.set(
         "phoneNumber",
-        phoneNumber
+        serverPhoneNumber
     );
 
-
     setButtonsDisabled(true);
-
 
     fetch(
         url.toString(),
@@ -384,53 +305,44 @@ function sendQueueRequest(method) {
     )
         .then(function (response) {
 
-            if (response.ok) {
-                return;
-            }
-
-
             /*
-             * Ошибки согласно ТЗ.
+             * Читаем тело ответа,
+             * чтобы при ошибке показать
+             * именно сообщение сервера.
              */
-            if (response.status === 400) {
+            return response.text()
+                .then(function (body) {
 
-                if (method === "POST") {
+                    if (!response.ok) {
 
-                    throw new Error(
-                        "Этот номер уже находится в очереди"
-                    );
-                }
+                        const message =
+                            getErrorMessage(body);
 
+                        if (message !== null) {
 
-                if (method === "DELETE") {
+                            throw new Error(
+                                message
+                            );
+                        }
 
-                    throw new Error(
-                        "Такого номера нет в очереди"
-                    );
-                }
-            }
+                        throw new Error(
+                            "Ошибка сервера. Код: " +
+                            response.status
+                        );
+                    }
 
-
-            throw new Error(
-                "Ошибка сервера. Код: " +
-                response.status
-            );
+                    return body;
+                });
         })
 
         .then(function () {
 
-            /*
-             * После успешного действия
-             * сразу обновляем историю.
-             */
             loadEventHistory();
         })
 
         .catch(function (error) {
 
-            alert(
-                error.message
-            );
+            alert(error.message);
         })
 
         .finally(function () {
@@ -439,6 +351,44 @@ function sendQueueRequest(method) {
         });
 }
 
+
+/*
+ * Если сервер вернул JSON:
+ *
+ * {
+ *   "message": "..."
+ * }
+ *
+ * показываем только message.
+ *
+ * Если пришла обычная строка -
+ * показываем строку.
+ */
+function getErrorMessage(body) {
+
+    if (
+        !body ||
+        body.trim() === ""
+    ) {
+        return null;
+    }
+
+    try {
+
+        const error =
+            JSON.parse(body);
+
+        if (error.message) {
+            return error.message;
+        }
+
+        return body;
+
+    } catch (e) {
+
+        return body;
+    }
+}
 
 
 function setButtonsDisabled(disabled) {
@@ -451,30 +401,19 @@ function setButtonsDisabled(disabled) {
 }
 
 
-
 /*
  * =========================
  * ИСТОРИЯ СОБЫТИЙ
  * =========================
  */
 
-
-/*
- * GET /api/action
- */
 function loadEventHistory() {
 
-    /*
-     * Не отправляем новый GET,
-     * пока предыдущий ещё выполняется.
-     */
     if (historyLoading) {
         return;
     }
 
-
     historyLoading = true;
-
 
     fetch(
         ACTION_URL,
@@ -492,7 +431,6 @@ function loadEventHistory() {
                 );
             }
 
-
             return response.json();
         })
 
@@ -503,11 +441,6 @@ function loadEventHistory() {
 
         .catch(function (error) {
 
-            /*
-             * alert здесь не используем,
-             * иначе при проблеме он будет
-             * появляться каждые 500 мс.
-             */
             console.error(
                 "Не удалось получить историю событий:",
                 error
@@ -521,29 +454,15 @@ function loadEventHistory() {
 }
 
 
-
 /*
  * =========================
- * ОТРИСОВКА ТАБЛИЦЫ
+ * ТАБЛИЦА
  * =========================
  */
 
-
-/*
- * AtsEvent:
- *
- * {
- *     phoneNumber: String,
- *     deviceNumber: String,
- *     operatorName: String,
- *     timeStamp: String,
- *     status: String
- * }
- */
 function renderEventHistory(events) {
 
     eventHistory.innerHTML = "";
-
 
     if (
         !events ||
@@ -555,26 +474,18 @@ function renderEventHistory(events) {
         return;
     }
 
-
     events.forEach(
         function (event) {
 
             const row =
                 document.createElement("tr");
 
-
             const eventCell =
                 document.createElement("td");
-
 
             const dataCell =
                 document.createElement("td");
 
-
-            /*
-             * В колонке "Событие"
-             * отображаем Status.
-             */
             if (
                 event.status !== null &&
                 event.status !== undefined
@@ -584,22 +495,11 @@ function renderEventHistory(events) {
                     event.status;
             }
 
-
-            /*
-             * В колонке "Данные"
-             * отображаем все данные,
-             * кроме status.
-             *
-             * null автоматически
-             * пропускается.
-             */
-
             appendData(
                 dataCell,
                 "Номер телефона",
                 event.phoneNumber
             );
-
 
             appendData(
                 dataCell,
@@ -607,13 +507,11 @@ function renderEventHistory(events) {
                 event.deviceNumber
             );
 
-
             appendData(
                 dataCell,
                 "Оператор",
                 event.operatorName
             );
-
 
             appendData(
                 dataCell,
@@ -621,16 +519,13 @@ function renderEventHistory(events) {
                 event.timeStamp
             );
 
-
             row.appendChild(
                 eventCell
             );
 
-
             row.appendChild(
                 dataCell
             );
-
 
             eventHistory.appendChild(
                 row
@@ -640,13 +535,6 @@ function renderEventHistory(events) {
 }
 
 
-
-/*
- * Добавляет поле в колонку "Данные".
- *
- * null и undefined вообще
- * не отображаются.
- */
 function appendData(
     cell,
     label,
@@ -657,66 +545,48 @@ function appendData(
         value === null ||
         value === undefined
     ) {
-
         return;
     }
-
 
     const line =
         document.createElement("div");
 
-
     line.className =
         "event-data-line";
 
-
     line.textContent =
         label + ": " + value;
-
 
     cell.appendChild(line);
 }
 
 
-
-/*
- * Если история пустая,
- * оставляем пустое пространство
- * как на макете.
- */
 function appendEmptyRow() {
 
     const row =
         document.createElement("tr");
 
-
     row.className =
         "empty-space";
-
 
     const eventCell =
         document.createElement("td");
 
-
     const dataCell =
         document.createElement("td");
-
 
     row.appendChild(
         eventCell
     );
 
-
     row.appendChild(
         dataCell
     );
-
 
     eventHistory.appendChild(
         row
     );
 }
-
 
 
 /*
@@ -725,25 +595,11 @@ function appendEmptyRow() {
  * =========================
  */
 
-
-/*
- * Начальное состояние поля.
- */
 phoneInput.value =
     PHONE_TEMPLATE;
 
-
-/*
- * Сразу получаем историю
- * после загрузки страницы.
- */
 loadEventHistory();
 
-
-/*
- * По ТЗ обновляем историю
- * каждые 500 миллисекунд.
- */
 setInterval(
     loadEventHistory,
     500

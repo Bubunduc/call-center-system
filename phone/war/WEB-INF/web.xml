@@ -26,10 +26,6 @@
 
 	<!-- Servlets -->
 
-	<servlet-mapping>
-		<servlet-name>greetServlet</servlet-name>
-		<url-pattern>/phone/greet</url-pattern>
-	</servlet-mapping>
 
 	<servlet>
 		<servlet-name>roomServlet</servlet-name>
