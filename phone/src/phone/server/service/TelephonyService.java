@@ -26,10 +26,10 @@ import phone.shared.model.Room;
 
 public class TelephonyService {
 
-	private RoomDao roomdao;
-	private DeviceDao devicedao;
-	private AtsClient atsclient;
-	private PhoneStorage phoneStorage;
+	private final RoomDao roomdao;
+	private final DeviceDao devicedao;
+	private final AtsClient atsclient;
+	private final PhoneStorage phoneStorage;
 
 	public TelephonyService(RoomDao roomdao, DeviceDao devicedao, AtsClient atsclient, PhoneStorage phonestorage) {
 		this.roomdao = roomdao;
