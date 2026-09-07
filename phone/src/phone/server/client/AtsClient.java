@@ -12,42 +12,60 @@ import phone.server.dto.CallResponse;
 
 public class AtsClient {
 
-	private final String URL = "http://127.0.0.1:8080/api/action";
+    private static final String DEFAULT_ATS_URL =
+            "http://127.0.0.1:8080/api/action";
 
-	public void sendAction(CallResponse response) throws Exception {
+    private final String atsUrl;
 
-		URL url = new URL(URL);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+    public AtsClient() {
+        String envUrl = System.getenv("ATS_URL");
 
-		
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.setDateFormat("dd.MM.yyyy HH:mm:ss.SSS");
-	    Gson gson = gsonBuilder.create();
-		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-		conn.setDoOutput(true);
-		conn.setConnectTimeout(5000);
+        atsUrl = envUrl != null
+                ? envUrl
+                : DEFAULT_ATS_URL;
+    }
 
-		String jsonResponse = gson.toJson(response);
-		byte[] inputBytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
+    public void sendAction(CallResponse response) throws Exception {
 
-		try (OutputStream os = conn.getOutputStream()) {
-			os.write(inputBytes, 0, inputBytes.length);
-		}
+        URL url = new URL(atsUrl);
 
-		try {
+        HttpURLConnection conn =
+                (HttpURLConnection) url.openConnection();
 
-			int responseCode = conn.getResponseCode();
+        Gson gson = new GsonBuilder()
+                .setDateFormat("dd.MM.yyyy HH:mm:ss.SSS")
+                .create();
 
-			if (responseCode < 200 || responseCode >= 300) {
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty(
+                "Content-Type",
+                "application/json; charset=UTF-8"
+        );
 
-				System.err.println("Сервер вернул ошибку: " + responseCode);
-				System.err.println(conn.getErrorStream());
-			}
-		} finally {
+        conn.setDoOutput(true);
+        conn.setConnectTimeout(5000);
+        conn.setReadTimeout(5000);
 
-			conn.disconnect();
-		}
-	}
+        String jsonResponse = gson.toJson(response);
 
+        byte[] inputBytes =
+                jsonResponse.getBytes(StandardCharsets.UTF_8);
+
+        try {
+            try (OutputStream os = conn.getOutputStream()) {
+                os.write(inputBytes);
+            }
+
+            int responseCode = conn.getResponseCode();
+
+            if (responseCode < 200 || responseCode >= 300) {
+                throw new RuntimeException(
+                        "АТС вернула HTTP " + responseCode
+                );
+            }
+
+        } finally {
+            conn.disconnect();
+        }
+    }
 }
