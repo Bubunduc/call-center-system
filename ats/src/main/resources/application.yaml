@@ -1,3 +1,6 @@
 spring:
   application:
     name: ats
+
+telephony:
+  url: ${TELEPHONY_URL}

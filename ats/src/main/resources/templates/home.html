@@ -2,183 +2,163 @@
 <html lang="ru">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Панель АТС</title>
+<title>Панель АТС</title>
 
-    <style>
-        .ats-container {
-            border: 1px solid #000;
-            padding: 20px;
-            width: 650px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            background-color: #fff;
-            margin: 20px auto;
-            box-sizing: border-box;
-        }
+<style>
+.ats-container {
+	border: 1px solid #000;
+	padding: 20px;
+	width: 650px;
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+	background-color: #fff;
+	margin: 20px auto;
+	box-sizing: border-box;
+}
 
-        .top-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
+.top-section {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 20px;
+}
 
-        .input-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 5px;
-        }
+.input-group {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: 5px;
+}
 
-        .input-group input[type="text"] {
-            padding: 5px;
-            border: 1px solid #000;
-            width: 170px;
-            font-size: 14px;
-            font-family: monospace;
-        }
+.input-group input[type="text"] {
+	padding: 5px;
+	border: 1px solid #000;
+	width: 170px;
+	font-size: 14px;
+	font-family: monospace;
+}
 
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+.button-group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
 
-        .btn {
-            background-color: #b7b7b7;
-            border: 1px solid #000;
-            border-radius: 4px;
-            padding: 6px 15px;
-            width: 120px;
-            cursor: pointer;
-            font-size: 13px;
-        }
+.btn {
+	background-color: #b7b7b7;
+	border: 1px solid #000;
+	border-radius: 4px;
+	padding: 6px 15px;
+	width: 120px;
+	cursor: pointer;
+	font-size: 13px;
+}
 
-        .btn:hover {
-            background-color: #8c8c8c;
-        }
+.btn:hover {
+	background-color: #8c8c8c;
+}
 
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: default;
-        }
+.btn:disabled {
+	opacity: 0.6;
+	cursor: default;
+}
 
-        .history-label {
-            margin-bottom: 5px;
-        }
+.history-label {
+	margin-bottom: 5px;
+}
 
-        .history-table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #cfe2f3;
-            border: 1px solid #000;
-        }
+.history-table {
+	width: 100%;
+	border-collapse: collapse;
+	background-color: #cfe2f3;
+	border: 1px solid #000;
+}
 
-        .history-table th,
-        .history-table td {
-            border: 1px solid #000;
-            padding: 6px 8px;
-            text-align: left;
-            font-weight: normal;
-            vertical-align: top;
-        }
+.history-table th, .history-table td {
+	border: 1px solid #000;
+	padding: 6px 8px;
+	text-align: left;
+	font-weight: normal;
+	vertical-align: top;
+}
 
-        .col-event {
-            width: 25%;
-        }
+.col-event {
+	width: 25%;
+}
 
-        .empty-space td {
-            height: 250px;
-        }
+.empty-space td {
+	height: 250px;
+}
 
-        .event-data-line {
-            margin-bottom: 3px;
-        }
+.event-data-line {
+	margin-bottom: 3px;
+}
 
-        .event-data-line:last-child {
-            margin-bottom: 0;
-        }
-    </style>
+.event-data-line:last-child {
+	margin-bottom: 0;
+}
+</style>
 </head>
 
 <body>
 
-<div class="ats-container">
+	<div class="ats-container">
 
-    <div class="top-section">
+		<div class="top-section">
 
-        <div class="input-group">
+			<div class="input-group">
 
-            <label for="phoneNumber">
-                Введите номер телефона:
-            </label>
+				<label for="phoneNumber"> Введите номер телефона: </label> <input
+					type="text" id="phoneNumber" value="+7-___-___-__-__"
+					maxlength="16" autocomplete="off" inputmode="numeric">
 
-            <input
-                    type="text"
-                    id="phoneNumber"
-                    value="+7-___-___-__-__"
-                    maxlength="16"
-                    autocomplete="off"
-                    inputmode="numeric"
-            >
+			</div>
 
-        </div>
+			<div class="button-group">
 
-        <div class="button-group">
+				<button type="button" id="callButton" class="btn">
+					Позвонить</button>
 
-            <button
-                    type="button"
-                    id="callButton"
-                    class="btn">
-                Позвонить
-            </button>
+				<button type="button" id="cancelButton" class="btn">
+					Отменить</button>
 
-            <button
-                    type="button"
-                    id="cancelButton"
-                    class="btn">
-                Отменить
-            </button>
+			</div>
 
-        </div>
-
-    </div>
+		</div>
 
 
-    <div class="history-section">
+		<div class="history-section">
 
-        <div class="history-label">
-            История событий:
-        </div>
+			<div class="history-label">История событий:</div>
 
-        <table class="history-table">
+			<table class="history-table">
 
-            <thead>
-            <tr>
-                <th class="col-event">
-                    Событие:
-                </th>
+				<thead>
+					<tr>
+						<th class="col-event">Событие:</th>
 
-                <th>
-                    Данные:
-                </th>
-            </tr>
-            </thead>
+						<th>Данные:</th>
+					</tr>
+				</thead>
 
-            <tbody id="eventHistory">
-            </tbody>
+				<tbody id="eventHistory">
+				</tbody>
 
-        </table>
+			</table>
 
-    </div>
+		</div>
 
-</div>
+	</div>
+	<script th:inline="javascript">
+    window.APP_CONFIG = {
+        telephonyUrl: /*[[${telephonyUrl}]]*/
+    };
+</script>
 
-
-<script src="/js/ats.js"></script>
+	<script src="/js/ats.js"></script>
 
 </body>
 

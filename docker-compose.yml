@@ -1,0 +1,74 @@
+services:
+
+  postgres:
+    image: postgres:17
+    container_name: telephony-postgres
+
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+    ports:
+      - "${DB_PORT}:5432"
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./phone/src/phone/server/sql/sqlinittables.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./phone/src/phone/server/sql/sqlinitdata.sql:/docker-entrypoint-initdb.d/02-data.sql:ro
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U ${DB_USERNAME} -d ${DB_NAME}
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+    restart: unless-stopped
+
+
+  ats:
+    build:
+      context: ./ats
+
+    container_name: ats
+
+    ports:
+      - "${ATS_PORT}:8080"
+
+    environment:
+      TELEPHONY_URL: "http://${PUBLIC_HOST}:${PHONE_PORT}"
+
+    restart: unless-stopped
+
+
+  phone:
+    build:
+      context: ./phone
+
+    container_name: phone
+
+    ports:
+      - "${PHONE_PORT}:8080"
+
+    environment:
+      ATS_URL: "http://ats:8080/api/action"
+
+      ATS_ALLOWED_ORIGIN: "http://${PUBLIC_HOST}:${ATS_PORT}"
+
+      DB_URL: "jdbc:postgresql://postgres:5432/${DB_NAME}"
+      DB_USERNAME: "${DB_USERNAME}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ats:
+        condition: service_started
+
+    restart: unless-stopped
+
+
+volumes:
+  postgres-data:
