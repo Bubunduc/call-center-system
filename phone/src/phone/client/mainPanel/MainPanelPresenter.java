@@ -2,6 +2,7 @@ package phone.client.mainPanel;
 
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -38,7 +39,7 @@ public class MainPanelPresenter {
 	private final ClientPhoneStore store;
 
 	private Timer refreshTimer;
-	private final String URL = "http://127.0.0.1:8888/api";
+	private final String URL = GWT.getHostPageBaseURL() + "api";
 
 	public MainPanelPresenter(ActiveCallsPresenter activeCallsPresenter, QueuePresenter queuePresenter,
 			TreePresenter treePresenter, MainPanelDisplay view, ActiveCallsClient activeCallsClient,
