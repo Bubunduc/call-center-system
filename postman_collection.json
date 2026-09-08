@@ -64,7 +64,7 @@
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8888/api/calls?deviceNumber=202&phoneNumber=8-950-123-11-47",
+              "raw": "http://127.0.0.1:8081/api/calls?deviceNumber=202&phoneNumber=8-950-123-11-12",
               "protocol": "http",
               "host": [
                 "127",
@@ -72,7 +72,7 @@
                 "0",
                 "1"
               ],
-              "port": "8888",
+              "port": "8081",
               "path": [
                 "api",
                 "calls"
@@ -84,7 +84,7 @@
                 },
                 {
                   "key": "phoneNumber",
-                  "value": "8-950-123-11-47"
+                  "value": "8-950-123-11-12"
                 }
               ]
             }
@@ -97,7 +97,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8888/api/rooms",
+              "raw": "http://127.0.0.1:8081/api/rooms",
               "protocol": "http",
               "host": [
                 "127",
@@ -105,7 +105,7 @@
                 "0",
                 "1"
               ],
-              "port": "8888",
+              "port": "8081",
               "path": [
                 "api",
                 "rooms"
@@ -120,7 +120,7 @@
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8888/api/queue?phoneNumber=8-950-123-11-17",
+              "raw": "http://127.0.0.1:8081/api/queue?phoneNumber=8-950-123-11-12",
               "protocol": "http",
               "host": [
                 "127",
@@ -128,7 +128,7 @@
                 "0",
                 "1"
               ],
-              "port": "8888",
+              "port": "8081",
               "path": [
                 "api",
                 "queue"
@@ -136,7 +136,7 @@
               "query": [
                 {
                   "key": "phoneNumber",
-                  "value": "8-950-123-11-17"
+                  "value": "8-950-123-11-12"
                 }
               ]
             }
@@ -149,7 +149,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8888/api/queue",
+              "raw": "http://127.0.0.1:8081/api/queue",
               "protocol": "http",
               "host": [
                 "127",
@@ -157,7 +157,7 @@
                 "0",
                 "1"
               ],
-              "port": "8888",
+              "port": "8081",
               "path": [
                 "api",
                 "queue"
@@ -172,7 +172,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8888/api/queue?phoneNumber=8-950-123-11-17",
+              "raw": "http://127.0.0.1:8081/api/queue?phoneNumber=8-950-123-11-17",
               "protocol": "http",
               "host": [
                 "127",
@@ -180,7 +180,7 @@
                 "0",
                 "1"
               ],
-              "port": "8888",
+              "port": "8081",
               "path": [
                 "api",
                 "queue"
@@ -201,7 +201,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8888/api/calls?deviceNumber=101",
+              "raw": "http://127.0.0.1:8081/api/calls?deviceNumber=101",
               "protocol": "http",
               "host": [
                 "127",
@@ -209,7 +209,7 @@
                 "0",
                 "1"
               ],
-              "port": "8888",
+              "port": "8081",
               "path": [
                 "api",
                 "calls"
@@ -230,7 +230,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8888/api/calls",
+              "raw": "http://127.0.0.1:8081/api/calls",
               "protocol": "http",
               "host": [
                 "127",
@@ -238,7 +238,7 @@
                 "0",
                 "1"
               ],
-              "port": "8888",
+              "port": "8081",
               "path": [
                 "api",
                 "calls"
@@ -253,7 +253,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8888/api/rooms/devices?roomId=1",
+              "raw": "http://127.0.0.1:8081/api/rooms/devices?roomId=1",
               "protocol": "http",
               "host": [
                 "127",
@@ -261,7 +261,7 @@
                 "0",
                 "1"
               ],
-              "port": "8888",
+              "port": "8081",
               "path": [
                 "api",
                 "rooms",
