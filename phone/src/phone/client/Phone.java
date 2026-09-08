@@ -41,21 +41,30 @@ public class Phone implements EntryPoint {
 		QueueClient queueClient = new QueueClient();
 		DeviceClient deviceClient = new DeviceClient();
 		RoomClient roomClient = new RoomClient();
-		
+
 		TreeDisplay treeView = new TreeView();
 		TreePresenter treePresenter = new TreePresenter(treeView);
 
 		QueueDisplay queueView = new QueueView();
 		QueuePresenter queuePresenter = new QueuePresenter(queueView);
 
-		ActiveCallsDisplay currentNumsView = new ActiveCallsView();
-		ActiveCallsPresenter currentNumsPresenter = new ActiveCallsPresenter(currentNumsView);
-		
+		ActiveCallsDisplay activeCallsView = new ActiveCallsView();
+		ActiveCallsPresenter activeCallsPresenter = new ActiveCallsPresenter(activeCallsView);
+
 		ClientPhoneStore store = new ClientPhoneStore();
-		
-		MainPanelDisplay mainPanelView = new MainPanelView(treeView, queueView, currentNumsView);
-		MainPanelPresenter mainPanelPresenter = new MainPanelPresenter(currentNumsPresenter, queuePresenter,
-				treePresenter, mainPanelView, activeCallsClient, queueClient, roomClient, deviceClient, store);
+
+		MainPanelDisplay mainPanelView = new MainPanelView(treeView, queueView, activeCallsView);
+		MainPanelPresenter mainPanelPresenter = MainPanelPresenter.builder()
+				.activeCallsClient(activeCallsClient)
+				.queueClient(queueClient)
+				.deviceClient(deviceClient)
+				.roomClient(roomClient)
+				.treePresenter(treePresenter)
+				.queuePresenter(queuePresenter)
+				.activeCallsPresenter(activeCallsPresenter)
+				.store(store)
+				.view(mainPanelView)
+				.build();
 		mainPanelPresenter.go(RootPanel.get("mainContainer"));
 	}
 }
