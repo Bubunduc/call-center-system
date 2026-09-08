@@ -37,24 +37,24 @@ public class Phone implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 
-		ActiveCallsClient activeCallsClient = new ActiveCallsClient();
-		QueueClient queueClient = new QueueClient();
-		DeviceClient deviceClient = new DeviceClient();
-		RoomClient roomClient = new RoomClient();
+		final ActiveCallsClient activeCallsClient = new ActiveCallsClient();
+		final QueueClient queueClient = new QueueClient();
+		final DeviceClient deviceClient = new DeviceClient();
+		final RoomClient roomClient = new RoomClient();
 
-		TreeDisplay treeView = new TreeView();
-		TreePresenter treePresenter = new TreePresenter(treeView);
+		final TreeDisplay treeView = new TreeView();
+		final TreePresenter treePresenter = new TreePresenter(treeView);
 
-		QueueDisplay queueView = new QueueView();
-		QueuePresenter queuePresenter = new QueuePresenter(queueView);
+		final QueueDisplay queueView = new QueueView();
+		final QueuePresenter queuePresenter = new QueuePresenter(queueView);
 
-		ActiveCallsDisplay activeCallsView = new ActiveCallsView();
-		ActiveCallsPresenter activeCallsPresenter = new ActiveCallsPresenter(activeCallsView);
+		final ActiveCallsDisplay activeCallsView = new ActiveCallsView();
+		final ActiveCallsPresenter activeCallsPresenter = new ActiveCallsPresenter(activeCallsView);
 
-		ClientPhoneStore store = new ClientPhoneStore();
+		final ClientPhoneStore store = new ClientPhoneStore();
 
-		MainPanelDisplay mainPanelView = new MainPanelView(treeView, queueView, activeCallsView);
-		MainPanelPresenter mainPanelPresenter = MainPanelPresenter.builder()
+		final MainPanelDisplay mainPanelView = new MainPanelView(treeView, queueView, activeCallsView);
+		final MainPanelPresenter mainPanelPresenter = MainPanelPresenter.builder()
 				.activeCallsClient(activeCallsClient)
 				.queueClient(queueClient)
 				.deviceClient(deviceClient)

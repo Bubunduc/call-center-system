@@ -6,7 +6,7 @@ import phone.shared.dto.PhoneResponse;
 
 public class QueuePresenter {
 	
-	private QueueDisplay view;
+	private final QueueDisplay view;
 	
 	public QueuePresenter(QueueDisplay view) {
 		this.view = view;
