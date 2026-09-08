@@ -31,7 +31,10 @@ services:
   ats:
     build:
       context: ./ats
-
+      
+    image: 
+      bubunduc/ats:latest
+   
     container_name: ats
 
     ports:
@@ -46,7 +49,10 @@ services:
   phone:
     build:
       context: ./phone
-
+    
+    image: 
+      bubunduc/phone:latest
+    
     container_name: phone
 
     ports:
