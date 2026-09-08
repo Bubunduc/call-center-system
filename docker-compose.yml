@@ -73,8 +73,23 @@ services:
       ats:
         condition: service_started
 
+    restart: unless-stopped    
+  swagger-ui:
+    image: swaggerapi/swagger-ui:latest
+    container_name: swagger-ui
+
+    ports:
+      - "${SWAGGER_PORT}:8080"
+
+    environment:
+      SWAGGER_JSON: /spec/openapi.yaml
+
+    volumes:
+      - ./phone/openapi.yaml:/spec/openapi.yaml:ro
+
+    depends_on:
+      - phone
+
     restart: unless-stopped
-
-
 volumes:
   postgres-data:

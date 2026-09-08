@@ -8,7 +8,7 @@ info:
     активными разговорами, комнатами и телефонными аппаратами.
 
 servers:
-  - url: http://127.0.0.1:8888/api
+  - url: http://127.0.0.1:8081/api
     description: Локальный сервер Телефонии
 
 tags:
@@ -36,7 +36,6 @@ paths:
           description: Номер входящего телефона
           schema:
             type: string
-            pattern: '^8-\d{3}-\d{3}-\d{2}-\d{2}$'
           example: 8-909-589-45-82
       responses:
         '200':
