@@ -21,6 +21,7 @@ public class ActiveCallsView implements ActiveCallsDisplay {
 	private Button endCall;
 	private FlowPanel headPanel;
 	private FlexTable numsTable;
+	private FlowPanel callsContainer;
 	private ActiveCallsSelectionHandler selectionHandler;
 	private ActiveCallsButtonClickHandler buttonHandler;
 
@@ -42,7 +43,9 @@ public class ActiveCallsView implements ActiveCallsDisplay {
 
 		endCall = new Button("Окончить");
 		endCall.setStyleName("response-button blue-background btn-answer");
+
 		endCall.addClickHandler(new ClickHandler() {
+
 			@Override
 			public void onClick(ClickEvent event) {
 				if (buttonHandler != null) {
@@ -52,7 +55,12 @@ public class ActiveCallsView implements ActiveCallsDisplay {
 		});
 
 		numsTable = new FlexTable();
-		numsTable.setStyleName("active-calls-box gray-background");
+		numsTable.setStyleName("active-calls-table");
+
+		numsTable.setCellPadding(0);
+		numsTable.setCellSpacing(0);
+		numsTable.setBorderWidth(0);
+
 		numsTable.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -72,20 +80,22 @@ public class ActiveCallsView implements ActiveCallsDisplay {
 					return;
 				}
 
-				selectionHandler.onSelected(deviceId);
-
+				if (selectionHandler != null) {
+					selectionHandler.onSelected(deviceId);
+				}
 			}
 		});
 
-		numsTable.setCellPadding(0);
-		numsTable.setCellSpacing(0);
-		numsTable.setBorderWidth(0);
+		callsContainer = new FlowPanel();
+		callsContainer.setStyleName("active-calls-box gray-background");
+
+		callsContainer.add(numsTable);
 
 		headPanel.add(currentCalls);
 		headPanel.add(endCall);
 
 		mainPanel.add(headPanel);
-		mainPanel.add(numsTable);
+		mainPanel.add(callsContainer);
 	}
 
 	@Override
@@ -110,7 +120,7 @@ public class ActiveCallsView implements ActiveCallsDisplay {
 
 		numsTable.setText(lastRow, 0, id);
 		numsTable.setText(lastRow, 1, name);
-		
+
 		numsTable.setText(lastRow, 2, phone.replaceFirst("8", "+7").replace("-", " "));
 
 		rowToDeviceId.put(lastRow, id);
