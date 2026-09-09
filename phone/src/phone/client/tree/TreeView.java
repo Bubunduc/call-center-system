@@ -21,7 +21,7 @@ public class TreeView implements TreeDisplay {
 
 	private FlowPanel mainPanel;
 	private FlowPanel treePanel;
-	private Label roomsLable;
+	private Label roomsLabel;
 	private Button responseButton;
 	private FlowPanel headerPanel;
 	private TreeButtonClickHandler buttonHandler;
@@ -45,7 +45,7 @@ public class TreeView implements TreeDisplay {
 			}
 		}, ClickEvent.getType());
 
-		roomsLable = new Label("Комнаты:");
+		roomsLabel = new Label("Комнаты:");
 
 		headerPanel = new FlowPanel();
 		headerPanel.setStyleName("tree-header");
@@ -62,7 +62,7 @@ public class TreeView implements TreeDisplay {
 			}
 		});
 
-		headerPanel.add(roomsLable);
+		headerPanel.add(roomsLabel);
 		headerPanel.add(responseButton);
 
 		mainPanel.add(headerPanel);
