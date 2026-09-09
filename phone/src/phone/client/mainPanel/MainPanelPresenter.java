@@ -108,7 +108,22 @@ public class MainPanelPresenter {
 		}
 
 		public MainPanelPresenter build() {
-			return new MainPanelPresenter(this);
+		    if (activeCallsPresenter == null
+		            || queuePresenter == null
+		            || treePresenter == null
+		            || view == null
+		            || activeCallsClient == null
+		            || queueClient == null
+		            || roomClient == null
+		            || deviceClient == null
+		            || store == null) {
+
+		        throw new IllegalStateException(
+		                "Не заданы все зависимости MainPanelPresenter"
+		        );
+		    }
+
+		    return new MainPanelPresenter(this);
 		}
 		
 	}
