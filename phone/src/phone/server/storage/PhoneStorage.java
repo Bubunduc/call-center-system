@@ -104,10 +104,6 @@ public class PhoneStorage {
 		return activeCall;
 	}
 
-	public String getPhoneFromActiveCall(String deviceNumber) {
-		return activeCalls.get(deviceNumber).getPhoneNumber();
-	}
-
 	private boolean isDeviceActive(String deviceNumber) {
 		return activeCalls.containsKey(deviceNumber);
 	}

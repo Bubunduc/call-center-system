@@ -41,7 +41,10 @@ public class TreeView implements TreeDisplay {
 		treePanel.addDomHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				handleTreeClick(event);
+				if (selectionHandler != null) {
+					handleTreeClick(event);
+				}
+
 			}
 		}, ClickEvent.getType());
 
@@ -119,7 +122,12 @@ public class TreeView implements TreeDisplay {
 		if (deviceId == null || deviceId.isEmpty()) {
 			return;
 		}
-		deviceMap.get(deviceId).addStyleName("selected-row");
+
+		FlowPanel device = deviceMap.get(deviceId);
+		if (device == null) {
+			return;
+		}
+		device.addStyleName("selected-row");
 	}
 
 	@Override
@@ -127,7 +135,11 @@ public class TreeView implements TreeDisplay {
 		if (deviceId == null || deviceId.isEmpty()) {
 			return;
 		}
-		deviceMap.get(deviceId).removeStyleName("selected-row");
+		FlowPanel device = deviceMap.get(deviceId);
+		if (device == null) {
+			return;
+		}
+		device.removeStyleName("selected-row");
 	}
 
 	private void handleTreeClick(ClickEvent event) {

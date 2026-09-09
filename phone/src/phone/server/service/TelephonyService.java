@@ -60,6 +60,7 @@ public class TelephonyService {
 	}
 
 	public void removeFromQueue(CallRequest call) throws TelephonyException, Exception {
+		validateCallRequest(call);
 		phoneStorage.removeFromQueue(call);
 		CallResponse toAtsData = new CallResponse(
 				call.getPhoneNumber(), 

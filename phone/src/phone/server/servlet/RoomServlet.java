@@ -20,7 +20,7 @@ public class RoomServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private TelephonyService service = ApplicationContext.getTelephonyService();
+	private final TelephonyService service = ApplicationContext.getTelephonyService();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
