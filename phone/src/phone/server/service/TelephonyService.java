@@ -60,7 +60,6 @@ public class TelephonyService {
 	}
 
 	public void removeFromQueue(CallRequest call) throws TelephonyException, Exception {
-		validateCallRequest(call);
 		phoneStorage.removeFromQueue(call);
 		CallResponse toAtsData = new CallResponse(
 				call.getPhoneNumber(), 
@@ -78,9 +77,7 @@ public class TelephonyService {
 	public void answerCall(AnswerCallRequest request)
 			throws TelephonyException, InvalidDeviceStateException, Exception {
 		Device device = getDeviceByNumber(request.getDeviceNumber());
-		CallRequest numInQueue = new CallRequest(request.getPhoneNumber());
 		phoneStorage.answerCall(device, request.getPhoneNumber());
-		phoneStorage.removeFromQueue(numInQueue);
 
 		CallResponse toAtsData = new CallResponse(
 				request.getPhoneNumber(), 
