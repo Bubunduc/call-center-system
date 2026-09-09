@@ -27,10 +27,16 @@ public class ClientPhoneStore {
 	}
 
 	public void addDevice(DeviceInfo device) {
+		if (device == null || device.getId() == null) {
+			return;
+		}
 		deviceMap.put(device.getId(), device);
 	}
 
 	public void addActiveCall(ActiveCall call) {
+		if (call == null || call.getDeviceNumber() == null || call.getDeviceNumber().isEmpty()) {
+			return;
+		}
 		activeCallMap.put(call.getDeviceNumber(), call);
 	}
 
@@ -39,12 +45,7 @@ public class ClientPhoneStore {
 	}
 
 	public boolean isDeviceBusy(String id) {
-		for (ActiveCall call : activeCallMap.values()) {
-			if (call.getDeviceNumber().equals(id)) {
-				return true;
-			}
-		}
-		return false;
+		return activeCallMap.containsKey(id);
 	}
 
 	public String getSelectedTreeDeviceId() {
@@ -87,7 +88,9 @@ public class ClientPhoneStore {
 
 	public void addToQueueList(List<PhoneResponse> phones) {
 		for (PhoneResponse phone : phones) {
-			addToQueue(phone.getPhoneNumber());
+			if (phone != null) {
+				addToQueue(phone.getPhoneNumber());
+			}
 		}
 	}
 
@@ -96,23 +99,29 @@ public class ClientPhoneStore {
 	}
 
 	public boolean updateQueue(List<PhoneResponse> response) {
-		
+
+		if (response == null) {
+			return false;
+		}
 		List<String> phones = new ArrayList<String>();
 		for (PhoneResponse phone : response) {
-			phones.add(phone.getPhoneNumber());
-		}
-		List<String> currentList = new ArrayList<String>(this.phonesQueue);
 
-		if (!phones.equals(currentList)) {
-			phonesQueue.clear();
-			phonesQueue.addAll(phones);
-			return true;
-		}
-		return false;
+			if (phone != null && phone.getPhoneNumber() != null) {
+				phones.add(phone.getPhoneNumber());
+			}
 
+		}
+		List<String> currentList = new ArrayList<String>(phonesQueue);
+		if (phones.equals(currentList)) {
+			return false;
+		}
+		phonesQueue.clear();
+		phonesQueue.addAll(phones);
+		return true;
 	}
 
 	public boolean updateActiveCalls(List<ActiveCall> calls) {
+		
 		ActiveCall selectedCall = activeCallMap.get(selectedActiveCallId);
 		Map<String, ActiveCall> newMap = toActiveCallsMap(calls);
 		if (!activeCallMap.equals(newMap)) {
@@ -129,8 +138,15 @@ public class ClientPhoneStore {
 	}
 
 	private Map<String, ActiveCall> toActiveCallsMap(List<ActiveCall> calls) {
+
 		Map<String, ActiveCall> result = new HashMap<String, ActiveCall>();
+		if (calls == null) {
+			return result;
+		}
 		for (ActiveCall call : calls) {
+			if (call == null || call.getDeviceNumber() == null || call.getDeviceNumber().isEmpty()) {
+				continue;
+			}
 			result.put(call.getDeviceNumber(), call);
 		}
 		return result;

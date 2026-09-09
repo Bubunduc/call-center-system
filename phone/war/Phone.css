@@ -1,152 +1,167 @@
 /** Add css rules here for your application. */
-
-
 /** Example rules used by the template application (remove for your app) */
 h1 {
-  font-size: 2em;
-  font-weight: bold;
-  color: #777777;
-  margin: 40px 0px 70px;
-  text-align: center;
+	font-size: 2em;
+	font-weight: bold;
+	color: #777777;
+	margin: 40px 0px 70px;
+	text-align: center;
 }
 
 .sendButton {
-  display: block;
-  font-size: 16pt;
+	display: block;
+	font-size: 16pt;
 }
 
 /** Most GWT widgets already have a style name defined */
 .gwt-DialogBox {
-  width: 400px;
+	width: 400px;
 }
 
 .dialogVPanel {
-  margin: 5px;
+	margin: 5px;
 }
 
 .serverResponseLabelError {
-  color: red;
+	color: red;
 }
 
 /** Set ids using widget.getElement().setId("idOfElement") */
 #closeButton {
-  margin: 15px 6px 6px;
+	margin: 15px 6px 6px;
 }
 
 .tree-panel, .tree-header {
-  width: 260px;
-  box-sizing: border-box;
+	width: 260px;
+	box-sizing: border-box;
 }
 
 .tree-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px; /* Отступ от шапки до серой панели */
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 5px; /* Отступ от шапки до серой панели */
 }
 
 .response-button {
-  border: 1px solid #333333;
-  border-radius: 6px;
-  padding: 3px 14px;
-  cursor: pointer;
-  font-size: 14px;
+	border: 1px solid #333333;
+	border-radius: 6px;
+	padding: 3px 14px;
+	cursor: pointer;
+	font-size: 14px;
 }
 
 .blue-background {
-  background-color: #cfe2f3;
+	background-color: #cfe2f3;
 }
 
 .gray-background {
-  background-color: #d9d9d9;
+	background-color: #d9d9d9;
 }
 
 .tree-panel {
-  border: 1px solid #333333;
-  height: 100%;
-  min-height: 443px;
-  overflow-y: auto; 
-  padding: 10px;
-}
-.main-panel-flex {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 20px;              
+	border: 1px solid #333333;
+	height: 100%;
+	height: 443px;
+	overflow-y: auto;
+	padding: 10px;
 }
 
+.main-panel-flex {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 20px;
+}
 
 .header-panel {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
-  width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 5px;
+	width: 100%;
 }
 
 .queue-box {
-  display: block; 
-  width: 150px;
-  height: 180px;
-  border: 1px solid #000;
-  box-sizing: border-box;
+    width: 150px;
+    height: 180px;
+
+    border: 1px solid #000;
+    box-sizing: border-box;
+
+    overflow-y: auto;
 }
 
+.queue-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.queue-table td {
+    border: none !important;
+    padding: 2px 6px !important;
+    font-size: 14px;
+    white-space: nowrap;
+}
 
 .active-calls-container {
-  width: 420px; 
+	width: 420px;
 }
 
 .active-calls-box {
-  display: block; 
-  width: 100%;
-  height: 200px;
-  border: 1px solid #000;
-  box-sizing: border-box;
-  overflow-y: auto;
+    width: 100%;
+    height: 200px;
+
+    border: 1px solid #000;
+    box-sizing: border-box;
+
+    overflow-y: auto;
 }
 
-
-.active-calls-box td {
-  border: none !important;
-  padding: 2px 16px 2px 0 !important; 
-  vertical-align: top !important;      
-  font-size: 14px;
+.active-calls-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
+.active-calls-table td {
+    border: none !important;
+    padding: 2px 16px 2px 0 !important;
+    vertical-align: top !important;
+    font-size: 14px;
+}
 
-.active-calls-box td:last-child {
-  padding-right: 0 !important;
+.active-calls-table td:last-child {
+    padding-right: 0 !important;
 }
 
 .upper-right-panel {
-  display: flex;
-  align-items: center; 
-  gap: 40px;          
+	display: flex;
+	align-items: center;
+	gap: 40px;
 }
 
 .app-logo {
-  color: #0000ff;
-  font-size: 22px;
-  font-weight: bold;
-  white-space: nowrap;
+	color: #0000ff;
+	font-size: 22px;
+	font-weight: bold;
+	white-space: nowrap;
 }
 
 .right-container {
-  display: flex;
-  flex-direction: column;
-  gap: 35px;
+	display: flex;
+	flex-direction: column;
+	gap: 35px;
 }
 
 .btn-answer {
-  padding: 6px 24px;  
-  font-size: 15px;      
+	padding: 6px 24px;
+	font-size: 15px;
 }
 
-.node-panel{
+.node-panel {
 	padding-left: 34px;
 }
 
-.selected-row{
+.selected-row {
 	background-color: #17a9bd !important;
 }

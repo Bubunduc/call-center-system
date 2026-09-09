@@ -21,7 +21,7 @@ public class TreeView implements TreeDisplay {
 
 	private FlowPanel mainPanel;
 	private FlowPanel treePanel;
-	private Label roomsLable;
+	private Label roomsLabel;
 	private Button responseButton;
 	private FlowPanel headerPanel;
 	private TreeButtonClickHandler buttonHandler;
@@ -41,11 +41,14 @@ public class TreeView implements TreeDisplay {
 		treePanel.addDomHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				handleTreeClick(event);
+				if (selectionHandler != null) {
+					handleTreeClick(event);
+				}
+
 			}
 		}, ClickEvent.getType());
 
-		roomsLable = new Label("Комнаты:");
+		roomsLabel = new Label("Комнаты:");
 
 		headerPanel = new FlowPanel();
 		headerPanel.setStyleName("tree-header");
@@ -62,7 +65,7 @@ public class TreeView implements TreeDisplay {
 			}
 		});
 
-		headerPanel.add(roomsLable);
+		headerPanel.add(roomsLabel);
 		headerPanel.add(responseButton);
 
 		mainPanel.add(headerPanel);
@@ -119,7 +122,12 @@ public class TreeView implements TreeDisplay {
 		if (deviceId == null || deviceId.isEmpty()) {
 			return;
 		}
-		deviceMap.get(deviceId).addStyleName("selected-row");
+
+		FlowPanel device = deviceMap.get(deviceId);
+		if (device == null) {
+			return;
+		}
+		device.addStyleName("selected-row");
 	}
 
 	@Override
@@ -127,7 +135,11 @@ public class TreeView implements TreeDisplay {
 		if (deviceId == null || deviceId.isEmpty()) {
 			return;
 		}
-		deviceMap.get(deviceId).removeStyleName("selected-row");
+		FlowPanel device = deviceMap.get(deviceId);
+		if (device == null) {
+			return;
+		}
+		device.removeStyleName("selected-row");
 	}
 
 	private void handleTreeClick(ClickEvent event) {

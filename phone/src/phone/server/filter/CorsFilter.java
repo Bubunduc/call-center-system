@@ -13,76 +13,52 @@ import javax.servlet.http.HttpServletResponse;
 
 public class CorsFilter implements Filter {
 
-	private static final String LOCALHOST_ORIGIN = "http://localhost:8080";
-	private static final String LOOPBACK_ORIGIN = "http://127.0.0.1:8080";
+    @Override
+    public void doFilter(
+            ServletRequest request,
+            ServletResponse response,
+            FilterChain chain)
+            throws IOException, ServletException {
 
-	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-	}
+        HttpServletRequest httpRequest =
+                (HttpServletRequest) request;
 
-	@Override
-	public void doFilter(
-			ServletRequest request,
-			ServletResponse response,
-			FilterChain chain) throws IOException, ServletException {
+        HttpServletResponse httpResponse =
+                (HttpServletResponse) response;
 
-		HttpServletRequest httpRequest =
-				(HttpServletRequest) request;
+        httpResponse.setHeader(
+                "Access-Control-Allow-Origin",
+                "*"
+        );
 
-		HttpServletResponse httpResponse =
-				(HttpServletResponse) response;
+        httpResponse.setHeader(
+                "Access-Control-Allow-Methods",
+                "GET, POST, DELETE, OPTIONS"
+        );
 
-		String origin = httpRequest.getHeader("Origin");
+        httpResponse.setHeader(
+                "Access-Control-Allow-Headers",
+                "Content-Type"
+        );
 
-		if (LOCALHOST_ORIGIN.equals(origin)
-				|| LOOPBACK_ORIGIN.equals(origin)) {
+        if ("OPTIONS".equalsIgnoreCase(
+                httpRequest.getMethod())) {
 
-			httpResponse.setHeader(
-					"Access-Control-Allow-Origin",
-					origin
-			);
-		}
+            httpResponse.setStatus(
+                    HttpServletResponse.SC_OK
+            );
 
-		httpResponse.setHeader(
-				"Access-Control-Allow-Methods",
-				"GET, POST, PUT, DELETE, OPTIONS"
-		);
+            return;
+        }
 
-		httpResponse.setHeader(
-				"Access-Control-Allow-Headers",
-				"Content-Type, Accept"
-		);
+        chain.doFilter(request, response);
+    }
 
-		httpResponse.setHeader(
-				"Access-Control-Max-Age",
-				"3600"
-		);
+    @Override
+    public void init(FilterConfig filterConfig) {
+    }
 
-		/*
-		 * Origin может отличаться,
-		 * поэтому сообщаем кэшу, что ответ
-		 * зависит от заголовка Origin.
-		 */
-		httpResponse.setHeader(
-				"Vary",
-				"Origin"
-		);
-
-		/*
-		 * Для CORS preflight.
-		 *
-		 * Браузер может сначала отправить OPTIONS,
-		 * например перед DELETE-запросом.
-		 */
-		if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
-			httpResponse.setStatus(HttpServletResponse.SC_OK);
-			return;
-		}
-
-		chain.doFilter(request, response);
-	}
-
-	@Override
-	public void destroy() {
-	}
+    @Override
+    public void destroy() {
+    }
 }

@@ -8,7 +8,7 @@ import phone.shared.dto.DeviceResponse;
 import phone.shared.dto.RoomResponse;
 
 public class TreePresenter {
-	private TreeDisplay view;
+	private final TreeDisplay view;
 
 	public TreePresenter(TreeDisplay view) {
 		this.view = view;

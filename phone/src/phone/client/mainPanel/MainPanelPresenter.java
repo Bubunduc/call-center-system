@@ -2,6 +2,7 @@ package phone.client.mainPanel;
 
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -38,24 +39,93 @@ public class MainPanelPresenter {
 	private final ClientPhoneStore store;
 
 	private Timer refreshTimer;
-	private final String URL = "http://127.0.0.1:8888/api";
+	private final String URL = GWT.getHostPageBaseURL() + "api";
 
-	public MainPanelPresenter(ActiveCallsPresenter activeCallsPresenter, QueuePresenter queuePresenter,
-			TreePresenter treePresenter, MainPanelDisplay view, ActiveCallsClient activeCallsClient,
-			QueueClient queueClient, RoomClient roomClient, DeviceClient deviceClient, ClientPhoneStore store) {
-		this.activeCallsPresenter = activeCallsPresenter;
-		this.queuePresenter = queuePresenter;
-		this.treePresenter = treePresenter;
-		this.view = view;
-		this.activeCallsClient = activeCallsClient;
-		this.queueClient = queueClient;
-		this.roomClient = roomClient;
-		this.deviceClient = deviceClient;
-		this.store = store;
-
+	public MainPanelPresenter(Builder builder) {
+		this.activeCallsPresenter = builder.activeCallsPresenter;
+		this.queuePresenter = builder.queuePresenter;
+		this.treePresenter = builder.treePresenter;
+		this.view = builder.view;
+		this.activeCallsClient = builder.activeCallsClient;
+		this.queueClient = builder.queueClient;
+		this.roomClient = builder.roomClient;
+		this.deviceClient = builder.deviceClient;
+		this.store = builder.store;
 		loadData();
 		bind();
 		startPolling();
+	}
+	public static Builder builder() {
+		return new Builder();
+	}
+	
+	public static class Builder{
+		private ActiveCallsPresenter activeCallsPresenter;
+		private QueuePresenter queuePresenter;
+		private TreePresenter treePresenter;
+		private MainPanelDisplay view;
+		private ActiveCallsClient activeCallsClient;
+		private QueueClient queueClient;
+		private RoomClient roomClient;
+		private DeviceClient deviceClient;
+		private ClientPhoneStore store;
+		
+		public Builder activeCallsPresenter(ActiveCallsPresenter activeCallsPresenter) {
+			this.activeCallsPresenter = activeCallsPresenter;
+			return this;
+		}
+		public Builder queuePresenter (QueuePresenter queuePresenter) {
+			this.queuePresenter = queuePresenter;
+			return this;
+		}
+		public Builder treePresenter(TreePresenter treePresenter) {
+			this.treePresenter = treePresenter;
+			return this;
+		}
+		public Builder view(MainPanelDisplay view) {
+			this.view = view;
+			return this;
+		}
+		public Builder activeCallsClient(ActiveCallsClient activeCallsClient) {
+			this.activeCallsClient = activeCallsClient;
+			return this;
+		}
+		public Builder queueClient(QueueClient queueClient) {
+			this.queueClient = queueClient;
+			return this;
+		}
+		public Builder roomClient (RoomClient roomClient) {
+			this.roomClient = roomClient;
+			return this;
+		}
+		public Builder deviceClient(DeviceClient deviceClient) {
+			this.deviceClient = deviceClient;
+			return this;
+		}
+		public Builder store (ClientPhoneStore store) {
+			this.store = store;
+			return this;
+		}
+
+		public MainPanelPresenter build() {
+		    if (activeCallsPresenter == null
+		            || queuePresenter == null
+		            || treePresenter == null
+		            || view == null
+		            || activeCallsClient == null
+		            || queueClient == null
+		            || roomClient == null
+		            || deviceClient == null
+		            || store == null) {
+
+		        throw new IllegalStateException(
+		                "Не заданы все зависимости MainPanelPresenter"
+		        );
+		    }
+
+		    return new MainPanelPresenter(this);
+		}
+		
 	}
 
 	private void bind() {

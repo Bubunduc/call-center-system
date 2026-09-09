@@ -10,6 +10,8 @@ public class QueueView implements QueueDisplay {
 	private FlowPanel panel;
 	private Label queueLabel;
 	private FlexTable queueTable;
+	private FlowPanel queueContainer;
+	private FlowPanel headPanel;
 
 	public QueueView() {
 		initQueue();
@@ -18,27 +20,32 @@ public class QueueView implements QueueDisplay {
 	private void initQueue() {
 		panel = new FlowPanel();
 
-		FlowPanel headPanel = new FlowPanel();
+		headPanel = new FlowPanel();
 		headPanel.setStyleName("header-panel");
 
 		queueLabel = new Label("Очередь звонков:");
 		headPanel.add(queueLabel);
 
 		queueTable = new FlexTable();
-		queueTable.setStyleName("queue-box blue-background");
+		queueTable.setStyleName("queue-table");
+
+		queueContainer = new FlowPanel();
+		queueContainer.setStyleName("queue-box blue-background");
+		queueContainer.add(queueTable);
 
 		panel.add(headPanel);
-		panel.add(queueTable);
+		panel.add(queueContainer);
 	}
 
 	@Override
 	public void clearQueue() {
-		queueTable.removeAllRows();	
+		queueTable.removeAllRows();
 	}
 
 	@Override
 	public void addNumber(String number) {
 		int row = queueTable.getRowCount();
+
 		queueTable.setText(row, 0, number.replaceFirst("8", "+7").replace("-", " "));
 	}
 
@@ -48,12 +55,9 @@ public class QueueView implements QueueDisplay {
 			queueTable.removeRow(0);
 		}
 	}
-	
+
 	@Override
 	public Widget asWidget() {
 		return panel;
 	}
-
-	
-
 }

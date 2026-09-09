@@ -12,8 +12,9 @@ const PHONE_TEMPLATE = "+7-___-___-__-__";
 const PHONE_REGEX =
     /^\+7-\d{3}-\d{3}-\d{2}-\d{2}$/;
 
-const QUEUE_URL =
-    "http://127.0.0.1:8888/api/queue";
+const TELEPHONY_URL = window.APP_CONFIG.telephonyUrl;
+
+const QUEUE_URL = `${TELEPHONY_URL}/api/queue`;
 
 const ACTION_URL =
     "/api/action";

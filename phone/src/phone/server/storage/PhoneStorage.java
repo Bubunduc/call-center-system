@@ -23,7 +23,7 @@ public class PhoneStorage {
 		activeCalls = new ConcurrentHashMap<String, ActiveCall>();
 	}
 
-	public void addCallQueue(CallRequest call) throws TelephonyException {
+	public synchronized void addCallQueue(CallRequest call) throws TelephonyException {
 		if (isExistsInQueue(call)) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " уже существует");
 		}
@@ -51,7 +51,7 @@ public class PhoneStorage {
 		return numsList.contains(call.getPhoneNumber());
 	}
 
-	public void removeFromQueue(CallRequest call) throws TelephonyException {
+	public synchronized void removeFromQueue(CallRequest call) throws TelephonyException {
 		if (!isExistsInQueue(call)) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " не существует");
 		}
@@ -78,14 +78,18 @@ public class PhoneStorage {
 		return null;
 	}
 
-	public void answerCall(Device device, String number) throws TelephonyException, InvalidDeviceStateException {
-		if (getCallRequestByNumber(number) == null) {
+	public synchronized void answerCall(Device device, String number) throws TelephonyException, InvalidDeviceStateException {
+		
+		CallRequest call = getCallRequestByNumber(number);
+		
+		if (call == null) {
 			throw new TelephonyException("Номер входящего не найден в очереди");
 		}
 		if (isDeviceActive(device.getDeviceNumber())) {
 			throw new InvalidDeviceStateException("Внутренний аппарат занят");
 		}
 		ActiveCall newCall = new ActiveCall(device.getDeviceNumber(), device.getOperatorName(), number);
+		removeFromQueue(call);
 		activeCalls.put(device.getDeviceNumber(), newCall);
 	}
 
@@ -93,7 +97,7 @@ public class PhoneStorage {
 		return new ArrayList<ActiveCall>(activeCalls.values());
 	}
 
-	public ActiveCall endCall(String deviceNumber) throws InvalidDeviceStateException {
+	public synchronized ActiveCall endCall(String deviceNumber) throws InvalidDeviceStateException {
 
 		ActiveCall activeCall = activeCalls.remove(deviceNumber);
 
@@ -102,10 +106,6 @@ public class PhoneStorage {
 		}
 
 		return activeCall;
-	}
-
-	public String getPhoneFromActiveCall(String deviceNumber) {
-		return activeCalls.get(deviceNumber).getPhoneNumber();
 	}
 
 	private boolean isDeviceActive(String deviceNumber) {

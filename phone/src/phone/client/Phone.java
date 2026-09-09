@@ -37,25 +37,34 @@ public class Phone implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 
-		ActiveCallsClient activeCallsClient = new ActiveCallsClient();
-		QueueClient queueClient = new QueueClient();
-		DeviceClient deviceClient = new DeviceClient();
-		RoomClient roomClient = new RoomClient();
-		
-		TreeDisplay treeView = new TreeView();
-		TreePresenter treePresenter = new TreePresenter(treeView);
+		final ActiveCallsClient activeCallsClient = new ActiveCallsClient();
+		final QueueClient queueClient = new QueueClient();
+		final DeviceClient deviceClient = new DeviceClient();
+		final RoomClient roomClient = new RoomClient();
 
-		QueueDisplay queueView = new QueueView();
-		QueuePresenter queuePresenter = new QueuePresenter(queueView);
+		final TreeDisplay treeView = new TreeView();
+		final TreePresenter treePresenter = new TreePresenter(treeView);
 
-		ActiveCallsDisplay currentNumsView = new ActiveCallsView();
-		ActiveCallsPresenter currentNumsPresenter = new ActiveCallsPresenter(currentNumsView);
-		
-		ClientPhoneStore store = new ClientPhoneStore();
-		
-		MainPanelDisplay mainPanelView = new MainPanelView(treeView, queueView, currentNumsView);
-		MainPanelPresenter mainPanelPresenter = new MainPanelPresenter(currentNumsPresenter, queuePresenter,
-				treePresenter, mainPanelView, activeCallsClient, queueClient, roomClient, deviceClient, store);
+		final QueueDisplay queueView = new QueueView();
+		final QueuePresenter queuePresenter = new QueuePresenter(queueView);
+
+		final ActiveCallsDisplay activeCallsView = new ActiveCallsView();
+		final ActiveCallsPresenter activeCallsPresenter = new ActiveCallsPresenter(activeCallsView);
+
+		final ClientPhoneStore store = new ClientPhoneStore();
+
+		final MainPanelDisplay mainPanelView = new MainPanelView(treeView, queueView, activeCallsView);
+		final MainPanelPresenter mainPanelPresenter = MainPanelPresenter.builder()
+				.activeCallsClient(activeCallsClient)
+				.queueClient(queueClient)
+				.deviceClient(deviceClient)
+				.roomClient(roomClient)
+				.treePresenter(treePresenter)
+				.queuePresenter(queuePresenter)
+				.activeCallsPresenter(activeCallsPresenter)
+				.store(store)
+				.view(mainPanelView)
+				.build();
 		mainPanelPresenter.go(RootPanel.get("mainContainer"));
 	}
 }

@@ -26,24 +26,24 @@ import phone.shared.model.Room;
 
 public class TelephonyService {
 
-	private final RoomDao roomdao;
-	private final DeviceDao devicedao;
-	private final AtsClient atsclient;
+	private final RoomDao roomDao;
+	private final DeviceDao deviceDao;
+	private final AtsClient atsClient;
 	private final PhoneStorage phoneStorage;
 
-	public TelephonyService(RoomDao roomdao, DeviceDao devicedao, AtsClient atsclient, PhoneStorage phonestorage) {
-		this.roomdao = roomdao;
-		this.devicedao = devicedao;
-		this.atsclient = atsclient;
-		this.phoneStorage = phonestorage;
+	public TelephonyService(RoomDao roomDao, DeviceDao deviceDao, AtsClient atsClient, PhoneStorage phoneStorage) {
+		this.roomDao = roomDao;
+		this.deviceDao = deviceDao;
+		this.atsClient = atsClient;
+		this.phoneStorage = phoneStorage;
 	}
 
 	public List<RoomResponse> getAllRooms() {
-		return RoomResponse.toDto(roomdao.findAll());
+		return RoomResponse.toDto(roomDao.findAll());
 	}
 
 	public List<Device> getAllDevices() {
-		return devicedao.findAll();
+		return deviceDao.findAll();
 	}
 
 	public void addToQueue(CallRequest call) throws TelephonyException, Exception, InvalidPhoneFormatException {
@@ -77,9 +77,7 @@ public class TelephonyService {
 	public void answerCall(AnswerCallRequest request)
 			throws TelephonyException, InvalidDeviceStateException, Exception {
 		Device device = getDeviceByNumber(request.getDeviceNumber());
-		CallRequest numInQueue = new CallRequest(request.getPhoneNumber());
 		phoneStorage.answerCall(device, request.getPhoneNumber());
-		phoneStorage.removeFromQueue(numInQueue);
 
 		CallResponse toAtsData = new CallResponse(
 				request.getPhoneNumber(), 
@@ -111,7 +109,7 @@ public class TelephonyService {
 	}
 
 	private Device getDeviceByNumber(String deviceNumber) throws TelephonyException {
-		Device device = devicedao.findByDeviceNumber(deviceNumber);
+		Device device = deviceDao.findByDeviceNumber(deviceNumber);
 
 		if (device == null) {
 			throw new TelephonyException("Номер внутреннего аппарата не существует");
@@ -120,11 +118,11 @@ public class TelephonyService {
 	}
 
 	public List<DeviceResponse> getDevicesStatusByRoom(Long roomId) throws TelephonyException {
-		Room room = roomdao.findRoomById(roomId);
+		Room room = roomDao.findRoomById(roomId);
 		if (room == null) {
 			throw new TelephonyException("Комнаты с таким id не существует");
 		}
-		List<Device> devices = devicedao.findAllByRoomId(roomId);
+		List<Device> devices = deviceDao.findAllByRoomId(roomId);
 		List<DeviceResponse> result = new ArrayList<DeviceResponse>();
 
 		if (devices == null) {
@@ -144,7 +142,7 @@ public class TelephonyService {
 	}
 
 	private void sendToAts(CallResponse action) throws Exception {
-		atsclient.sendAction(action);
+		atsClient.sendAction(action);
 	}
 
 	private void validateCallRequest(CallRequest callRequest) throws InvalidPhoneFormatException {

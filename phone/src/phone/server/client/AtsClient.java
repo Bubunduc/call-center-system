@@ -12,42 +12,48 @@ import phone.server.dto.CallResponse;
 
 public class AtsClient {
 
-	private final String URL = "http://127.0.0.1:8080/api/action";
+	private final String atsUrl;
+
+	public AtsClient() {
+		atsUrl = System.getenv("ATS_URL");
+
+		if (atsUrl == null || atsUrl.isEmpty()) {
+			throw new IllegalStateException("Environment variable ATS_URL is not set");
+		}
+	}
 
 	public void sendAction(CallResponse response) throws Exception {
 
-		URL url = new URL(URL);
+		URL url = new URL(atsUrl);
+
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-		
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.setDateFormat("dd.MM.yyyy HH:mm:ss.SSS");
-	    Gson gson = gsonBuilder.create();
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy HH:mm:ss.SSS").create();
+
 		conn.setRequestMethod("POST");
 		conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+
 		conn.setDoOutput(true);
 		conn.setConnectTimeout(5000);
+		conn.setReadTimeout(5000);
 
 		String jsonResponse = gson.toJson(response);
+
 		byte[] inputBytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
 
-		try (OutputStream os = conn.getOutputStream()) {
-			os.write(inputBytes, 0, inputBytes.length);
-		}
-
 		try {
+			try (OutputStream os = conn.getOutputStream()) {
+				os.write(inputBytes);
+			}
 
 			int responseCode = conn.getResponseCode();
 
 			if (responseCode < 200 || responseCode >= 300) {
-
-				System.err.println("Сервер вернул ошибку: " + responseCode);
-				System.err.println(conn.getErrorStream());
+				throw new RuntimeException("АТС вернула HTTP " + responseCode);
 			}
-		} finally {
 
+		} finally {
 			conn.disconnect();
 		}
 	}
-
 }
