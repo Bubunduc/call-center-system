@@ -13,6 +13,8 @@ import com.example.ats.storage.ActionStorage;
 public class ActionServiceImpl implements ActionService {
 	private final ActionStorage actionStorage;
 
+	private static final String PHONE_REGEX = "^8-\\d{3}-\\d{3}-\\d{2}-\\d{2}$";
+
 	public ActionServiceImpl(ActionStorage actionStorage) {
 		this.actionStorage = actionStorage;
 	}
@@ -28,6 +30,11 @@ public class ActionServiceImpl implements ActionService {
 		if (event.getPhoneNumber() == null || event.getPhoneNumber().isEmpty() || event.getStatus() == null) {
 			throw new EventValidationException("Поля телефонного номера и события являются обязательными к заполнению");
 		}
+		
+		if (!event.getPhoneNumber().matches(PHONE_REGEX)) {
+			throw new EventValidationException("Номер телефона не соответствует формату вида 8-xxx-xxx-xx-xx");
+		}
+		
 		if (event.getTimeStamp() == null) {
 			event.setTimeStamp(new Timestamp(System.currentTimeMillis()));
 		}
