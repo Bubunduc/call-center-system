@@ -10,57 +10,43 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 public final class MyBatisUtil {
 
-    private static final SqlSessionFactory SQL_SESSION_FACTORY;
+	private static final SqlSessionFactory SQL_SESSION_FACTORY;
 
-    static {
-        try {
-            String resource = "mybatis-config.xml";
+	static {
+		try {
+			String resource = "mybatis-config.xml";
 
-            InputStream inputStream =
-                    Resources.getResourceAsStream(resource);
+			InputStream inputStream = Resources.getResourceAsStream(resource);
 
-            Properties properties = new Properties();
+			Properties properties = new Properties();
 
-            properties.setProperty(
-                    "db.url",
-                    getRequiredEnv("DB_URL")
-            );
+			properties.setProperty("db.url", getRequiredEnv("DB_URL"));
 
-            properties.setProperty(
-                    "db.username",
-                    getRequiredEnv("DB_USERNAME")
-            );
+			properties.setProperty("db.username", getRequiredEnv("DB_USERNAME"));
 
-            properties.setProperty(
-                    "db.password",
-                    getRequiredEnv("DB_PASSWORD")
-            );
+			properties.setProperty("db.password", getRequiredEnv("DB_PASSWORD"));
 
-            SQL_SESSION_FACTORY =
-                    new SqlSessionFactoryBuilder()
-                            .build(inputStream, properties);
+			SQL_SESSION_FACTORY = new SqlSessionFactoryBuilder().build(inputStream, properties);
 
-        } catch (IOException e) {
-            throw new ExceptionInInitializerError(e);
-        }
-    }
+		} catch (IOException e) {
+			throw new ExceptionInInitializerError(e);
+		}
+	}
 
-    private MyBatisUtil() {
-    }
+	private MyBatisUtil() {
+	}
 
-    public static SqlSessionFactory getSqlSessionFactory() {
-        return SQL_SESSION_FACTORY;
-    }
+	public static SqlSessionFactory getSqlSessionFactory() {
+		return SQL_SESSION_FACTORY;
+	}
 
-    private static String getRequiredEnv(String name) {
-        String value = System.getenv(name);
+	private static String getRequiredEnv(String name) {
+		String value = System.getenv(name);
 
-        if (value == null || value.trim().isEmpty()) {
-            throw new IllegalStateException(
-                    "Environment variable " + name + " is not set"
-            );
-        }
+		if (value == null || value.trim().isEmpty()) {
+			throw new IllegalStateException("Environment variable " + name + " is not set");
+		}
 
-        return value;
-    }
+		return value;
+	}
 }

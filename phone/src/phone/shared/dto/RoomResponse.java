@@ -35,7 +35,7 @@ public class RoomResponse {
 		return "Room [id=" + id + ", name=" + name + "]";
 	}
 	
-	public static List<RoomResponse> toDto(List<Room> rooms){
+	public static List<RoomResponse> toDtoList(List<Room> rooms){
 		
 		List<RoomResponse> result = new ArrayList<RoomResponse>();
 		

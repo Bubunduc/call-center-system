@@ -33,7 +33,7 @@ public class PhoneResponse {
 		return "PhoneResponse [phoneNumber=" + phoneNumber + "]";
 	}
 	
-	public static List<PhoneResponse> toDto(List<String> phones){
+	public static List<PhoneResponse> toDtoList(List<String> phones){
 		List<PhoneResponse> responseList = new ArrayList<PhoneResponse>();
 		for (String phone : phones) {
 			responseList.add(new PhoneResponse(phone));

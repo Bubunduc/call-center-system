@@ -121,7 +121,7 @@ public class ClientPhoneStore {
 	}
 
 	public boolean updateActiveCalls(List<ActiveCall> calls) {
-		
+
 		ActiveCall selectedCall = activeCallMap.get(selectedActiveCallId);
 		Map<String, ActiveCall> newMap = toActiveCallsMap(calls);
 		if (!activeCallMap.equals(newMap)) {

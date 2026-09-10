@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ats.dto.AtsEvent;
+import com.example.ats.exception.EventValidationException;
 import com.example.ats.service.ActionService;
 
 @RestController
@@ -23,9 +24,9 @@ public class ActionController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> saveAction(@RequestBody AtsEvent event) {
-		actionService.save(event);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<Void> saveAction(@RequestBody AtsEvent event) throws EventValidationException {
+	    actionService.save(event);
+	    return ResponseEntity.ok().build();
 	}
 
 	@GetMapping

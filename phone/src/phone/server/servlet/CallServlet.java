@@ -1,6 +1,5 @@
 package phone.server.servlet;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -37,7 +36,7 @@ public class CallServlet extends HttpServlet {
 		String phoneNumber = req.getParameter("phoneNumber");
 		
 		PrintWriter out = resp.getWriter();
-		try (BufferedReader reader = req.getReader()) {
+		try {
 			AnswerCallRequest callRequest = new AnswerCallRequest(deviceNumber,phoneNumber);
 
 			service.answerCall(callRequest);
@@ -67,7 +66,7 @@ public class CallServlet extends HttpServlet {
 		String deviceNumber = req.getParameter("deviceNumber");
 		
 		PrintWriter out = resp.getWriter();
-		try (BufferedReader reader = req.getReader()) {
+		try {
 			EndCallRequest callRequest = new EndCallRequest(deviceNumber);
 
 			service.endCall(callRequest);

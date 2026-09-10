@@ -34,6 +34,5 @@ public class DeviceDaoMyBatisImpl implements DeviceDao {
 			return mapper.findAllByRoomId(id);
 		}
 	}
-	
 
 }

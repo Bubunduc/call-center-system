@@ -39,7 +39,7 @@ public class TelephonyService {
 	}
 
 	public List<RoomResponse> getAllRooms() {
-		return RoomResponse.toDto(roomDao.findAll());
+		return RoomResponse.toDtoList(roomDao.findAll());
 	}
 
 	public List<Device> getAllDevices() {
@@ -71,7 +71,7 @@ public class TelephonyService {
 	}
 
 	public List<PhoneResponse> getNumsList() {
-		return PhoneResponse.toDto(phoneStorage.getPhoneNumberList());
+		return PhoneResponse.toDtoList(phoneStorage.getPhoneNumberList());
 	}
 
 	public void answerCall(AnswerCallRequest request)

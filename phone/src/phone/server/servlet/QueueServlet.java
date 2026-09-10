@@ -1,6 +1,5 @@
 package phone.server.servlet;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -36,7 +35,7 @@ public class QueueServlet extends HttpServlet {
 
 		PrintWriter out = resp.getWriter();
 
-		try (BufferedReader reader = req.getReader()) {
+		try{
 			CallRequest callRequest = new CallRequest(phoneNumber);
 
 			service.addToQueue(callRequest);
@@ -64,7 +63,7 @@ public class QueueServlet extends HttpServlet {
 
 		String phoneNumber = req.getParameter("phoneNumber");
 		PrintWriter out = resp.getWriter();
-		try (BufferedReader reader = req.getReader()) {
+		try{
 			CallRequest callRequest = new CallRequest(phoneNumber);
 
 			service.removeFromQueue(callRequest);

@@ -57,16 +57,16 @@ public class ActiveCallsClient {
 	public void acceptCall(String url, String deviceNumber, String phoneNumber, final AsyncCallback<Void> callback) {
 		String requestUrl = url + ROUTE + "?deviceNumber=" + deviceNumber + "&phoneNumber=" + phoneNumber;
 		RequestBuilder request = new RequestBuilder(RequestBuilder.POST, requestUrl);
-		changeStageRequest(request, callback);
+		changeStateRequest(request, callback);
 	}
 
 	public void endCall(String url, String deviceNumber, final AsyncCallback<Void> callback) {
 		String requestUrl = url + ROUTE + "?deviceNumber=" + deviceNumber;
 		RequestBuilder request = new RequestBuilder(RequestBuilder.DELETE, requestUrl);
-		changeStageRequest(request, callback);
+		changeStateRequest(request, callback);
 	}
 
-	private void changeStageRequest(RequestBuilder request, final AsyncCallback<Void> callback) {
+	private void changeStateRequest(RequestBuilder request, final AsyncCallback<Void> callback) {
 		try {
 			request.sendRequest(null, new RequestCallback() {
 
@@ -94,7 +94,7 @@ public class ActiveCallsClient {
 		List<ActiveCall> list = new ArrayList<ActiveCall>();
 
 		JSONArray jsonArray = JsonUtils.parseArray(jsonText);
-		
+
 		if (jsonArray == null) {
 			return list;
 		}

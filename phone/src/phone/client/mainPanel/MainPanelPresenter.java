@@ -275,6 +275,8 @@ public class MainPanelPresenter {
 								number);
 						store.addActiveCall(newCall);
 						activeCallsPresenter.addActiveCall(newCall);
+						treePresenter.uncolorNode(selectedDevice.getId());
+						store.setSelectedTreeDeviceId(null);
 						Window.alert("Звонок успешно принят");
 					}
 
