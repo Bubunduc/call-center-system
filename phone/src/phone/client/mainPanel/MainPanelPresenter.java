@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 
 import phone.client.activeCalls.ActiveCallsPresenter;
 import phone.client.dto.DeviceInfo;
+import phone.client.errorPanel.ErrorPresenter;
 import phone.client.event.click.ActiveCallsButtonClickHandler;
 import phone.client.event.click.TreeButtonClickHandler;
 import phone.client.event.select.ActiveCallsSelectionHandler;
@@ -37,7 +38,8 @@ public class MainPanelPresenter {
 	private final RoomClient roomClient;
 	private final DeviceClient deviceClient;
 	private final ClientPhoneStore store;
-
+	private final ErrorPresenter errorPresenter;
+	
 	private Timer refreshTimer;
 	private final String URL = GWT.getHostPageBaseURL() + "api";
 
@@ -50,6 +52,7 @@ public class MainPanelPresenter {
 		this.queueClient = builder.queueClient;
 		this.roomClient = builder.roomClient;
 		this.deviceClient = builder.deviceClient;
+		this.errorPresenter = builder.errorPresenter;
 		this.store = builder.store;
 		loadData();
 		bind();
@@ -70,6 +73,7 @@ public class MainPanelPresenter {
 		private RoomClient roomClient;
 		private DeviceClient deviceClient;
 		private ClientPhoneStore store;
+		private ErrorPresenter errorPresenter;
 		
 		public Builder activeCallsPresenter(ActiveCallsPresenter activeCallsPresenter) {
 			this.activeCallsPresenter = activeCallsPresenter;
@@ -103,6 +107,10 @@ public class MainPanelPresenter {
 			this.deviceClient = deviceClient;
 			return this;
 		}
+		public Builder errorPresenter(ErrorPresenter errorPresenter) {
+			this.errorPresenter = errorPresenter;
+			return this;
+		}
 		public Builder store (ClientPhoneStore store) {
 			this.store = store;
 			return this;
@@ -112,6 +120,7 @@ public class MainPanelPresenter {
 		    if (activeCallsPresenter == null
 		            || queuePresenter == null
 		            || treePresenter == null
+		            || errorPresenter == null
 		            || view == null
 		            || activeCallsClient == null
 		            || queueClient == null
@@ -154,7 +163,7 @@ public class MainPanelPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert(caught.getMessage());
+				 GWT.log("Ошибка обновления активных звонков", caught);
 
 			}
 		});
@@ -169,7 +178,7 @@ public class MainPanelPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert(caught.getMessage());
+				 GWT.log("Ошибка обновления активных звонков", caught);
 			}
 		});
 
@@ -229,7 +238,7 @@ public class MainPanelPresenter {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						Window.alert(caught.getMessage());
+						 GWT.log("Ошибка обновления активных звонков", caught);
 
 					}
 				});
@@ -283,7 +292,7 @@ public class MainPanelPresenter {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						Window.alert(caught.getMessage());
+						 GWT.log("Ошибка обновления активных звонков", caught);
 
 					}
 				});
@@ -333,7 +342,7 @@ public class MainPanelPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert(caught.getMessage());
+				 GWT.log("Ошибка обновления активных звонков", caught);
 
 			}
 		});
@@ -355,7 +364,7 @@ public class MainPanelPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert(caught.getMessage());
+				 GWT.log("Ошибка обновления активных звонков", caught);
 
 			}
 		});

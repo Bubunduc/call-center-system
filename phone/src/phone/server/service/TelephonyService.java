@@ -18,6 +18,7 @@ import phone.shared.dto.ActiveCall;
 import phone.shared.dto.DeviceResponse;
 import phone.shared.dto.PhoneResponse;
 import phone.shared.dto.RoomResponse;
+import phone.shared.exception.AtsCommunicationException;
 import phone.shared.exception.InvalidDeviceStateException;
 import phone.shared.exception.InvalidPhoneFormatException;
 import phone.shared.exception.TelephonyException;
@@ -46,65 +47,76 @@ public class TelephonyService {
 		return deviceDao.findAll();
 	}
 
-	public void addToQueue(CallRequest call) throws TelephonyException, Exception, InvalidPhoneFormatException {
+	public void addToQueue(CallRequest call) throws TelephonyException, AtsCommunicationException, InvalidPhoneFormatException {
 
 		validateCallRequest(call);
-		
-		CallResponse toAtsData = new CallResponse(
-				call.getPhoneNumber(),
-				null, 
-				null,
-				new Timestamp(System.currentTimeMillis()),
-				Status.INCOMING);
-		
+
+		CallResponse toAtsData = new CallResponse(call.getPhoneNumber(), null, null,
+				new Timestamp(System.currentTimeMillis()), Status.INCOMING);
+
 		sendToAts(toAtsData);
 		phoneStorage.addCallQueue(call);
-	
+
 	}
 
-	public void removeFromQueue(CallRequest call) throws TelephonyException, Exception {
-		phoneStorage.removeFromQueue(call);
-		CallResponse toAtsData = new CallResponse(
-				call.getPhoneNumber(), 
-				null,
-				null,
-				new Timestamp(System.currentTimeMillis()), 
-				Status.CANCELED);
+	public void removeFromQueue(CallRequest call) throws TelephonyException, InvalidDeviceStateException, AtsCommunicationException {
+		CallResponse toAtsData;
+
+		ActiveCall currentCall = phoneStorage.isPhoneTalks(call);
+		if (currentCall != null) {
+			toAtsData = new CallResponse(
+					currentCall.getPhoneNumber(),
+					currentCall.getDeviceNumber(),
+					currentCall.getOperatorName(), 
+					new Timestamp(System.currentTimeMillis()), 
+					Status.CANCELED);
+		} else {
+			toAtsData = new CallResponse(call.getPhoneNumber(),
+					null,
+					null,
+					new Timestamp(System.currentTimeMillis()),
+					Status.CANCELED);
+		}
+		
 		sendToAts(toAtsData);
+		if (currentCall != null) {
+	        phoneStorage.removeActiveCall(currentCall.getDeviceNumber());
+	    } else {
+	        phoneStorage.removeFromQueue(call);
+	    }
 	}
 
 	public List<PhoneResponse> getNumsList() {
 		return PhoneResponse.toDtoList(phoneStorage.getPhoneNumberList());
 	}
 
-	public void answerCall(AnswerCallRequest request)
-			throws TelephonyException, InvalidDeviceStateException, Exception {
+	public void answerCall(AnswerCallRequest request) throws TelephonyException, InvalidDeviceStateException, AtsCommunicationException {
 		Device device = getDeviceByNumber(request.getDeviceNumber());
-		phoneStorage.answerCall(device, request.getPhoneNumber());
-
-		CallResponse toAtsData = new CallResponse(
-				request.getPhoneNumber(), 
+		
+		CallResponse toAtsData = new CallResponse(request.getPhoneNumber(),
 				device.getDeviceNumber(),
 				device.getOperatorName(),
-				new Timestamp(System.currentTimeMillis()),
+				new Timestamp(System.currentTimeMillis()), 
 				Status.ANSWERED);
-
+		
 		sendToAts(toAtsData);
+		phoneStorage.addActiveCall(device, request.getPhoneNumber());
+		
 	}
 
-	public void endCall(EndCallRequest request) throws TelephonyException, InvalidDeviceStateException, Exception {
+	public void endCall(EndCallRequest request) throws TelephonyException, InvalidDeviceStateException, AtsCommunicationException {
 		Device device = getDeviceByNumber(request.getDeviceNumber());
 
-		ActiveCall activeCall = phoneStorage.endCall(device.getDeviceNumber());
-
+		ActiveCall activeCall = phoneStorage.getActiveCallByDeviceNumber(device.getDeviceNumber());
 		CallResponse toAtsData = new CallResponse(
 				activeCall.getPhoneNumber(),
 				device.getDeviceNumber(),
 				device.getOperatorName(),
 				new Timestamp(System.currentTimeMillis()),
 				Status.HANG_UP);
-
+		
 		sendToAts(toAtsData);
+		phoneStorage.removeActiveCall(device.getDeviceNumber());
 	}
 
 	public List<ActiveCall> getActiveCallsList() {
@@ -144,8 +156,8 @@ public class TelephonyService {
 
 	}
 
-	private void sendToAts(CallResponse action) throws Exception {
-		atsClient.sendAction(action);
+	private void sendToAts(CallResponse action) throws AtsCommunicationException {	
+		atsClient.sendAction(action);	
 	}
 
 	private void validateCallRequest(CallRequest callRequest) throws InvalidPhoneFormatException {

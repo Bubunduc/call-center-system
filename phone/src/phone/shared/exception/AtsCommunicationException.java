@@ -9,6 +9,11 @@ public class AtsCommunicationException extends Exception implements Serializable
 	public AtsCommunicationException() {
 	}
 
+	public AtsCommunicationException(String message, Throwable cause) {
+
+		super(message, cause);
+	}
+
 	public AtsCommunicationException(String message) {
 		super(message);
 	}

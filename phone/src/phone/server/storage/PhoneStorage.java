@@ -27,19 +27,19 @@ public class PhoneStorage {
 		if (isExistsInQueue(call)) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " уже существует");
 		}
-		if (isPhoneTalks(call)) {
+		if (isPhoneTalks(call)!= null) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " уже разговаривает");
 		}
 		callsQueue.add(call);
 	}
 
-	public boolean isPhoneTalks(CallRequest call) {
+	public ActiveCall isPhoneTalks(CallRequest call) {
 		for (ActiveCall activeCall : activeCalls.values()) {
 			if (activeCall.getPhoneNumber().equals(call.getPhoneNumber())) {
-				return true;
+				return activeCall;
 			}
 		}
-		return false;
+		return null;
 	}
 
 	public boolean isExistsInQueue(CallRequest call) {
@@ -69,7 +69,7 @@ public class PhoneStorage {
 		return callsQueue.stream().map(x -> x.getPhoneNumber()).collect(Collectors.toList());
 	}
 
-	private CallRequest getCallRequestByNumber(String number) {
+	public CallRequest getCallRequestByNumber(String number) {
 		for (CallRequest call : callsQueue) {
 			if (call.getPhoneNumber().equals(number)) {
 				return call;
@@ -78,7 +78,7 @@ public class PhoneStorage {
 		return null;
 	}
 
-	public synchronized void answerCall(Device device, String number) throws TelephonyException, InvalidDeviceStateException {
+	public synchronized void addActiveCall(Device device, String number) throws TelephonyException, InvalidDeviceStateException {
 		
 		CallRequest call = getCallRequestByNumber(number);
 		
@@ -97,7 +97,7 @@ public class PhoneStorage {
 		return new ArrayList<ActiveCall>(activeCalls.values());
 	}
 
-	public synchronized ActiveCall endCall(String deviceNumber) throws InvalidDeviceStateException {
+	public synchronized void removeActiveCall(String deviceNumber) throws InvalidDeviceStateException {
 
 		ActiveCall activeCall = activeCalls.remove(deviceNumber);
 
@@ -105,7 +105,6 @@ public class PhoneStorage {
 			throw new InvalidDeviceStateException("Аппарат свободен и ни с кем не разговаривает");
 		}
 
-		return activeCall;
 	}
 
 	private boolean isDeviceActive(String deviceNumber) {

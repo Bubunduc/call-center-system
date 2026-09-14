@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import phone.server.dto.CallResponse;
+import phone.shared.exception.AtsCommunicationException;
 
 public class AtsClient {
 
@@ -22,26 +23,28 @@ public class AtsClient {
 		}
 	}
 
-	public void sendAction(CallResponse response) throws Exception {
+	public void sendAction(CallResponse response) throws AtsCommunicationException {
 
-		URL url = new URL(atsUrl);
-
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy HH:mm:ss.SSS").create();
-
-		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-
-		conn.setDoOutput(true);
-		conn.setConnectTimeout(5000);
-		conn.setReadTimeout(5000);
-
-		String jsonResponse = gson.toJson(response);
-
-		byte[] inputBytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
+		HttpURLConnection conn = null;
 
 		try {
+			URL url = new URL(atsUrl);
+
+			conn = (HttpURLConnection) url.openConnection();
+
+			Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy HH:mm:ss.SSS").create();
+
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+
+			conn.setDoOutput(true);
+			conn.setConnectTimeout(5000);
+			conn.setReadTimeout(5000);
+
+			String jsonResponse = gson.toJson(response);
+
+			byte[] inputBytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
+
 			try (OutputStream os = conn.getOutputStream()) {
 				os.write(inputBytes);
 			}
@@ -49,11 +52,19 @@ public class AtsClient {
 			int responseCode = conn.getResponseCode();
 
 			if (responseCode < 200 || responseCode >= 300) {
-				throw new RuntimeException("АТС вернула HTTP " + responseCode);
+				throw new AtsCommunicationException("АТС вернула HTTP " + responseCode);
 			}
 
+		} catch (AtsCommunicationException e) {
+			throw e;
+
+		} catch (Exception e) {
+			throw new AtsCommunicationException("АТС сервер недоступен", e);
+
 		} finally {
-			conn.disconnect();
+			if (conn != null) {
+				conn.disconnect();
+			}
 		}
 	}
 }

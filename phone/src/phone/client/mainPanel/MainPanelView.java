@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import phone.client.activeCalls.ActiveCallsDisplay;
+import phone.client.errorPanel.ErrorDisplay;
 import phone.client.event.click.ActiveCallsButtonClickHandler;
 import phone.client.event.click.TreeButtonClickHandler;
 import phone.client.event.select.ActiveCallsSelectionHandler;
@@ -20,11 +21,13 @@ public class MainPanelView implements MainPanelDisplay {
 	private FlowPanel rightPanel;
 	private final TreeDisplay treeView;
 	private final ActiveCallsDisplay activeCallsView;
-
-	public MainPanelView(TreeDisplay treeView, QueueDisplay queueView, ActiveCallsDisplay activeCallsView) {
+	private final ErrorDisplay errorView;
+	
+	public MainPanelView(TreeDisplay treeView, QueueDisplay queueView, ActiveCallsDisplay activeCallsView,ErrorDisplay errorView) {
 		this.treeView = treeView;
 		this.activeCallsView = activeCallsView;
-
+		this.errorView = errorView;
+		
 		mainPanel = new FlowPanel();
 		mainPanel.setStyleName("main-panel-flex");
 
@@ -76,5 +79,12 @@ public class MainPanelView implements MainPanelDisplay {
 		treeView.setTreeButtonClickHandler(handler);
 		
 	}
+
+	@Override
+	public void setErrorMessage(String message) {
+		errorView.setErrorMessage(message);
+		
+	}
+	
 
 }

@@ -6,6 +6,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 import phone.client.activeCalls.ActiveCallsDisplay;
 import phone.client.activeCalls.ActiveCallsPresenter;
 import phone.client.activeCalls.ActiveCallsView;
+import phone.client.errorPanel.ErrorDisplay;
+import phone.client.errorPanel.ErrorPresenter;
+import phone.client.errorPanel.ErrorView;
 import phone.client.mainPanel.MainPanelDisplay;
 import phone.client.mainPanel.MainPanelPresenter;
 import phone.client.mainPanel.MainPanelView;
@@ -50,10 +53,13 @@ public class Phone implements EntryPoint {
 
 		final ActiveCallsDisplay activeCallsView = new ActiveCallsView();
 		final ActiveCallsPresenter activeCallsPresenter = new ActiveCallsPresenter(activeCallsView);
-
+		
+		final ErrorDisplay errorView = new ErrorView();
+		final ErrorPresenter errorPresenter = new ErrorPresenter(errorView);
+		
 		final ClientPhoneStore store = new ClientPhoneStore();
 
-		final MainPanelDisplay mainPanelView = new MainPanelView(treeView, queueView, activeCallsView);
+		final MainPanelDisplay mainPanelView = new MainPanelView(treeView, queueView, activeCallsView,errorView);
 		final MainPanelPresenter mainPanelPresenter = MainPanelPresenter.builder()
 				.activeCallsClient(activeCallsClient)
 				.queueClient(queueClient)
@@ -62,6 +68,7 @@ public class Phone implements EntryPoint {
 				.treePresenter(treePresenter)
 				.queuePresenter(queuePresenter)
 				.activeCallsPresenter(activeCallsPresenter)
+				.errorPresenter(errorPresenter)
 				.store(store)
 				.view(mainPanelView)
 				.build();

@@ -165,3 +165,7 @@ h1 {
 .selected-row {
 	background-color: #17a9bd !important;
 }
+
+.error-label{
+	color : red;
+}

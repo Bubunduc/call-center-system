@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import phone.server.ApplicationContext;
 import phone.server.dto.CallRequest;
 import phone.server.service.TelephonyService;
+import phone.shared.exception.AtsCommunicationException;
 import phone.shared.exception.InvalidPhoneFormatException;
 import phone.shared.exception.TelephonyException;
 
@@ -39,6 +40,8 @@ public class QueueServlet extends HttpServlet {
 
 		} catch (InvalidPhoneFormatException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+		} catch (AtsCommunicationException e) {
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 		} catch (Exception e) {// 500
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Внутренняя ошибка сервера");
 		}
@@ -61,6 +64,8 @@ public class QueueServlet extends HttpServlet {
 		} catch (TelephonyException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 
+		} catch (AtsCommunicationException e) {
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 		} catch (Exception e) {// 500
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Внутренняя ошибка сервера");
 		}

@@ -17,6 +17,8 @@ public class DeviceServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private final TelephonyService service = ApplicationContext.getTelephonyService();
+	
+	// Посмотреть статус всех аппаратов в комнате
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
