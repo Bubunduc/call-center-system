@@ -14,6 +14,8 @@ public class ErrorView implements ErrorDisplay{
 		panel = new FlowPanel();
 		errorMessage = new Label();
 		errorMessage.setStyleName(".error-label");
+		
+		panel.add(errorMessage);
 	}
 	
 	@Override

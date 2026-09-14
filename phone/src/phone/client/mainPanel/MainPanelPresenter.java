@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 
@@ -223,7 +222,7 @@ public class MainPanelPresenter {
 			public void onClick() {
 				final String selectedCallId = store.getSelectedActiveCallId();
 				if (selectedCallId == null) {
-					Window.alert("Сначала выберите звонок");
+					errorPresenter.setErrorMessage("Сначала выберите звонок");
 					return;
 				}
 				activeCallsClient.endCall(URL, selectedCallId, new AsyncCallback<Void>() {
@@ -233,7 +232,6 @@ public class MainPanelPresenter {
 						activeCallsPresenter.removeActiveCall(selectedCallId);
 						store.removeActiveCall(selectedCallId);
 						store.setSelectedActiveCallId(null);
-						Window.alert("Звонок успешно окончен");
 					}
 
 					@Override
@@ -262,16 +260,16 @@ public class MainPanelPresenter {
 			public void onClick() {
 				final String number = store.getNext();
 				if (number == null) {
-					Window.alert("Очередь звонков пуста");
+					errorPresenter.setErrorMessage("Очередь звонков пуста");
 					return;
 				}
 				final DeviceInfo selectedDevice = store.getSelectedDevice();
 				if (selectedDevice == null) {
-					Window.alert("Сначала выберите устройство");
+					errorPresenter.setErrorMessage("Сначала выберите устройство");
 					return;
 				}
 				if (store.isDeviceBusy(selectedDevice.getId())) {
-					Window.alert("Текущий оператор уже с кем то разговаривает");
+					errorPresenter.setErrorMessage("Текущий оператор уже с кем то разговаривает");
 					return;
 				}
 				activeCallsClient.acceptCall(URL, selectedDevice.getId(), number, new AsyncCallback<Void>() {
@@ -281,13 +279,15 @@ public class MainPanelPresenter {
 						store.pushQueue();
 						queuePresenter.pushQueue();
 
-						ActiveCall newCall = new ActiveCall(selectedDevice.getId(), selectedDevice.getOperatorName(),
+						ActiveCall newCall = new ActiveCall(
+								selectedDevice.getId(),
+								selectedDevice.getOperatorName(),
 								number);
+						
 						store.addActiveCall(newCall);
 						activeCallsPresenter.addActiveCall(newCall);
 						treePresenter.uncolorNode(selectedDevice.getId());
 						store.setSelectedTreeDeviceId(null);
-						Window.alert("Звонок успешно принят");
 					}
 
 					@Override

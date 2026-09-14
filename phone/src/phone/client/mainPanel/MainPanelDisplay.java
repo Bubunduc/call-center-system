@@ -17,7 +17,5 @@ public interface MainPanelDisplay {
 
 	void setTreeButtonClickHandler(TreeButtonClickHandler handler);
 	
-	void setErrorMessage(String message);
-	
 	Widget asWidget();
 }

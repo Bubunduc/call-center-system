@@ -21,12 +21,11 @@ public class MainPanelView implements MainPanelDisplay {
 	private FlowPanel rightPanel;
 	private final TreeDisplay treeView;
 	private final ActiveCallsDisplay activeCallsView;
-	private final ErrorDisplay errorView;
+
 	
 	public MainPanelView(TreeDisplay treeView, QueueDisplay queueView, ActiveCallsDisplay activeCallsView,ErrorDisplay errorView) {
 		this.treeView = treeView;
 		this.activeCallsView = activeCallsView;
-		this.errorView = errorView;
 		
 		mainPanel = new FlowPanel();
 		mainPanel.setStyleName("main-panel-flex");
@@ -44,6 +43,7 @@ public class MainPanelView implements MainPanelDisplay {
 
 		rightPanel.add(upperRightPanel);
 		rightPanel.add(activeCallsView.asWidget());
+		rightPanel.add(errorView.asWidget());
 		rightPanel.setStyleName("right-container");
 		
 		mainPanel.add(treeView.asWidget());
@@ -79,12 +79,5 @@ public class MainPanelView implements MainPanelDisplay {
 		treeView.setTreeButtonClickHandler(handler);
 		
 	}
-
-	@Override
-	public void setErrorMessage(String message) {
-		errorView.setErrorMessage(message);
-		
-	}
-	
 
 }
