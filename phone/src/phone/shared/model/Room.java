@@ -15,6 +15,9 @@ public class Room implements Serializable {
 		this.name = name;
 	}
 
+	public Room() {
+	}
+
 	public Long getId() {
 		return id;
 	}

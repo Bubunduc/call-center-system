@@ -1,16 +1,12 @@
 package phone.server.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import phone.server.ApplicationContext;
 import phone.server.dto.AnswerCallRequest;
@@ -31,29 +27,23 @@ public class CallServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("application/json");
 		resp.setCharacterEncoding("UTF-8");
-		
+
 		String deviceNumber = req.getParameter("deviceNumber");
 		String phoneNumber = req.getParameter("phoneNumber");
-		
-		PrintWriter out = resp.getWriter();
 		try {
-			AnswerCallRequest callRequest = new AnswerCallRequest(deviceNumber,phoneNumber);
+			AnswerCallRequest callRequest = new AnswerCallRequest(deviceNumber, phoneNumber);
 
 			service.answerCall(callRequest);
-			resp.setStatus(HttpServletResponse.SC_OK); // 200
-			out.print("{\"status\": \"success\", \"message\": \"Звонок принят\"}");
+			JsonResponse.successMessage(resp, HttpServletResponse.SC_OK, "Звонок принят на обработку");
 
 		} catch (TelephonyException e) {
-			resp.setStatus(HttpServletResponse.SC_NOT_FOUND); // 404
-			resp.getWriter().print("{\"error\": \"" + e.getMessage() + "\"}");
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
 
 		} catch (InvalidDeviceStateException e) {
-			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			resp.getWriter().print("{\"error\": \"" + e.getMessage() + "\"}");
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 
-		} catch (Exception e) {
-			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 500
-			resp.getWriter().print("{\"error\": \"" + e.getMessage() + "\"}");
+		} catch (Exception e) {// 500
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
 
@@ -64,41 +54,38 @@ public class CallServlet extends HttpServlet {
 		resp.setCharacterEncoding("UTF-8");
 
 		String deviceNumber = req.getParameter("deviceNumber");
-		
-		PrintWriter out = resp.getWriter();
+
 		try {
 			EndCallRequest callRequest = new EndCallRequest(deviceNumber);
 
 			service.endCall(callRequest);
 			resp.setStatus(HttpServletResponse.SC_OK); // 200
-			out.print("{\"status\": \"success\", \"message\": \"Звонок окончен\"}");
+			JsonResponse.successMessage(resp, HttpServletResponse.SC_OK, "Звонок окончен");// "Звонок окончен"
 
 		} catch (TelephonyException e) {
 			resp.setStatus(HttpServletResponse.SC_NOT_FOUND); // 404
-			resp.getWriter().print("{\"error\": \"" + e.getMessage() + "\"}");
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
 
 		} catch (InvalidDeviceStateException e) {
 			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); // 400
-			resp.getWriter().print("{\"error\": \"" + e.getMessage() + "\"}");
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 
 		} catch (Exception e) {
 			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 500
-			resp.getWriter().print("{\"error\": \"Внутренняя ошибка сервера\"}");
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
 
 	// Посмотреть все активные звонки - кто с кем разговаривает.
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
-		String responseJson = gsonPretty.toJson(service.getActiveCallsList());
-
 		resp.setContentType("application/json");
 		resp.setCharacterEncoding("UTF-8");
 
-		try (PrintWriter out = resp.getWriter()) {
-			out.print(responseJson);
-			out.flush();
+		try {
+			JsonResponse.successMessageFromList(resp, HttpServletResponse.SC_OK, service.getActiveCallsList());
+		} catch (IOException e) {
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Внутренняя ошибка сервера");
 		}
 	}
 }

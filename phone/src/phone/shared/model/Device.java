@@ -21,6 +21,9 @@ public class Device implements Serializable {
 		this.operatorName = operatorName;
 	}
 
+	public Device() {
+	}
+
 	public Long getId() {
 		return id;
 	}

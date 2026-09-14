@@ -1,16 +1,12 @@
 package phone.server.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import phone.server.ApplicationContext;
 import phone.server.service.TelephonyService;
@@ -25,15 +21,14 @@ public class RoomServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
-		String responseJson = gsonPretty.toJson(service.getAllRooms());
-
 		resp.setContentType("application/json");
 		resp.setCharacterEncoding("UTF-8");
-
-		try (PrintWriter out = resp.getWriter()) {
-			out.print(responseJson);
-			out.flush();
+		
+		try  {
+			JsonResponse.successMessageFromList(resp, HttpServletResponse.SC_OK, service.getAllRooms());
+		}
+		catch (IOException e){
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка формирования json");
 		}
 	}
 }

@@ -21,7 +21,6 @@ public class ActionServiceImpl implements ActionService {
 
 	@Override
 	public List<AtsEvent> findAllSortedByTimeDesc() {
-
 		return actionStorage.findAllSortedByTimeDesc();
 	}
 

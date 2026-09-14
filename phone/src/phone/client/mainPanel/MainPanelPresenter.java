@@ -55,6 +55,7 @@ public class MainPanelPresenter {
 		bind();
 		startPolling();
 	}
+	
 	public static Builder builder() {
 		return new Builder();
 	}

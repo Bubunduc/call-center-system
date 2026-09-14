@@ -49,14 +49,17 @@ public class TelephonyService {
 	public void addToQueue(CallRequest call) throws TelephonyException, Exception, InvalidPhoneFormatException {
 
 		validateCallRequest(call);
-		phoneStorage.addCallQueue(call);
+		
 		CallResponse toAtsData = new CallResponse(
 				call.getPhoneNumber(),
 				null, 
 				null,
 				new Timestamp(System.currentTimeMillis()),
 				Status.INCOMING);
+		
 		sendToAts(toAtsData);
+		phoneStorage.addCallQueue(call);
+	
 	}
 
 	public void removeFromQueue(CallRequest call) throws TelephonyException, Exception {
