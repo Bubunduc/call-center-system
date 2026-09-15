@@ -38,9 +38,10 @@ public class MainPanelPresenter {
 	private final DeviceClient deviceClient;
 	private final ClientPhoneStore store;
 	private final ErrorPresenter errorPresenter;
-	
+
 	private Timer refreshTimer;
 	private final String URL = GWT.getHostPageBaseURL() + "api";
+	private boolean pollingError = false; // true, только если текущая ошибка вызвана поллингом
 
 	public MainPanelPresenter(Builder builder) {
 		this.activeCallsPresenter = builder.activeCallsPresenter;
@@ -57,12 +58,12 @@ public class MainPanelPresenter {
 		bind();
 		startPolling();
 	}
-	
+
 	public static Builder builder() {
 		return new Builder();
 	}
-	
-	public static class Builder{
+
+	public static class Builder {
 		private ActiveCallsPresenter activeCallsPresenter;
 		private QueuePresenter queuePresenter;
 		private TreePresenter treePresenter;
@@ -73,68 +74,75 @@ public class MainPanelPresenter {
 		private DeviceClient deviceClient;
 		private ClientPhoneStore store;
 		private ErrorPresenter errorPresenter;
-		
+
 		public Builder activeCallsPresenter(ActiveCallsPresenter activeCallsPresenter) {
 			this.activeCallsPresenter = activeCallsPresenter;
 			return this;
 		}
-		public Builder queuePresenter (QueuePresenter queuePresenter) {
+
+		public Builder queuePresenter(QueuePresenter queuePresenter) {
 			this.queuePresenter = queuePresenter;
 			return this;
 		}
+
 		public Builder treePresenter(TreePresenter treePresenter) {
 			this.treePresenter = treePresenter;
 			return this;
 		}
+
 		public Builder view(MainPanelDisplay view) {
 			this.view = view;
 			return this;
 		}
+
 		public Builder activeCallsClient(ActiveCallsClient activeCallsClient) {
 			this.activeCallsClient = activeCallsClient;
 			return this;
 		}
+
 		public Builder queueClient(QueueClient queueClient) {
 			this.queueClient = queueClient;
 			return this;
 		}
-		public Builder roomClient (RoomClient roomClient) {
+
+		public Builder roomClient(RoomClient roomClient) {
 			this.roomClient = roomClient;
 			return this;
 		}
+
 		public Builder deviceClient(DeviceClient deviceClient) {
 			this.deviceClient = deviceClient;
 			return this;
 		}
+
 		public Builder errorPresenter(ErrorPresenter errorPresenter) {
 			this.errorPresenter = errorPresenter;
 			return this;
 		}
-		public Builder store (ClientPhoneStore store) {
+
+		public Builder store(ClientPhoneStore store) {
 			this.store = store;
 			return this;
 		}
 
 		public MainPanelPresenter build() {
-		    if (activeCallsPresenter == null
-		            || queuePresenter == null
-		            || treePresenter == null
-		            || errorPresenter == null
-		            || view == null
-		            || activeCallsClient == null
-		            || queueClient == null
-		            || roomClient == null
-		            || deviceClient == null
-		            || store == null) {
+			if (activeCallsPresenter == null 
+					|| queuePresenter == null
+					|| treePresenter == null
+					|| errorPresenter == null 
+					|| view == null 
+					|| activeCallsClient == null 
+					|| queueClient == null
+					|| roomClient == null 
+					|| deviceClient == null 
+					|| store == null) {
 
-		        throw new IllegalStateException(
-		                "Не заданы все зависимости MainPanelPresenter"
-		        );
-		    }
+				throw new IllegalStateException("Не заданы все зависимости MainPanelPresenter");
+			}
 
-		    return new MainPanelPresenter(this);
+			return new MainPanelPresenter(this);
 		}
-		
+
 	}
 
 	private void bind() {
@@ -162,8 +170,8 @@ public class MainPanelPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				 GWT.log("Ошибка обновления активных звонков", caught);
-				 errorPresenter.setErrorMessage(caught.getMessage());
+				GWT.log("Ошибка обновления активных звонков", caught);
+				errorPresenter.setErrorMessage(caught.getMessage());
 
 			}
 		});
@@ -179,8 +187,8 @@ public class MainPanelPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				 GWT.log("Ошибка обновления активных звонков", caught);
-				 errorPresenter.setErrorMessage(caught.getMessage());
+				GWT.log("Ошибка обновления активных звонков", caught);
+				errorPresenter.setErrorMessage(caught.getMessage());
 			}
 		});
 
@@ -201,8 +209,11 @@ public class MainPanelPresenter {
 				for (DeviceResponse i : result) {
 					store.addDevice(new DeviceInfo(i.getDeviceNumber(), i.getOperatorName()));
 					if (i.getIncomingNumber() != null) {
-						store.addActiveCall(
-								new ActiveCall(i.getDeviceNumber(), i.getOperatorName(), i.getIncomingNumber()));
+						store.addActiveCall(new ActiveCall(
+							i.getDeviceNumber(),
+							i.getOperatorName(),
+							i.getIncomingNumber()));
+						
 						activeCallsPresenter.loadData(i);
 					}
 				}
@@ -240,8 +251,8 @@ public class MainPanelPresenter {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						 GWT.log("Ошибка обновления активных звонков", caught);
-						 errorPresenter.setErrorMessage(caught.getMessage());
+						GWT.log("Ошибка обновления активных звонков", caught);
+						errorPresenter.setErrorMessage(caught.getMessage());
 
 					}
 				});
@@ -281,15 +292,15 @@ public class MainPanelPresenter {
 
 					@Override
 					public void onSuccess(Void result) {
-						
+
 						store.pushQueue();
 						queuePresenter.pushQueue();
 
 						ActiveCall newCall = new ActiveCall(
-								selectedDevice.getId(),
+								selectedDevice.getId(), 
 								selectedDevice.getOperatorName(),
 								number);
-						
+
 						store.addActiveCall(newCall);
 						activeCallsPresenter.addActiveCall(newCall);
 						treePresenter.uncolorNode(selectedDevice.getId());
@@ -299,8 +310,8 @@ public class MainPanelPresenter {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						 GWT.log("Ошибка обновления активных звонков", caught);
-						 errorPresenter.setErrorMessage(caught.getMessage());
+						GWT.log("Ошибка обновления активных звонков", caught);
+						errorPresenter.setErrorMessage(caught.getMessage());
 
 					}
 				});
@@ -341,17 +352,21 @@ public class MainPanelPresenter {
 
 			@Override
 			public void onSuccess(List<PhoneResponse> result) {
-				
+
 				if (store.updateQueue(result)) {
 					queuePresenter.refreshQueue(result);
 				}
-
+				if (pollingError) {
+					errorPresenter.clearErrorMessage();
+					pollingError = false;
+				}
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				 GWT.log("Ошибка обновления активных звонков", caught);
-				 errorPresenter.setErrorMessage(caught.getMessage());
+				GWT.log("Ошибка обновления активных звонков", caught);
+				pollingError = true;
+				errorPresenter.setErrorMessage(caught.getMessage());
 
 			}
 		});
@@ -367,14 +382,19 @@ public class MainPanelPresenter {
 					if (store.getSelectedActiveCallId() != null) {
 						activeCallsPresenter.colorRow(store.getSelectedActiveCallId());
 					}
+					if (pollingError) {
+						errorPresenter.clearErrorMessage();
+						pollingError = false;
+					}
 				}
 
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				 GWT.log("Ошибка обновления активных звонков", caught);
-				 errorPresenter.setErrorMessage(caught.getMessage());
+				GWT.log("Ошибка обновления активных звонков", caught);
+				pollingError = true;
+				errorPresenter.setErrorMessage(caught.getMessage());
 
 			}
 		});
