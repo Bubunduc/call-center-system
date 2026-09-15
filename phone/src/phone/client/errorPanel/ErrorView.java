@@ -13,7 +13,7 @@ public class ErrorView implements ErrorDisplay{
 	private void init() {
 		panel = new FlowPanel();
 		errorMessage = new Label();
-		errorMessage.setStyleName(".error-label");
+		errorMessage.setStyleName("error-label");
 		
 		panel.add(errorMessage);
 	}
@@ -22,6 +22,7 @@ public class ErrorView implements ErrorDisplay{
 	public void setErrorMessage(String message) {
 		if (message == null) {
 			errorMessage.setText("");
+			return;
 		}
 		errorMessage.setText(message);
 		

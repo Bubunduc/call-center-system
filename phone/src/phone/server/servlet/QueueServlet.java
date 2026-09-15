@@ -41,7 +41,7 @@ public class QueueServlet extends HttpServlet {
 		} catch (InvalidPhoneFormatException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 		} catch (AtsCommunicationException e) {
-			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_SERVICE_UNAVAILABLE, e.getMessage());
 		} catch (Exception e) {// 500
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Внутренняя ошибка сервера");
 		}
@@ -65,7 +65,7 @@ public class QueueServlet extends HttpServlet {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 
 		} catch (AtsCommunicationException e) {
-			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_SERVICE_UNAVAILABLE, e.getMessage());
 		} catch (Exception e) {// 500
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Внутренняя ошибка сервера");
 		}

@@ -10,4 +10,7 @@ public class ErrorPresenter {
 	public void setErrorMessage(String message) {
 		view.setErrorMessage(message);
 	}
+	public void clearErrorMessage() {
+        view.setErrorMessage("");
+    }
 }

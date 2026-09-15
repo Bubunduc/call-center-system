@@ -157,12 +157,13 @@ public class MainPanelPresenter {
 
 				store.addToQueueList(result);
 				queuePresenter.loadData(result);
-
+				errorPresenter.clearErrorMessage();
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
 				 GWT.log("Ошибка обновления активных звонков", caught);
+				 errorPresenter.setErrorMessage(caught.getMessage());
 
 			}
 		});
@@ -173,11 +174,13 @@ public class MainPanelPresenter {
 
 					loadDevicesForRoom(result, 0);
 				}
+				errorPresenter.clearErrorMessage();
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
 				 GWT.log("Ошибка обновления активных звонков", caught);
+				 errorPresenter.setErrorMessage(caught.getMessage());
 			}
 		});
 
@@ -232,11 +235,13 @@ public class MainPanelPresenter {
 						activeCallsPresenter.removeActiveCall(selectedCallId);
 						store.removeActiveCall(selectedCallId);
 						store.setSelectedActiveCallId(null);
+						errorPresenter.clearErrorMessage();
 					}
 
 					@Override
 					public void onFailure(Throwable caught) {
 						 GWT.log("Ошибка обновления активных звонков", caught);
+						 errorPresenter.setErrorMessage(caught.getMessage());
 
 					}
 				});
@@ -276,6 +281,7 @@ public class MainPanelPresenter {
 
 					@Override
 					public void onSuccess(Void result) {
+						
 						store.pushQueue();
 						queuePresenter.pushQueue();
 
@@ -288,11 +294,13 @@ public class MainPanelPresenter {
 						activeCallsPresenter.addActiveCall(newCall);
 						treePresenter.uncolorNode(selectedDevice.getId());
 						store.setSelectedTreeDeviceId(null);
+						errorPresenter.clearErrorMessage();
 					}
 
 					@Override
 					public void onFailure(Throwable caught) {
 						 GWT.log("Ошибка обновления активных звонков", caught);
+						 errorPresenter.setErrorMessage(caught.getMessage());
 
 					}
 				});
@@ -325,7 +333,7 @@ public class MainPanelPresenter {
 			}
 		};
 
-		refreshTimer.scheduleRepeating(1000);
+		refreshTimer.scheduleRepeating(500);
 	}
 
 	private void refreshQueue() {
@@ -333,7 +341,7 @@ public class MainPanelPresenter {
 
 			@Override
 			public void onSuccess(List<PhoneResponse> result) {
-
+				
 				if (store.updateQueue(result)) {
 					queuePresenter.refreshQueue(result);
 				}
@@ -343,6 +351,7 @@ public class MainPanelPresenter {
 			@Override
 			public void onFailure(Throwable caught) {
 				 GWT.log("Ошибка обновления активных звонков", caught);
+				 errorPresenter.setErrorMessage(caught.getMessage());
 
 			}
 		});
@@ -365,6 +374,7 @@ public class MainPanelPresenter {
 			@Override
 			public void onFailure(Throwable caught) {
 				 GWT.log("Ошибка обновления активных звонков", caught);
+				 errorPresenter.setErrorMessage(caught.getMessage());
 
 			}
 		});

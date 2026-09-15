@@ -13,6 +13,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import phone.client.request.utils.JsonUtils;
+import phone.client.request.utils.ResponseUtils;
 import phone.shared.dto.PhoneResponse;
 
 public class QueueClient {
@@ -29,7 +30,7 @@ public class QueueClient {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					if (response.getStatusCode() < 200 || response.getStatusCode() >= 300) {
-						callback.onFailure(new Exception("Ошибка сервера, код ответа: " + response.getStatusCode()));
+						callback.onFailure(new Exception(ResponseUtils.getErrorMessage(response)));
 						return;
 					}
 
@@ -41,7 +42,7 @@ public class QueueClient {
 						callback.onSuccess(resultList);
 
 					} catch (Exception e) {
-						callback.onFailure(new Exception("Ошибка парсинга JSON: " + e.getMessage(), e));
+						callback.onFailure(new Exception(ResponseUtils.getErrorMessage(response)));
 					}
 				}
 

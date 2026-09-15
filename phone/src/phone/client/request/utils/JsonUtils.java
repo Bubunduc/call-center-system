@@ -21,6 +21,15 @@ public final class JsonUtils {
 		return jsonArray;
 	}
 
+	public static JSONObject parseObject(String jsonText) {
+		if (jsonText == null || jsonText.trim().isEmpty()) {
+			return null;
+		}
+
+		JSONValue jsonValue = JSONParser.parseStrict(jsonText);
+		return jsonValue.isObject();
+	}
+
 	public static String getString(JSONObject object, String fieldName) {
 		if (object == null) {
 			return null;

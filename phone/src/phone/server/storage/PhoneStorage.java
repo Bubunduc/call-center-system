@@ -1,11 +1,11 @@
 package phone.server.storage;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
 
 import phone.server.dto.CallRequest;
@@ -15,11 +15,11 @@ import phone.shared.exception.TelephonyException;
 import phone.shared.model.Device;
 
 public class PhoneStorage {
-	private final Queue<CallRequest> callsQueue;
+	private final Deque<CallRequest> callsQueue;
 	private final Map<String, ActiveCall> activeCalls;
 
 	public PhoneStorage() {
-		callsQueue = new ConcurrentLinkedQueue<CallRequest>();
+		callsQueue = new ConcurrentLinkedDeque<CallRequest>();
 		activeCalls = new ConcurrentHashMap<String, ActiveCall>();
 	}
 
@@ -27,10 +27,10 @@ public class PhoneStorage {
 		if (isExistsInQueue(call)) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " уже существует");
 		}
-		if (isPhoneTalks(call)!= null) {
+		if (isPhoneTalks(call) != null) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " уже разговаривает");
 		}
-		callsQueue.add(call);
+		callsQueue.addLast(call);
 	}
 
 	public ActiveCall isPhoneTalks(CallRequest call) {
@@ -78,17 +78,21 @@ public class PhoneStorage {
 		return null;
 	}
 
-	public synchronized void addActiveCall(Device device, String number) throws TelephonyException, InvalidDeviceStateException {
-		
+	public synchronized void addActiveCall(Device device, String number)
+			throws TelephonyException, InvalidDeviceStateException {
+
 		CallRequest call = getCallRequestByNumber(number);
-		
+
 		if (call == null) {
 			throw new TelephonyException("Номер входящего не найден в очереди");
 		}
 		if (isDeviceActive(device.getDeviceNumber())) {
 			throw new InvalidDeviceStateException("Внутренний аппарат занят");
 		}
-		ActiveCall newCall = new ActiveCall(device.getDeviceNumber(), device.getOperatorName(), number);
+		ActiveCall newCall = new ActiveCall(
+				device.getDeviceNumber(),
+				device.getOperatorName(),
+				number);
 		removeFromQueue(call);
 		activeCalls.put(device.getDeviceNumber(), newCall);
 	}
@@ -98,7 +102,6 @@ public class PhoneStorage {
 	}
 
 	public synchronized void removeActiveCall(String deviceNumber) throws InvalidDeviceStateException {
-
 		ActiveCall activeCall = activeCalls.remove(deviceNumber);
 
 		if (activeCall == null) {
@@ -116,6 +119,20 @@ public class PhoneStorage {
 			return activeCalls.get(deviceNumber);
 		}
 		return null;
+	}
+
+	public synchronized void restoreActiveCall(ActiveCall activeCall) throws InvalidDeviceStateException {
+		if (isDeviceActive(activeCall.getDeviceNumber())) {
+			throw new InvalidDeviceStateException("Внутренний аппарат занят");
+		}
+		activeCalls.put(activeCall.getDeviceNumber(), activeCall);
+	}
+
+	public synchronized void restoreCallToQueue(CallRequest call) throws TelephonyException {
+		if (isExistsInQueue(call)) {
+			throw new TelephonyException("Номер " + call.getPhoneNumber() + " уже существует");
+		}
+		callsQueue.addFirst(call);
 	}
 
 }
