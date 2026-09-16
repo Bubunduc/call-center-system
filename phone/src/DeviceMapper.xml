@@ -24,7 +24,7 @@
 		FROM device WHERE device_number =
 		#{device_number}
 	</select>
-	
+
 	<select id="findAllByRoomId" resultMap="DeviceResultMap">
 		SELECT id, room_id,
 		device_number, operator_name
