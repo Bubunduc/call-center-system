@@ -117,6 +117,9 @@ public class PhoneStorage {
 	}
 
 	private boolean isDeviceActive(String deviceNumber) {
+		if (deviceNumber == null) {
+			return false;
+		}
 		return activeCalls.containsKey(deviceNumber);
 	}
 
