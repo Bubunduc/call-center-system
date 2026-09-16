@@ -170,7 +170,7 @@ public class MainPanelPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				GWT.log("Ошибка обновления активных звонков", caught);
+				GWT.log("Ошибка загрузки очереди", caught);
 				errorPresenter.setErrorMessage(caught.getMessage());
 
 			}
@@ -187,7 +187,7 @@ public class MainPanelPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				GWT.log("Ошибка обновления активных звонков", caught);
+				GWT.log("Ошибка загрузки комнат", caught);
 				errorPresenter.setErrorMessage(caught.getMessage());
 			}
 		});
@@ -285,7 +285,7 @@ public class MainPanelPresenter {
 					return;
 				}
 				if (store.isDeviceBusy(selectedDevice.getId())) {
-					errorPresenter.setErrorMessage("Текущий оператор уже с кем то разговаривает");
+					errorPresenter.setErrorMessage("Текущий оператор уже с кем-то разговаривает");
 					return;
 				}
 				activeCallsClient.acceptCall(URL, selectedDevice.getId(), number, new AsyncCallback<Void>() {
@@ -364,7 +364,7 @@ public class MainPanelPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				GWT.log("Ошибка обновления активных звонков", caught);
+				GWT.log("Ошибка обновления очереди", caught);
 				pollingError = true;
 				errorPresenter.setErrorMessage(caught.getMessage());
 

@@ -27,7 +27,7 @@ public class SuccessMessage {
 
 	@Override
 	public String toString() {
-		return "SuccesssMessage [status=" + status + ", message=" + message + "]";
+		return "SuccessMessage [status=" + status + ", message=" + message + "]";
 	}
 		
 }
