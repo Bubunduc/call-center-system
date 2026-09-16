@@ -18,7 +18,7 @@ import phone.shared.dto.PhoneResponse;
 
 public class QueueClient {
 
-	private final String ROUTE = "/queue";
+	private static final String ROUTE = "/queue";
 
 	public void getQueue(String url, final AsyncCallback<List<PhoneResponse>> callback) {
 

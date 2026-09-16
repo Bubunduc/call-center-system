@@ -17,7 +17,7 @@ import phone.client.request.utils.ResponseUtils;
 import phone.shared.dto.DeviceResponse;
 
 public class DeviceClient {
-	private final String ROUTE = "/rooms/devices";
+	private static final String ROUTE = "/rooms/devices";
 
 	public void getDevices(String url, Long id, final AsyncCallback<List<DeviceResponse>> callback) {
 

@@ -24,20 +24,8 @@ import phone.client.tree.TreeDisplay;
 import phone.client.tree.TreePresenter;
 import phone.client.tree.TreeView;
 
-/**
- * Entry point classes define <code>onModuleLoad()</code>.
- */
 public class Phone implements EntryPoint {
 
-	/**
-	 * Create a remote service proxy to talk to the server-side Greeting service.
-	 */
-	// private final GreetingServiceAsync greetingService =
-	// GWT.create(GreetingService.class);
-
-	/**
-	 * This is the entry point method.
-	 */
 	public void onModuleLoad() {
 
 		final ActiveCallsClient activeCallsClient = new ActiveCallsClient();

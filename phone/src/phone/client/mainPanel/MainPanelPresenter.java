@@ -40,7 +40,7 @@ public class MainPanelPresenter {
 	private final ErrorPresenter errorPresenter;
 
 	private Timer refreshTimer;
-	private final String URL = GWT.getHostPageBaseURL() + "api";
+	private static final String URL = GWT.getHostPageBaseURL() + "api";
 	private boolean pollingError = false; // true, только если текущая ошибка вызвана поллингом
 
 	public MainPanelPresenter(Builder builder) {

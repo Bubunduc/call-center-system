@@ -17,7 +17,8 @@ import phone.client.request.utils.ResponseUtils;
 import phone.shared.dto.RoomResponse;
 
 public class RoomClient {
-	private final String ROUTE = "/rooms";
+	
+	private static final String ROUTE = "/rooms";
 
 	public void getRooms(String url, final AsyncCallback<List<RoomResponse>> callback) {
 

@@ -18,7 +18,7 @@ import phone.shared.dto.ActiveCall;
 
 public class ActiveCallsClient {
 
-	private final String ROUTE = "/calls";
+	private static final String ROUTE = "/calls";
 
 	public void getActiveCalls(String url, final AsyncCallback<List<ActiveCall>> callback) {
 
