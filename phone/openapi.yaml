@@ -1,42 +1,39 @@
 openapi: 3.0.3
-
 info:
   title: Telephony Service API
   version: 1.0.0
-  description: >
-    REST API микросервиса «Телефония». API управляет очередью входящих звонков,
-    активными разговорами, комнатами и телефонными аппаратами.
+  description: 'REST API микросервиса «Телефония». API управляет очередью входящих звонков, активными разговорами, комнатами
+    и телефонными аппаратами.
 
+    '
 servers:
-  - url: http://127.0.0.1:8081/api
-    description: Локальный сервер Телефонии
-
+- url: http://127.0.0.1:8081/api
+  description: Локальный сервер Телефонии
 tags:
-  - name: Queue
-    description: Очередь входящих звонков
-  - name: Calls
-    description: Активные звонки
-  - name: Rooms
-    description: Комнаты и телефонные аппараты
-
+- name: Queue
+  description: Очередь входящих звонков
+- name: Calls
+  description: Активные звонки
+- name: Rooms
+  description: Комнаты и телефонные аппараты
 paths:
   /queue:
     post:
       tags:
-        - Queue
+      - Queue
       summary: Добавить входящий звонок в очередь
-      description: >
-        Добавляет входящий звонок в очередь. Звонок остаётся в очереди,
-        пока на него не ответит внутренний аппарат.
+      description: 'Добавляет входящий звонок в очередь. Звонок остаётся в очереди, пока на него не ответит внутренний аппарат.
+
+        '
       operationId: addCallToQueue
       parameters:
-        - name: phoneNumber
-          in: query
-          required: true
-          description: Номер входящего телефона
-          schema:
-            type: string
-          example: 8-909-589-45-82
+      - name: phoneNumber
+        in: query
+        required: true
+        description: Номер входящего телефона
+        schema:
+          type: string
+        example: 8-909-589-45-82
       responses:
         '200':
           description: Звонок поставлен в очередь
@@ -48,9 +45,9 @@ paths:
                 status: success
                 message: Звонок добавлен в очередь
         '400':
-          description: >
-            Номер уже находится в очереди, уже участвует в разговоре
-            или имеет неверный формат
+          description: 'Номер уже находится в очереди, уже участвует в разговоре или имеет неверный формат
+
+            '
           content:
             application/json:
               schema:
@@ -59,32 +56,33 @@ paths:
                 alreadyExists:
                   summary: Номер уже существует
                   value:
-                    error: Номер 8-909-589-45-82 уже существует
+                    message: Номер 8-909-589-45-82 уже существует
                 alreadyTalking:
                   summary: Номер уже участвует в разговоре
                   value:
-                    error: Номер 8-909-589-45-82 уже разговаривает
+                    message: Номер 8-909-589-45-82 уже разговаривает
                 invalidFormat:
                   summary: Неверный формат номера
                   value:
-                    error: Номер телефона не соответствует формату вида 8-xxx-xxx-xx-xx
+                    message: Номер телефона не соответствует формату вида 8-xxx-xxx-xx-xx
+        '503':
+          $ref: '#/components/responses/AtsServiceUnavailable'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
     delete:
       tags:
-        - Queue
+      - Queue
       summary: Удалить звонок из очереди
       description: Отменяет входящий звонок и удаляет указанный номер из очереди.
       operationId: removeCallFromQueue
       parameters:
-        - name: phoneNumber
-          in: query
-          required: true
-          description: Номер входящего телефона
-          schema:
-            type: string
-          example: 8-909-589-45-82
+      - name: phoneNumber
+        in: query
+        required: true
+        description: Номер входящего телефона
+        schema:
+          type: string
+        example: 8-909-589-45-82
       responses:
         '200':
           description: Звонок удалён из очереди
@@ -96,19 +94,27 @@ paths:
                 status: success
                 message: Звонок удален из очереди
         '400':
-          description: Номер не найден в очереди
+          description: Номер не найден в очереди или запрос содержит некорректный номер телефона
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-              example:
-                error: Номер 8-909-589-45-82 не существует
+              examples:
+                notFound:
+                  summary: Номер не найден
+                  value:
+                    message: Номер 8-909-589-45-82 не существует
+                invalidRequest:
+                  summary: Некорректные входные данные
+                  value:
+                    message: Неверный формат данных или отсутствует номер телефона
+        '503':
+          $ref: '#/components/responses/AtsServiceUnavailable'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
     get:
       tags:
-        - Queue
+      - Queue
       summary: Получить всю очередь звонков
       description: Возвращает входящие звонки, на которые ещё никто не ответил.
       operationId: getQueue
@@ -122,33 +128,34 @@ paths:
                 items:
                   $ref: '#/components/schemas/PhoneResponse'
               example:
-                - phoneNumber: 8-909-589-45-82
-                - phoneNumber: 8-951-147-25-89
-
+              - phoneNumber: 8-909-589-45-82
+              - phoneNumber: 8-951-147-25-89
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /calls:
     post:
       tags:
-        - Calls
+      - Calls
       summary: Ответить на входящий звонок
-      description: >
-        Связывает входящий звонок из очереди с выбранным внутренним аппаратом
-        и переводит его в активные звонки.
+      description: 'Связывает входящий звонок из очереди с выбранным внутренним аппаратом и переводит его в активные звонки.
+
+        '
       operationId: answerCall
       parameters:
-        - name: deviceNumber
-          in: query
-          required: true
-          description: Номер внутреннего аппарата
-          schema:
-            type: string
-          example: '100'
-        - name: phoneNumber
-          in: query
-          required: true
-          description: Номер входящего телефона
-          schema:
-            type: string
-          example: 8-909-589-45-82
+      - name: deviceNumber
+        in: query
+        required: true
+        description: Номер внутреннего аппарата
+        schema:
+          type: string
+        example: '100'
+      - name: phoneNumber
+        in: query
+        required: true
+        description: Номер входящего телефона
+        schema:
+          type: string
+        example: 8-909-589-45-82
       responses:
         '200':
           description: Звонок принят
@@ -158,19 +165,30 @@ paths:
                 $ref: '#/components/schemas/SuccessResponse'
               example:
                 status: success
-                message: Звонок принят
+                message: Звонок принят на обработку
         '400':
-          description: Внутренний аппарат занят
+          description: Аппарат занят или запрос содержит некорректные входные данные
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-              example:
-                error: Внутренний аппарат занят
+              examples:
+                deviceBusy:
+                  summary: Внутренний аппарат занят
+                  value:
+                    message: Внутренний аппарат занят
+                missingDeviceNumber:
+                  summary: Не указан внутренний номер
+                  value:
+                    message: Не указан внутренний номер аппарата
+                missingPhoneNumber:
+                  summary: Не указан номер телефона
+                  value:
+                    message: Не указан номер телефона
         '404':
-          description: >
-            Внутренний аппарат не существует или входящий номер
-            не найден в очереди
+          description: 'Внутренний аппарат не существует или входящий номер не найден в очереди
+
+            '
           content:
             application/json:
               schema:
@@ -179,30 +197,31 @@ paths:
                 deviceNotFound:
                   summary: Аппарат не найден
                   value:
-                    error: Номер внутреннего аппарата не существует
+                    message: Номер внутреннего аппарата не существует
                 phoneNotFound:
                   summary: Входящий звонок не найден
                   value:
-                    error: Номер входящего не найден в очереди
+                    message: Номер входящего не найден в очереди
+        '503':
+          $ref: '#/components/responses/AtsServiceUnavailable'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
     delete:
       tags:
-        - Calls
+      - Calls
       summary: Завершить активный звонок
-      description: >
-        Завершает разговор выбранного внутреннего аппарата
-        и удаляет звонок из списка активных.
+      description: 'Завершает разговор выбранного внутреннего аппарата и удаляет звонок из списка активных.
+
+        '
       operationId: endCall
       parameters:
-        - name: deviceNumber
-          in: query
-          required: true
-          description: Номер внутреннего аппарата
-          schema:
-            type: string
-          example: '100'
+      - name: deviceNumber
+        in: query
+        required: true
+        description: Номер внутреннего аппарата
+        schema:
+          type: string
+        example: '100'
       responses:
         '200':
           description: Звонок окончен
@@ -214,13 +233,20 @@ paths:
                 status: success
                 message: Звонок окончен
         '400':
-          description: Аппарат свободен и ни с кем не разговаривает
+          description: Аппарат свободен или запрос содержит некорректные входные данные
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-              example:
-                error: Аппарат свободен и ни с кем не разговаривает
+              examples:
+                deviceFree:
+                  summary: Аппарат не участвует в разговоре
+                  value:
+                    message: Аппарат свободен и ни с кем не разговаривает
+                missingDeviceNumber:
+                  summary: Не указан внутренний номер
+                  value:
+                    message: Не указан внутренний номер аппарата
         '404':
           description: Внутренний аппарат не существует
           content:
@@ -228,13 +254,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
-                error: Номер внутреннего аппарата не существует
+                message: Номер внутреннего аппарата не существует
+        '503':
+          $ref: '#/components/responses/AtsServiceUnavailable'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
     get:
       tags:
-        - Calls
+      - Calls
       summary: Получить все активные звонки
       description: Возвращает информацию о том, какой оператор с каким номером разговаривает.
       operationId: getActiveCalls
@@ -248,14 +275,15 @@ paths:
                 items:
                   $ref: '#/components/schemas/ActiveCall'
               example:
-                - deviceNumber: '100'
-                  operatorName: Вася
-                  phoneNumber: 8-909-589-45-82
-
+              - deviceNumber: '100'
+                operatorName: Вася
+                phoneNumber: 8-909-589-45-82
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /rooms:
     get:
       tags:
-        - Rooms
+      - Rooms
       summary: Получить список комнат
       description: Возвращает идентификатор и имя каждой комнаты.
       operationId: getRooms
@@ -269,33 +297,34 @@ paths:
                 items:
                   $ref: '#/components/schemas/RoomResponse'
               example:
-                - id: 1
-                  name: Главный зал
-                - id: 2
-                  name: Офис
-                - id: 3
-                  name: Переговорная
-
+              - id: 1
+                name: Главный зал
+              - id: 2
+                name: Офис
+              - id: 3
+                name: Переговорная
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /rooms/devices:
     get:
       tags:
-        - Rooms
+      - Rooms
       summary: Получить статусы аппаратов в комнате
-      description: >
-        Возвращает все аппараты выбранной комнаты. Если аппарат участвует
-        в разговоре, incomingNumber содержит номер входящего звонка.
-        Для свободного аппарата incomingNumber равен null.
+      description: 'Возвращает все аппараты выбранной комнаты. Если аппарат участвует в разговоре, incomingNumber содержит
+        номер входящего звонка. Для свободного аппарата incomingNumber равен null.
+
+        '
       operationId: getDevicesByRoom
       parameters:
-        - name: roomId
-          in: query
-          required: true
-          description: Идентификатор комнаты
-          schema:
-            type: integer
-            format: int64
-            minimum: 1
-          example: 1
+      - name: roomId
+        in: query
+        required: true
+        description: Идентификатор комнаты
+        schema:
+          type: integer
+          format: int64
+          minimum: 1
+        example: 1
       responses:
         '200':
           description: Список аппаратов комнаты и их текущих состояний
@@ -306,12 +335,12 @@ paths:
                 items:
                   $ref: '#/components/schemas/DeviceResponse'
               example:
-                - deviceNumber: '100'
-                  operatorName: Вася
-                  incomingNumber: 8-909-589-45-82
-                - deviceNumber: '101'
-                  operatorName: Коля
-                  incomingNumber: null
+              - deviceNumber: '100'
+                operatorName: Вася
+                incomingNumber: 8-909-589-45-82
+              - deviceNumber: '101'
+                operatorName: Коля
+                incomingNumber: null
         '400':
           description: Параметр roomId отсутствует или имеет неверный формат
           content:
@@ -322,11 +351,11 @@ paths:
                 missingRoomId:
                   summary: Параметр отсутствует
                   value:
-                    error: Не указан параметр roomId
+                    message: Не указан параметр roomId
                 invalidRoomId:
                   summary: Неверное значение roomId
                   value:
-                    error: Указан некорректный roomId
+                    message: Указан некорректный roomId
         '404':
           description: Комната с указанным идентификатором не существует
           content:
@@ -334,26 +363,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
-                error: Комнаты с таким id не существует
-
+                message: Комнаты с таким id не существует
 components:
   schemas:
     PhoneResponse:
       type: object
       required:
-        - phoneNumber
+      - phoneNumber
       properties:
         phoneNumber:
           type: string
           description: Номер входящего телефона
           example: 8-909-589-45-82
-
     ActiveCall:
       type: object
       required:
-        - deviceNumber
-        - operatorName
-        - phoneNumber
+      - deviceNumber
+      - operatorName
+      - phoneNumber
       properties:
         deviceNumber:
           type: string
@@ -367,12 +394,11 @@ components:
           type: string
           description: Номер входящего телефона
           example: 8-909-589-45-82
-
     RoomResponse:
       type: object
       required:
-        - id
-        - name
+      - id
+      - name
       properties:
         id:
           type: integer
@@ -383,12 +409,11 @@ components:
           type: string
           description: Имя комнаты
           example: Главный зал
-
     DeviceResponse:
       type: object
       required:
-        - deviceNumber
-        - operatorName
+      - deviceNumber
+      - operatorName
       properties:
         deviceNumber:
           type: string
@@ -401,16 +426,15 @@ components:
         incomingNumber:
           type: string
           nullable: true
-          description: >
-            Номер входящего звонка, если аппарат занят разговором.
-            Для свободного аппарата null.
-          example: 8-909-589-45-82
+          description: 'Номер входящего звонка, если аппарат занят разговором. Для свободного аппарата null.
 
+            '
+          example: 8-909-589-45-82
     SuccessResponse:
       type: object
       required:
-        - status
-        - message
+      - status
+      - message
       properties:
         status:
           type: string
@@ -418,16 +442,14 @@ components:
         message:
           type: string
           example: Операция выполнена успешно
-
     ErrorResponse:
       type: object
       required:
-        - error
+      - message
       properties:
-        error:
+        message:
           type: string
           example: Описание ошибки
-
   responses:
     InternalServerError:
       description: Внутренняя ошибка сервера
@@ -436,4 +458,19 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
           example:
-            error: Внутренняя ошибка сервера
+            message: Внутренняя ошибка сервера
+    AtsServiceUnavailable:
+      description: АТС недоступна или вернула ошибку
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            unavailable:
+              summary: Сервер АТС недоступен
+              value:
+                message: АТС сервер недоступен. Повторите попытку позже
+            atsError:
+              summary: АТС вернула ошибочный HTTP-статус
+              value:
+                message: АТС вернула HTTP 500
