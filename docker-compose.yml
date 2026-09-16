@@ -62,6 +62,8 @@ services:
       ATS_URL: "http://ats:8080/api/action"
 
       ATS_ALLOWED_ORIGIN: "http://${PUBLIC_HOST}:${ATS_PORT}"
+      PHONE_ALLOWED_ORIGIN: "http://${PUBLIC_HOST}:${PHONE_PORT}"
+      SWAGGER_ALLOWED_ORIGIN: "http://${PUBLIC_HOST}:${SWAGGER_PORT}"
 
       DB_URL: "jdbc:postgresql://postgres:5432/${DB_NAME}"
       DB_USERNAME: "${DB_USERNAME}"

@@ -83,25 +83,23 @@ h1 {
 }
 
 .queue-box {
-    width: 150px;
-    height: 180px;
-
-    border: 1px solid #000;
-    box-sizing: border-box;
-
-    overflow-y: auto;
+	width: 150px;
+	height: 180px;
+	border: 1px solid #000;
+	box-sizing: border-box;
+	overflow-y: auto;
 }
 
 .queue-table {
-    width: 100%;
-    border-collapse: collapse;
+	width: 100%;
+	border-collapse: collapse;
 }
 
 .queue-table td {
-    border: none !important;
-    padding: 2px 6px !important;
-    font-size: 14px;
-    white-space: nowrap;
+	border: none !important;
+	padding: 2px 6px !important;
+	font-size: 14px;
+	white-space: nowrap;
 }
 
 .active-calls-container {
@@ -109,29 +107,27 @@ h1 {
 }
 
 .active-calls-box {
-    width: 100%;
-    height: 200px;
-
-    border: 1px solid #000;
-    box-sizing: border-box;
-
-    overflow-y: auto;
+	width: 100%;
+	height: 200px;
+	border: 1px solid #000;
+	box-sizing: border-box;
+	overflow-y: auto;
 }
 
 .active-calls-table {
-    width: 100%;
-    border-collapse: collapse;
+	width: 100%;
+	border-collapse: collapse;
 }
 
 .active-calls-table td {
-    border: none !important;
-    padding: 2px 16px 2px 0 !important;
-    vertical-align: top !important;
-    font-size: 14px;
+	border: none !important;
+	padding: 2px 16px 2px 0 !important;
+	vertical-align: top !important;
+	font-size: 14px;
 }
 
 .active-calls-table td:last-child {
-    padding-right: 0 !important;
+	padding-right: 0 !important;
 }
 
 .upper-right-panel {
@@ -166,6 +162,13 @@ h1 {
 	background-color: #17a9bd !important;
 }
 
-.error-label{
-	color : red;
+.error-label {
+	display: inline-block;
+	padding: 6px 10px;
+	margin-top: 10px;
+	color: #a40000;
+	background: #ffecec;
+	border: 1px solid #d88;
+	border-radius: 3px;
+	font-size: 13px;
 }

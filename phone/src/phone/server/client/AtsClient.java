@@ -59,7 +59,7 @@ public class AtsClient {
 			throw e;
 
 		} catch (Exception e) {
-			throw new AtsCommunicationException("АТС сервер недоступен", e);
+			throw new AtsCommunicationException("АТС сервер недоступен. Повторите попытку позже", e);
 
 		} finally {
 			if (conn != null) {
