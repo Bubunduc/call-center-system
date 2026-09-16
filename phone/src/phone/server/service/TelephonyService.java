@@ -20,7 +20,7 @@ import phone.shared.dto.PhoneResponse;
 import phone.shared.dto.RoomResponse;
 import phone.shared.exception.AtsCommunicationException;
 import phone.shared.exception.InvalidDeviceStateException;
-import phone.shared.exception.InvalidPhoneFormatException;
+import phone.shared.exception.InvalidRequestException;
 import phone.shared.exception.TelephonyException;
 import phone.shared.model.Device;
 import phone.shared.model.Room;
@@ -48,7 +48,7 @@ public class TelephonyService {
 	}
 
 	public void addToQueue(CallRequest call)
-			throws TelephonyException, AtsCommunicationException, InvalidPhoneFormatException {
+			throws TelephonyException, AtsCommunicationException, InvalidRequestException {
 
 		validateCallRequest(call);
 		phoneStorage.addCallQueue(call);
@@ -65,10 +65,12 @@ public class TelephonyService {
 	}
 
 	public void removeFromQueue(CallRequest call)
-			throws TelephonyException, InvalidDeviceStateException, AtsCommunicationException {
+			throws TelephonyException, InvalidDeviceStateException, AtsCommunicationException,InvalidRequestException {
+		validateCallRequest(call);
+		
 		CallResponse toAtsData;
-
 		ActiveCall currentCall = phoneStorage.isPhoneTalks(call);
+		
 		if (currentCall != null) {
 			toAtsData = new CallResponse(currentCall.getPhoneNumber(), currentCall.getDeviceNumber(),
 					currentCall.getOperatorName(), new Timestamp(System.currentTimeMillis()), Status.CANCELED);
@@ -105,7 +107,8 @@ public class TelephonyService {
 	}
 
 	public void answerCall(AnswerCallRequest request)
-			throws TelephonyException, InvalidDeviceStateException, AtsCommunicationException {
+			throws TelephonyException, InvalidDeviceStateException, AtsCommunicationException, InvalidRequestException {
+		validateAnswerCallRequest(request);
 		Device device = getDeviceByNumber(request.getDeviceNumber());
 
 		CallResponse toAtsData = new CallResponse(
@@ -126,7 +129,8 @@ public class TelephonyService {
 	}
 
 	public void endCall(EndCallRequest request)
-			throws TelephonyException, InvalidDeviceStateException, AtsCommunicationException {
+			throws TelephonyException, InvalidDeviceStateException, AtsCommunicationException, InvalidRequestException {
+		validateEndCallRequest(request);
 		Device device = getDeviceByNumber(request.getDeviceNumber());
 
 		ActiveCall activeCall = phoneStorage.getActiveCallByDeviceNumber(device.getDeviceNumber());
@@ -190,10 +194,43 @@ public class TelephonyService {
 		atsClient.sendAction(action);
 	}
 
-	private void validateCallRequest(CallRequest callRequest) throws InvalidPhoneFormatException {
+	private void validateCallRequest(CallRequest callRequest) throws InvalidRequestException {
 		String error = PhoneValidator.verifyIncomingPhone(callRequest);
 		if (error != null) {
-			throw new InvalidPhoneFormatException(error);
+			throw new InvalidRequestException(error);
 		}
 	}
+	private void validateAnswerCallRequest(AnswerCallRequest request)
+	        throws InvalidRequestException {
+
+	    if (request == null) {
+	        throw new InvalidRequestException("Отсутствуют данные запроса");
+	    }
+
+	    if (request.getDeviceNumber() == null
+	            || request.getDeviceNumber().trim().isEmpty()) {
+	        throw new InvalidRequestException(
+	                "Не указан внутренний номер аппарата");
+	    }
+
+	    if (request.getPhoneNumber() == null
+	            || request.getPhoneNumber().trim().isEmpty()) {
+	        throw new InvalidRequestException(
+	                "Не указан номер телефона");
+	    }
+	}
+	private void validateEndCallRequest(EndCallRequest request)
+	        throws InvalidRequestException {
+
+	    if (request == null) {
+	        throw new InvalidRequestException("Отсутствуют данные запроса");
+	    }
+
+	    if (request.getDeviceNumber() == null
+	            || request.getDeviceNumber().trim().isEmpty()) {
+	        throw new InvalidRequestException(
+	                "Не указан внутренний номер аппарата");
+	    }
+	}
+	
 }

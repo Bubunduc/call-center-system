@@ -12,7 +12,7 @@ import phone.server.ApplicationContext;
 import phone.server.dto.CallRequest;
 import phone.server.service.TelephonyService;
 import phone.shared.exception.AtsCommunicationException;
-import phone.shared.exception.InvalidPhoneFormatException;
+import phone.shared.exception.InvalidRequestException;
 import phone.shared.exception.TelephonyException;
 
 @WebServlet("/api/queue")
@@ -38,7 +38,7 @@ public class QueueServlet extends HttpServlet {
 		} catch (TelephonyException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 
-		} catch (InvalidPhoneFormatException e) {
+		} catch (InvalidRequestException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 		} catch (AtsCommunicationException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_SERVICE_UNAVAILABLE, e.getMessage());
@@ -64,6 +64,8 @@ public class QueueServlet extends HttpServlet {
 		} catch (TelephonyException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 
+		} catch (InvalidRequestException e) {
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 		} catch (AtsCommunicationException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_SERVICE_UNAVAILABLE, e.getMessage());
 		} catch (Exception e) {// 500

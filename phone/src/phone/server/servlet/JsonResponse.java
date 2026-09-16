@@ -16,7 +16,11 @@ public final class JsonResponse {
 
 	private static final Gson gson = new Gson();
 	private static final Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
-
+	
+	private JsonResponse() {
+		
+	}
+	
 	public static void successMessage(HttpServletResponse resp, int status, String message) throws IOException {
 		resp.setStatus(status);
 		PrintWriter out = resp.getWriter();

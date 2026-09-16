@@ -24,6 +24,9 @@ public class PhoneStorage {
 	}
 
 	public synchronized void addCallQueue(CallRequest call) throws TelephonyException {
+		if (call == null) {
+		    throw new TelephonyException("Данные звонка отсутствуют");
+		}
 		if (isExistsInQueue(call)) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " уже существует");
 		}
@@ -42,7 +45,7 @@ public class PhoneStorage {
 		return null;
 	}
 
-	public boolean isExistsInQueue(CallRequest call) {
+	private boolean isExistsInQueue(CallRequest call) {
 		if ((call == null) || (call.getPhoneNumber() == null) || (call.getPhoneNumber().isEmpty())) {
 			return false;
 		}
@@ -52,6 +55,9 @@ public class PhoneStorage {
 	}
 
 	public synchronized void removeFromQueue(CallRequest call) throws TelephonyException {
+		if (call == null) {
+		    throw new TelephonyException("Данные звонка отсутствуют");
+		}
 		if (!isExistsInQueue(call)) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " не существует");
 		}
@@ -69,7 +75,7 @@ public class PhoneStorage {
 		return callsQueue.stream().map(x -> x.getPhoneNumber()).collect(Collectors.toList());
 	}
 
-	public CallRequest getCallRequestByNumber(String number) {
+	private CallRequest getCallRequestByNumber(String number) {
 		for (CallRequest call : callsQueue) {
 			if (call.getPhoneNumber().equals(number)) {
 				return call;
@@ -129,6 +135,9 @@ public class PhoneStorage {
 	}
 
 	public synchronized void restoreCallToQueue(CallRequest call) throws TelephonyException {
+		if (call == null) {
+		    throw new TelephonyException("Данные звонка отсутствуют");
+		}
 		if (isExistsInQueue(call)) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " уже существует");
 		}

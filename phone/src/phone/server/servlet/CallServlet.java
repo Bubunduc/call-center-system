@@ -14,6 +14,7 @@ import phone.server.dto.EndCallRequest;
 import phone.server.service.TelephonyService;
 import phone.shared.exception.AtsCommunicationException;
 import phone.shared.exception.InvalidDeviceStateException;
+import phone.shared.exception.InvalidRequestException;
 import phone.shared.exception.TelephonyException;
 
 @WebServlet("/api/calls")
@@ -42,6 +43,8 @@ public class CallServlet extends HttpServlet {
 
 		} catch (InvalidDeviceStateException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+		} catch (InvalidRequestException e) {
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 		} catch (AtsCommunicationException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_SERVICE_UNAVAILABLE, e.getMessage());
 		} catch (Exception e) {// 500
@@ -69,6 +72,8 @@ public class CallServlet extends HttpServlet {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
 		} catch (InvalidDeviceStateException e) {
 			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); // 400
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+		} catch (InvalidRequestException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 		} catch (AtsCommunicationException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_SERVICE_UNAVAILABLE, e.getMessage());
