@@ -14,13 +14,21 @@ import phone.shared.exception.AtsCommunicationException;
 public class AtsClient {
 
 	private final String atsUrl;
+	private final String internalToken;
 
 	public AtsClient() {
-		atsUrl = System.getenv("ATS_URL");
+		atsUrl = getRequiredEnv("ATS_URL");
+		internalToken = getRequiredEnv("INTERNAL_TOKEN");
+	}
 
-		if (atsUrl == null || atsUrl.isEmpty()) {
-			throw new IllegalStateException("Environment variable ATS_URL is not set");
+	private String getRequiredEnv(String name) {
+		String value = System.getenv(name);
+
+		if (value == null || value.trim().isEmpty()) {
+			throw new IllegalStateException("Environment variable " + name + " is not set");
 		}
+
+		return value;
 	}
 
 	public void sendAction(CallResponse response) throws AtsCommunicationException {
@@ -36,8 +44,8 @@ public class AtsClient {
 
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-			conn.setRequestProperty("X-Internal-Token", System.getenv("INTERNAL_TOKEN"));
-			
+			conn.setRequestProperty("X-Internal-Token", internalToken);
+
 			conn.setDoOutput(true);
 			conn.setConnectTimeout(5000);
 			conn.setReadTimeout(5000);
