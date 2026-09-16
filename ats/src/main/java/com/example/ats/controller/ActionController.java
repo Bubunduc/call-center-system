@@ -2,10 +2,13 @@ package com.example.ats.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,15 +21,25 @@ import com.example.ats.service.ActionService;
 public class ActionController {
 
 	private final ActionService actionService;
+	private final String internalToken;
 
-	public ActionController(ActionService actionService) {
+	public ActionController(ActionService actionService, @Value("${INTERNAL_TOKEN}") String internalToken) {
+
 		this.actionService = actionService;
+		this.internalToken = internalToken;
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> saveAction(@RequestBody AtsEvent event) throws EventValidationException {
-	    actionService.save(event);
-	    return ResponseEntity.ok().build();
+	public ResponseEntity<Void> saveAction(@RequestHeader(value = "X-Internal-Token", required = false) String token,
+			@RequestBody AtsEvent event) throws EventValidationException {
+
+		if (token == null || !internalToken.equals(token)) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+
+		actionService.save(event);
+
+		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping

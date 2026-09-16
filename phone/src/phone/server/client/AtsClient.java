@@ -36,7 +36,8 @@ public class AtsClient {
 
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-
+			conn.setRequestProperty("X-Internal-Token", System.getenv("INTERNAL_TOKEN"));
+			
 			conn.setDoOutput(true);
 			conn.setConnectTimeout(5000);
 			conn.setReadTimeout(5000);

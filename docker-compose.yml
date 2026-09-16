@@ -42,6 +42,7 @@ services:
 
     environment:
       TELEPHONY_URL: "http://${PUBLIC_HOST}:${PHONE_PORT}"
+      INTERNAL_TOKEN: "${INTERNAL_TOKEN}"
 
     restart: unless-stopped
 
@@ -68,6 +69,8 @@ services:
       DB_URL: "jdbc:postgresql://postgres:5432/${DB_NAME}"
       DB_USERNAME: "${DB_USERNAME}"
       DB_PASSWORD: "${DB_PASSWORD}"
+      
+      INTERNAL_TOKEN: "${INTERNAL_TOKEN}"
 
     depends_on:
       postgres:
