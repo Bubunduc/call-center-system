@@ -3,7 +3,7 @@ package phone.server.dto;
 public class SuccessMessage {
 	private String status;
 	private String message;
-	
+
 	public SuccessMessage(String status, String message) {
 		this.status = status;
 		this.message = message;
@@ -29,5 +29,5 @@ public class SuccessMessage {
 	public String toString() {
 		return "SuccessMessage [status=" + status + ", message=" + message + "]";
 	}
-		
+
 }

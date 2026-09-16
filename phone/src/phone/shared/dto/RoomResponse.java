@@ -34,15 +34,15 @@ public class RoomResponse {
 	public String toString() {
 		return "Room [id=" + id + ", name=" + name + "]";
 	}
-	
-	public static List<RoomResponse> toDtoList(List<Room> rooms){
-		
+
+	public static List<RoomResponse> toDtoList(List<Room> rooms) {
+
 		List<RoomResponse> result = new ArrayList<RoomResponse>();
-		
+
 		for (Room room : rooms) {
 			result.add(new RoomResponse(room.getId(), room.getName()));
 		}
-		
+
 		return result;
 	}
 }

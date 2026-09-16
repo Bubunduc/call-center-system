@@ -41,14 +41,15 @@ public class Phone implements EntryPoint {
 
 		final ActiveCallsDisplay activeCallsView = new ActiveCallsView();
 		final ActiveCallsPresenter activeCallsPresenter = new ActiveCallsPresenter(activeCallsView);
-		
+
 		final ErrorDisplay errorView = new ErrorView();
 		final ErrorPresenter errorPresenter = new ErrorPresenter(errorView);
-		
+
 		final ClientPhoneStore store = new ClientPhoneStore();
 
-		final MainPanelDisplay mainPanelView = new MainPanelView(treeView, queueView, activeCallsView,errorView);
-		final MainPanelPresenter mainPanelPresenter = MainPanelPresenter.builder()
+		final MainPanelDisplay mainPanelView = new MainPanelView(treeView, queueView, activeCallsView, errorView);
+		final MainPanelPresenter mainPanelPresenter = MainPanelPresenter
+				.builder()
 				.activeCallsClient(activeCallsClient)
 				.queueClient(queueClient)
 				.deviceClient(deviceClient)
@@ -60,6 +61,7 @@ public class Phone implements EntryPoint {
 				.store(store)
 				.view(mainPanelView)
 				.build();
+		
 		mainPanelPresenter.go(RootPanel.get("mainContainer"));
 	}
 }

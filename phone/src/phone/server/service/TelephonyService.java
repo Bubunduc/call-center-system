@@ -65,21 +65,17 @@ public class TelephonyService {
 	}
 
 	public void removeFromQueue(CallRequest call)
-			throws TelephonyException, InvalidDeviceStateException, AtsCommunicationException,InvalidRequestException {
+			throws TelephonyException, InvalidDeviceStateException, AtsCommunicationException, InvalidRequestException {
 		validateCallRequest(call);
-		
+
 		CallResponse toAtsData;
 		ActiveCall currentCall = phoneStorage.isPhoneTalks(call);
-		
+
 		if (currentCall != null) {
 			toAtsData = new CallResponse(currentCall.getPhoneNumber(), currentCall.getDeviceNumber(),
 					currentCall.getOperatorName(), new Timestamp(System.currentTimeMillis()), Status.CANCELED);
 		} else {
-			toAtsData = new CallResponse(
-					call.getPhoneNumber(), 
-					null,
-					null, 
-					new Timestamp(System.currentTimeMillis()),
+			toAtsData = new CallResponse(call.getPhoneNumber(), null, null, new Timestamp(System.currentTimeMillis()),
 					Status.CANCELED);
 		}
 
@@ -111,12 +107,8 @@ public class TelephonyService {
 		validateAnswerCallRequest(request);
 		Device device = getDeviceByNumber(request.getDeviceNumber());
 
-		CallResponse toAtsData = new CallResponse(
-				request.getPhoneNumber(),
-				device.getDeviceNumber(),
-				device.getOperatorName(),
-				new Timestamp(System.currentTimeMillis()),
-				Status.ANSWERED);
+		CallResponse toAtsData = new CallResponse(request.getPhoneNumber(), device.getDeviceNumber(),
+				device.getOperatorName(), new Timestamp(System.currentTimeMillis()), Status.ANSWERED);
 		phoneStorage.addActiveCall(device, request.getPhoneNumber());
 		try {
 			sendToAts(toAtsData);
@@ -135,14 +127,10 @@ public class TelephonyService {
 
 		ActiveCall activeCall = phoneStorage.getActiveCallByDeviceNumber(device.getDeviceNumber());
 		if (activeCall == null) {
-			 throw new InvalidDeviceStateException("Аппарат свободен и ни с кем не разговаривает");
+			throw new InvalidDeviceStateException("Аппарат свободен и ни с кем не разговаривает");
 		}
-		CallResponse toAtsData = new CallResponse(
-				activeCall.getPhoneNumber(),
-				device.getDeviceNumber(),
-				device.getOperatorName(),
-				new Timestamp(System.currentTimeMillis()),
-				Status.HANG_UP);
+		CallResponse toAtsData = new CallResponse(activeCall.getPhoneNumber(), device.getDeviceNumber(),
+				device.getOperatorName(), new Timestamp(System.currentTimeMillis()), Status.HANG_UP);
 		phoneStorage.removeActiveCall(device.getDeviceNumber());
 		try {
 			sendToAts(toAtsData);
@@ -200,37 +188,31 @@ public class TelephonyService {
 			throw new InvalidRequestException(error);
 		}
 	}
-	private void validateAnswerCallRequest(AnswerCallRequest request)
-	        throws InvalidRequestException {
 
-	    if (request == null) {
-	        throw new InvalidRequestException("Отсутствуют данные запроса");
-	    }
+	private void validateAnswerCallRequest(AnswerCallRequest request) throws InvalidRequestException {
 
-	    if (request.getDeviceNumber() == null
-	            || request.getDeviceNumber().trim().isEmpty()) {
-	        throw new InvalidRequestException(
-	                "Не указан внутренний номер аппарата");
-	    }
+		if (request == null) {
+			throw new InvalidRequestException("Отсутствуют данные запроса");
+		}
 
-	    if (request.getPhoneNumber() == null
-	            || request.getPhoneNumber().trim().isEmpty()) {
-	        throw new InvalidRequestException(
-	                "Не указан номер телефона");
-	    }
+		if (request.getDeviceNumber() == null || request.getDeviceNumber().trim().isEmpty()) {
+			throw new InvalidRequestException("Не указан внутренний номер аппарата");
+		}
+
+		if (request.getPhoneNumber() == null || request.getPhoneNumber().trim().isEmpty()) {
+			throw new InvalidRequestException("Не указан номер телефона");
+		}
 	}
-	private void validateEndCallRequest(EndCallRequest request)
-	        throws InvalidRequestException {
 
-	    if (request == null) {
-	        throw new InvalidRequestException("Отсутствуют данные запроса");
-	    }
+	private void validateEndCallRequest(EndCallRequest request) throws InvalidRequestException {
 
-	    if (request.getDeviceNumber() == null
-	            || request.getDeviceNumber().trim().isEmpty()) {
-	        throw new InvalidRequestException(
-	                "Не указан внутренний номер аппарата");
-	    }
+		if (request == null) {
+			throw new InvalidRequestException("Отсутствуют данные запроса");
+		}
+
+		if (request.getDeviceNumber() == null || request.getDeviceNumber().trim().isEmpty()) {
+			throw new InvalidRequestException("Не указан внутренний номер аппарата");
+		}
 	}
-	
+
 }

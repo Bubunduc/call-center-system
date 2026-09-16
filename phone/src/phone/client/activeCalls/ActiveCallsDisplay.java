@@ -8,7 +8,7 @@ import phone.client.event.select.ActiveCallsSelectionHandler;
 public interface ActiveCallsDisplay {
 
 	void addActiveCall(String id, String name, String phone);
-	
+
 	void removeActiveCall(String id);
 
 	void colorSelectedRow(String id);
@@ -16,7 +16,7 @@ public interface ActiveCallsDisplay {
 	void setCurrentNumSelectionHandler(ActiveCallsSelectionHandler selectionHandler);
 
 	void setCurrentNumButtonClickHandler(ActiveCallsButtonClickHandler handler);
-	
+
 	void clear();
 
 	Widget asWidget();

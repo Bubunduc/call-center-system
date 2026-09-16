@@ -6,6 +6,8 @@ import phone.shared.model.Device;
 
 public interface DeviceDao {
 	List<Device> findAll();
+
 	Device findByDeviceNumber(String number);
+
 	List<Device> findAllByRoomId(Long id);
 }

@@ -129,12 +129,12 @@ public class MainPanelPresenter {
 			if (activeCallsPresenter == null 
 					|| queuePresenter == null
 					|| treePresenter == null
-					|| errorPresenter == null 
+					|| errorPresenter == null
 					|| view == null 
-					|| activeCallsClient == null 
+					|| activeCallsClient == null
 					|| queueClient == null
-					|| roomClient == null 
-					|| deviceClient == null 
+					|| roomClient == null
+					|| deviceClient == null
 					|| store == null) {
 
 				throw new IllegalStateException("Не заданы все зависимости MainPanelPresenter");
@@ -210,10 +210,10 @@ public class MainPanelPresenter {
 					store.addDevice(new DeviceInfo(i.getDeviceNumber(), i.getOperatorName()));
 					if (i.getIncomingNumber() != null) {
 						store.addActiveCall(new ActiveCall(
-							i.getDeviceNumber(),
-							i.getOperatorName(),
-							i.getIncomingNumber()));
-						
+								i.getDeviceNumber(),
+								i.getOperatorName(),
+								i.getIncomingNumber()));
+
 						activeCallsPresenter.loadData(i);
 					}
 				}
@@ -297,7 +297,7 @@ public class MainPanelPresenter {
 						queuePresenter.pushQueue();
 
 						ActiveCall newCall = new ActiveCall(
-								selectedDevice.getId(), 
+								selectedDevice.getId(),
 								selectedDevice.getOperatorName(),
 								number);
 

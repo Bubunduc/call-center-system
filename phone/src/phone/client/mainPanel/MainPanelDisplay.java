@@ -8,14 +8,14 @@ import phone.client.event.select.ActiveCallsSelectionHandler;
 import phone.client.event.select.TreeDeviceSelectionHandler;
 
 public interface MainPanelDisplay {
-	
+
 	void setActiveCallsSelectionHandler(ActiveCallsSelectionHandler selectionHandler);
 
 	void setActiveCallsButtonClickHandler(ActiveCallsButtonClickHandler handler);
-	
+
 	void setTreeSelectionHandler(TreeDeviceSelectionHandler selectionHandler);
 
 	void setTreeButtonClickHandler(TreeButtonClickHandler handler);
-	
+
 	Widget asWidget();
 }

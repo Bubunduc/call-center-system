@@ -6,10 +6,10 @@ public class DeviceResponse {
 	private String deviceNumber;
 	private String operatorName;
 	private String incomingNumber;
-	
+
 	public DeviceResponse() {
 	}
-	
+
 	public DeviceResponse(String deviceNumber, String operatorName, String incomingNumber) {
 		this.deviceNumber = deviceNumber;
 		this.operatorName = operatorName;
@@ -45,14 +45,14 @@ public class DeviceResponse {
 		return "DeviceResponse [deviceNumber=" + deviceNumber + ", operatorName=" + operatorName + ", incomingNumber="
 				+ incomingNumber + "]";
 	}
-	
+
 	public static DeviceResponse toDeviceResponse(Device deviceinfo) {
-		return new DeviceResponse(deviceinfo.getDeviceNumber(),deviceinfo.getOperatorName(),null);
+		return new DeviceResponse(deviceinfo.getDeviceNumber(), deviceinfo.getOperatorName(), null);
 	}
+
 	public static DeviceResponse toDeviceResponse(ActiveCall deviceinfo) {
-		return new DeviceResponse(deviceinfo.getDeviceNumber(),deviceinfo.getOperatorName(),deviceinfo.getPhoneNumber());
+		return new DeviceResponse(deviceinfo.getDeviceNumber(), deviceinfo.getOperatorName(),
+				deviceinfo.getPhoneNumber());
 	}
-	
-	
-	
+
 }

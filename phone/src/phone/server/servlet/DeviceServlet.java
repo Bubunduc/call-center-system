@@ -17,7 +17,7 @@ public class DeviceServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private final TelephonyService service = ApplicationContext.getTelephonyService();
-	
+
 	// Посмотреть статус всех аппаратов в комнате
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -31,19 +31,20 @@ public class DeviceServlet extends HttpServlet {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, "Не указан параметр roomId");
 			return;
 		}
-		
+
 		final Long roomId;
-		
+
 		try {
 			try {
-			    roomId = Long.parseLong(roomIdParam);
+				roomId = Long.parseLong(roomIdParam);
 			} catch (NumberFormatException e) {
-			    JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, "Указан некорректный roomId");
-			    return;
+				JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, "Указан некорректный roomId");
+				return;
 			}
 			resp.setContentType("application/json");
 			resp.setCharacterEncoding("UTF-8");
-			JsonResponse.successMessageFromList(resp, HttpServletResponse.SC_OK, service.getDevicesStatusByRoom(roomId));
+			JsonResponse.successMessageFromList(resp, HttpServletResponse.SC_OK,
+					service.getDevicesStatusByRoom(roomId));
 		} catch (TelephonyException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
 		}

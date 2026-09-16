@@ -5,18 +5,14 @@ import java.util.List;
 
 public class PhoneResponse {
 	private String phoneNumber;
-	
+
 	public PhoneResponse() {
-		
+
 	}
-	
-	
-	
+
 	public PhoneResponse(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-
-
 
 	public String getPhoneNumber() {
 		return phoneNumber;
@@ -26,19 +22,17 @@ public class PhoneResponse {
 		this.phoneNumber = phoneNumber;
 	}
 
-
-
 	@Override
 	public String toString() {
 		return "PhoneResponse [phoneNumber=" + phoneNumber + "]";
 	}
-	
-	public static List<PhoneResponse> toDtoList(List<String> phones){
+
+	public static List<PhoneResponse> toDtoList(List<String> phones) {
 		List<PhoneResponse> responseList = new ArrayList<PhoneResponse>();
 		for (String phone : phones) {
 			responseList.add(new PhoneResponse(phone));
 		}
 		return responseList;
 	}
-	
+
 }

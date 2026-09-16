@@ -2,11 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper
-	namespace="phone.server.mybatis.RoomMapper">
+<mapper namespace="phone.server.mybatis.RoomMapper">
 
-	<resultMap id="RoomResultMap"
-		type="phone.shared.model.Room">
+	<resultMap id="RoomResultMap" type="phone.shared.model.Room">
 		<id property="id" column="id" />
 		<result property="name" column="name" />
 	</resultMap>
@@ -18,7 +16,8 @@
 
 	<select id="findRoomById" resultMap="RoomResultMap">
 		SELECT id, name
-		FROM room WHERE id =
+		FROM room
+		WHERE id =
 		#{id}
 	</select>
 

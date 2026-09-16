@@ -23,11 +23,10 @@ public class RoomServlet extends HttpServlet {
 
 		resp.setContentType("application/json");
 		resp.setCharacterEncoding("UTF-8");
-		
-		try  {
+
+		try {
 			JsonResponse.successMessageFromList(resp, HttpServletResponse.SC_OK, service.getAllRooms());
-		}
-		catch (IOException e){
+		} catch (IOException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка формирования json");
 		}
 	}

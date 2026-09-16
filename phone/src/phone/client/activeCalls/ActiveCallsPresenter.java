@@ -9,7 +9,7 @@ import phone.shared.dto.DeviceResponse;
 
 public class ActiveCallsPresenter {
 
-	private final  ActiveCallsDisplay view;
+	private final ActiveCallsDisplay view;
 
 	public ActiveCallsPresenter(ActiveCallsDisplay view) {
 
