@@ -49,7 +49,6 @@ public class TelephonyService {
 
 	public void addToQueue(CallRequest call)
 			throws TelephonyException, AtsCommunicationException, InvalidRequestException {
-
 		validateCallRequest(call);
 		phoneStorage.addCallQueue(call);
 		CallResponse toAtsData = new CallResponse(call.getPhoneNumber(), null, null,
@@ -190,7 +189,6 @@ public class TelephonyService {
 	}
 
 	private void validateAnswerCallRequest(AnswerCallRequest request) throws InvalidRequestException {
-
 		if (request == null) {
 			throw new InvalidRequestException("Отсутствуют данные запроса");
 		}
@@ -205,7 +203,6 @@ public class TelephonyService {
 	}
 
 	private void validateEndCallRequest(EndCallRequest request) throws InvalidRequestException {
-
 		if (request == null) {
 			throw new InvalidRequestException("Отсутствуют данные запроса");
 		}

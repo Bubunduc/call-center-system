@@ -32,7 +32,6 @@ public class AtsClient {
 	}
 
 	public void sendAction(CallResponse response) throws AtsCommunicationException {
-
 		HttpURLConnection conn = null;
 
 		try {

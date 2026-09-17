@@ -10,7 +10,6 @@ public class AtsCommunicationException extends Exception implements Serializable
 	}
 
 	public AtsCommunicationException(String message, Throwable cause) {
-
 		super(message, cause);
 	}
 

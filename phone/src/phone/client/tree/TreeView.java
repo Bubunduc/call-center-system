@@ -143,7 +143,6 @@ public class TreeView implements TreeDisplay {
 	}
 
 	private void handleTreeClick(ClickEvent event) {
-
 		Element clickedElement = event.getNativeEvent().getEventTarget().cast();
 
 		Element nodeElement = clickedElement.getParentElement();

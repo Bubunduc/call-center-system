@@ -21,7 +21,6 @@ public class QueueClient {
 	private static final String ROUTE = "/queue";
 
 	public void getQueue(String url, final AsyncCallback<List<PhoneResponse>> callback) {
-
 		RequestBuilder request = new RequestBuilder(RequestBuilder.GET, url + ROUTE);
 
 		try {

@@ -21,7 +21,6 @@ public class RoomClient {
 	private static final String ROUTE = "/rooms";
 
 	public void getRooms(String url, final AsyncCallback<List<RoomResponse>> callback) {
-
 		RequestBuilder request = new RequestBuilder(RequestBuilder.GET, url + ROUTE);
 
 		try {

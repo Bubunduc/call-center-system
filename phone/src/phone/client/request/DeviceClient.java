@@ -20,7 +20,6 @@ public class DeviceClient {
 	private static final String ROUTE = "/rooms/devices";
 
 	public void getDevices(String url, Long id, final AsyncCallback<List<DeviceResponse>> callback) {
-
 		RequestBuilder request = new RequestBuilder(RequestBuilder.GET, url + ROUTE + "?roomId=" + String.valueOf(id));
 
 		try {

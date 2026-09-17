@@ -52,7 +52,6 @@ public class MainPanelView implements MainPanelDisplay {
 
 	@Override
 	public Widget asWidget() {
-
 		return mainPanel;
 	}
 

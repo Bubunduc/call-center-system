@@ -151,13 +151,11 @@ public class MainPanelPresenter {
 	}
 
 	public void go(HasWidgets container) {
-
 		container.add(view.asWidget());
 
 	}
 
 	private void loadData() {
-
 		queueClient.getQueue(URL, new AsyncCallback<List<PhoneResponse>>() {
 
 			@Override

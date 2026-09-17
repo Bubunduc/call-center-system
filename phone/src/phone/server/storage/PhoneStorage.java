@@ -86,7 +86,6 @@ public class PhoneStorage {
 
 	public synchronized void addActiveCall(Device device, String number)
 			throws TelephonyException, InvalidDeviceStateException {
-
 		CallRequest call = getCallRequestByNumber(number);
 
 		if (call == null) {

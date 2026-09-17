@@ -11,7 +11,6 @@ public final class PhoneValidator {
 	}
 
 	public static String verifyIncomingPhone(CallRequest callRequest) {
-
 		if ((callRequest == null) || (callRequest.getPhoneNumber() == null)
 				|| (callRequest.getPhoneNumber().isEmpty())) {
 			return "Неверный формат данных или отсутствует номер телефона";

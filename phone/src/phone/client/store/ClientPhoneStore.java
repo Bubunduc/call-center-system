@@ -20,7 +20,6 @@ public class ClientPhoneStore {
 	private String selectedActiveCallId;
 
 	public ClientPhoneStore() {
-
 		deviceMap = new HashMap<String, DeviceInfo>();
 		activeCallMap = new HashMap<String, ActiveCall>();
 		phonesQueue = new LinkedList<String>();
@@ -99,7 +98,6 @@ public class ClientPhoneStore {
 	}
 
 	public boolean updateQueue(List<PhoneResponse> response) {
-
 		if (response == null) {
 			return false;
 		}
@@ -121,7 +119,6 @@ public class ClientPhoneStore {
 	}
 
 	public boolean updateActiveCalls(List<ActiveCall> calls) {
-
 		ActiveCall selectedCall = activeCallMap.get(selectedActiveCallId);
 		Map<String, ActiveCall> newMap = toActiveCallsMap(calls);
 		if (!activeCallMap.equals(newMap)) {
@@ -138,7 +135,6 @@ public class ClientPhoneStore {
 	}
 
 	private Map<String, ActiveCall> toActiveCallsMap(List<ActiveCall> calls) {
-
 		Map<String, ActiveCall> result = new HashMap<String, ActiveCall>();
 		if (calls == null) {
 			return result;

@@ -19,7 +19,6 @@ public class CorsFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) {
-
 		allowedOrigins.add(System.getenv("ATS_ALLOWED_ORIGIN"));
 
 		allowedOrigins.add(System.getenv("PHONE_ALLOWED_ORIGIN"));
@@ -30,7 +29,6 @@ public class CorsFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 
 		HttpServletResponse httpResponse = (HttpServletResponse) response;

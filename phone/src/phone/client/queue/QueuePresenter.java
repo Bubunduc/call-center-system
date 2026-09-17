@@ -13,7 +13,6 @@ public class QueuePresenter {
 	}
 
 	public void loadData(List<PhoneResponse> data) {
-
 		if (data == null) {
 			return;
 		}

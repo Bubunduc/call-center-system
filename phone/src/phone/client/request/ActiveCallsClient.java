@@ -21,7 +21,6 @@ public class ActiveCallsClient {
 	private static final String ROUTE = "/calls";
 
 	public void getActiveCalls(String url, final AsyncCallback<List<ActiveCall>> callback) {
-
 		RequestBuilder request = new RequestBuilder(RequestBuilder.GET, url + ROUTE);
 
 		try {
