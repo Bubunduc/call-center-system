@@ -29,11 +29,11 @@ public class ActionServiceImpl implements ActionService {
 		if (event.getPhoneNumber() == null || event.getPhoneNumber().isEmpty() || event.getStatus() == null) {
 			throw new EventValidationException("Поля телефонного номера и события являются обязательными к заполнению");
 		}
-		
+
 		if (!event.getPhoneNumber().matches(PHONE_REGEX)) {
 			throw new EventValidationException("Номер телефона не соответствует формату вида 8-xxx-xxx-xx-xx");
 		}
-		
+
 		if (event.getTimeStamp() == null) {
 			event.setTimeStamp(new Timestamp(System.currentTimeMillis()));
 		}

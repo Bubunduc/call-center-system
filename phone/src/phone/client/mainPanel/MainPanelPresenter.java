@@ -230,6 +230,17 @@ public class MainPanelPresenter {
 	}
 
 	private void bindActiveCalls() {
+		bindActiveCallsButton();
+		bindActiveCallsSelectionHandler();
+	}
+	
+	
+
+	private void bindTree() {
+		bindTreeButton();
+		bindTreeSelectionHandler();
+	}
+	private void bindActiveCallsButton() {
 		view.setActiveCallsButtonClickHandler(new ActiveCallsButtonClickHandler() {
 
 			@Override
@@ -259,6 +270,10 @@ public class MainPanelPresenter {
 
 			}
 		});
+		
+	}
+	
+	private void bindActiveCallsSelectionHandler() {
 		view.setActiveCallsSelectionHandler(new ActiveCallsSelectionHandler() {
 
 			@Override
@@ -268,8 +283,8 @@ public class MainPanelPresenter {
 			}
 		});
 	}
-
-	private void bindTree() {
+	
+	private void bindTreeButton() {
 		view.setTreeButtonClickHandler(new TreeButtonClickHandler() {
 
 			@Override
@@ -318,6 +333,9 @@ public class MainPanelPresenter {
 
 			}
 		});
+	}
+	
+	private void bindTreeSelectionHandler() {
 		view.setTreeSelectionHandler(new TreeDeviceSelectionHandler() {
 
 			@Override
@@ -332,7 +350,7 @@ public class MainPanelPresenter {
 			}
 		});
 	}
-
+	
 	private void startPolling() {
 		refreshTimer = new Timer() {
 
