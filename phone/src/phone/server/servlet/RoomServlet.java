@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ibatis.exceptions.PersistenceException;
+
 import phone.server.ApplicationContext;
 import phone.server.service.TelephonyService;
 
@@ -28,5 +30,9 @@ public class RoomServlet extends HttpServlet {
 		} catch (IOException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка формирования json");
 		}
+		catch (PersistenceException e) {
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка работы базы данных");
+		}
+	
 	}
 }

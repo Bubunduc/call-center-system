@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ibatis.exceptions.PersistenceException;
+
 import phone.server.ApplicationContext;
 import phone.server.service.TelephonyService;
 import phone.shared.exception.TelephonyException;
@@ -46,6 +48,8 @@ public class DeviceServlet extends HttpServlet {
 					service.getDevicesStatusByRoom(roomId));
 		} catch (TelephonyException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
+		} catch (PersistenceException e) {
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка работы базы данных");
 		}
 	}
 

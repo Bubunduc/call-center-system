@@ -12,6 +12,7 @@ import phone.server.ApplicationContext;
 import phone.server.dto.CallRequest;
 import phone.server.service.TelephonyService;
 import phone.shared.exception.AtsCommunicationException;
+import phone.shared.exception.InvalidDeviceStateException;
 import phone.shared.exception.InvalidRequestException;
 import phone.shared.exception.TelephonyException;
 
@@ -66,7 +67,10 @@ public class QueueServlet extends HttpServlet {
 
 		} catch (InvalidRequestException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-		} catch (AtsCommunicationException e) {
+		}catch (InvalidDeviceStateException e) {
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+		} 
+		catch (AtsCommunicationException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_SERVICE_UNAVAILABLE, e.getMessage());
 		} catch (Exception e) {// 500
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Внутренняя ошибка сервера");

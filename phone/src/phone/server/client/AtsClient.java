@@ -15,10 +15,11 @@ public class AtsClient {
 
 	private final String atsUrl;
 	private final String internalToken;
-
+	private final Gson gson;
 	public AtsClient() {
 		atsUrl = getRequiredEnv("ATS_URL");
 		internalToken = getRequiredEnv("INTERNAL_TOKEN");
+		gson = new GsonBuilder().setDateFormat("dd.MM.yyyy HH:mm:ss.SSS").create();
 	}
 
 	private String getRequiredEnv(String name) {
@@ -38,8 +39,6 @@ public class AtsClient {
 			URL url = new URL(atsUrl);
 
 			conn = (HttpURLConnection) url.openConnection();
-
-			Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy HH:mm:ss.SSS").create();
 
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");

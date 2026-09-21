@@ -64,14 +64,11 @@ public class CallServlet extends HttpServlet {
 			EndCallRequest callRequest = new EndCallRequest(deviceNumber);
 
 			service.endCall(callRequest);
-			resp.setStatus(HttpServletResponse.SC_OK); // 200
 			JsonResponse.successMessage(resp, HttpServletResponse.SC_OK, "Звонок окончен");// "Звонок окончен"
 
 		} catch (TelephonyException e) {
-			resp.setStatus(HttpServletResponse.SC_NOT_FOUND); // 404
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
 		} catch (InvalidDeviceStateException e) {
-			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); // 400
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 		} catch (InvalidRequestException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
