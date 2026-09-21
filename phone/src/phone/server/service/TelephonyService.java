@@ -57,7 +57,13 @@ public class TelephonyService {
 		try {
 			sendToAts(toAtsData);
 		} catch (AtsCommunicationException e) {
-			phoneStorage.removeFromQueue(call);
+			try {
+				phoneStorage.removeFromQueue(call);
+			} catch (Exception rollbackException) {
+				e.addSuppressed(rollbackException);
+				rollbackException.printStackTrace();
+			}
+
 			throw e;
 		}
 
@@ -71,10 +77,18 @@ public class TelephonyService {
 		ActiveCall currentCall = phoneStorage.isPhoneTalks(call);
 
 		if (currentCall != null) {
-			toAtsData = new CallResponse(currentCall.getPhoneNumber(), currentCall.getDeviceNumber(),
-					currentCall.getOperatorName(), new Timestamp(System.currentTimeMillis()), Status.CANCELED);
+			toAtsData = new CallResponse(
+					currentCall.getPhoneNumber(), 
+					currentCall.getDeviceNumber(),
+					currentCall.getOperatorName(),
+					new Timestamp(System.currentTimeMillis()), 
+					Status.CANCELED);
 		} else {
-			toAtsData = new CallResponse(call.getPhoneNumber(), null, null, new Timestamp(System.currentTimeMillis()),
+			toAtsData = new CallResponse(
+					call.getPhoneNumber(),
+					null,
+					null,
+					new Timestamp(System.currentTimeMillis()),
 					Status.CANCELED);
 		}
 
@@ -87,10 +101,15 @@ public class TelephonyService {
 		try {
 			sendToAts(toAtsData);
 		} catch (AtsCommunicationException e) {
-			if (currentCall != null) {
-				phoneStorage.restoreActiveCall(currentCall);
-			} else {
-				phoneStorage.addCallQueue(call);
+			try {
+				if (currentCall != null) {
+					phoneStorage.restoreActiveCall(currentCall);
+				} else {
+					phoneStorage.addCallQueue(call);
+				}
+			} catch (Exception rollbackException) {
+				e.addSuppressed(rollbackException);
+				rollbackException.printStackTrace();
 			}
 			throw e;
 		}
@@ -106,14 +125,31 @@ public class TelephonyService {
 		validateAnswerCallRequest(request);
 		Device device = getDeviceByNumber(request.getDeviceNumber());
 
-		CallResponse toAtsData = new CallResponse(request.getPhoneNumber(), device.getDeviceNumber(),
-				device.getOperatorName(), new Timestamp(System.currentTimeMillis()), Status.ANSWERED);
+		CallResponse toAtsData = new CallResponse(
+				request.getPhoneNumber(),
+				device.getDeviceNumber(),
+				device.getOperatorName(), 
+				new Timestamp(System.currentTimeMillis()),
+				Status.ANSWERED);
+		
 		phoneStorage.addActiveCall(device, request.getPhoneNumber());
 		try {
 			sendToAts(toAtsData);
 		} catch (AtsCommunicationException e) {
-			phoneStorage.removeActiveCall(device.getDeviceNumber());
-			phoneStorage.restoreCallToQueue(new CallRequest(request.getPhoneNumber()));
+			try {
+			    phoneStorage.removeActiveCall(device.getDeviceNumber());
+			} catch (Exception rollbackException) {
+			    e.addSuppressed(rollbackException);
+			    rollbackException.printStackTrace();
+			}
+
+			try {
+			    phoneStorage.restoreCallToQueue(new CallRequest(request.getPhoneNumber()));
+			} catch (Exception rollbackException) {
+			    e.addSuppressed(rollbackException);
+			    rollbackException.printStackTrace();
+			}
+
 			throw e;
 		}
 
@@ -134,7 +170,12 @@ public class TelephonyService {
 		try {
 			sendToAts(toAtsData);
 		} catch (AtsCommunicationException e) {
-			phoneStorage.restoreActiveCall(activeCall);
+			try {
+				phoneStorage.restoreActiveCall(activeCall);
+			} catch (Exception rollbackException) {
+				e.addSuppressed(rollbackException);
+				rollbackException.printStackTrace();
+			}
 			throw e;
 		}
 
