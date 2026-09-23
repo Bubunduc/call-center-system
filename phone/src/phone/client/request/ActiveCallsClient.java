@@ -11,6 +11,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.http.client.URL;
 
 import phone.client.request.utils.JsonUtils;
 import phone.client.request.utils.ResponseUtils;
@@ -55,13 +56,23 @@ public class ActiveCallsClient {
 	}
 
 	public void acceptCall(String url, String deviceNumber, String phoneNumber, final AsyncCallback<Void> callback) {
-		String requestUrl = url + ROUTE + "?deviceNumber=" + deviceNumber + "&phoneNumber=" + phoneNumber;
+		String requestUrl = url + 
+				ROUTE 
+				+ "?deviceNumber=" 
+				+ URL.encodeQueryString(deviceNumber)
+				+ "&phoneNumber="
+				+ URL.encodeQueryString(phoneNumber);
+		
 		RequestBuilder request = new RequestBuilder(RequestBuilder.POST, requestUrl);
 		changeStateRequest(request, callback);
 	}
 
 	public void endCall(String url, String deviceNumber, final AsyncCallback<Void> callback) {
-		String requestUrl = url + ROUTE + "?deviceNumber=" + deviceNumber;
+		String requestUrl = url 
+				+ ROUTE
+	            + "?deviceNumber="
+				+ URL.encodeQueryString(deviceNumber);
+		
 		RequestBuilder request = new RequestBuilder(RequestBuilder.DELETE, requestUrl);
 		changeStateRequest(request, callback);
 	}

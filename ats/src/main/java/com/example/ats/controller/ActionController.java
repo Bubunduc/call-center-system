@@ -30,16 +30,16 @@ public class ActionController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> saveAction(@RequestHeader(value = "X-Internal-Token", required = false) String token,
+	public ResponseEntity<Void> saveAction(@RequestHeader(value = "X-Internal-Token", required = true) String token,
 			@RequestBody AtsEvent event) throws EventValidationException {
 
-		if (token == null || !internalToken.equals(token)) {
+		if (internalToken.equals(token)) {
+			actionService.save(event);
+			return ResponseEntity.ok().build();
+		}
+		else {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
-
-		actionService.save(event);
-
-		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping
