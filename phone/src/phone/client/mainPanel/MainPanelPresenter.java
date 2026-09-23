@@ -42,6 +42,8 @@ public class MainPanelPresenter {
 	private Timer refreshTimer;
 	private static final String URL = GWT.getHostPageBaseURL() + "api";
 	private boolean pollingError = false; // true, только если текущая ошибка вызвана поллингом
+	private boolean queueRequestInProgress = false;
+	private boolean activeCallsRequestInProgress = false;
 
 	public MainPanelPresenter(Builder builder) {
 		this.activeCallsPresenter = builder.activeCallsPresenter;
@@ -126,8 +128,8 @@ public class MainPanelPresenter {
 		}
 
 		public MainPanelPresenter build() {
-			if (activeCallsPresenter == null 
-					|| queuePresenter == null
+			if (activeCallsPresenter == null
+					|| queuePresenter == null 
 					|| treePresenter == null
 					|| errorPresenter == null
 					|| view == null 
@@ -206,14 +208,6 @@ public class MainPanelPresenter {
 
 				for (DeviceResponse i : result) {
 					store.addDevice(new DeviceInfo(i.getDeviceNumber(), i.getOperatorName()));
-					if (i.getIncomingNumber() != null) {
-						store.addActiveCall(new ActiveCall(
-								i.getDeviceNumber(),
-								i.getOperatorName(),
-								i.getIncomingNumber()));
-
-						activeCallsPresenter.loadData(i);
-					}
 				}
 
 				loadDevicesForRoom(rooms, index + 1);
@@ -223,6 +217,7 @@ public class MainPanelPresenter {
 			public void onFailure(Throwable caught) {
 
 				loadDevicesForRoom(rooms, index + 1);
+				GWT.log(caught.getMessage());
 			}
 		});
 	}
@@ -231,13 +226,12 @@ public class MainPanelPresenter {
 		bindActiveCallsButton();
 		bindActiveCallsSelectionHandler();
 	}
-	
-	
 
 	private void bindTree() {
 		bindTreeButton();
 		bindTreeSelectionHandler();
 	}
+
 	private void bindActiveCallsButton() {
 		view.setActiveCallsButtonClickHandler(new ActiveCallsButtonClickHandler() {
 
@@ -268,9 +262,9 @@ public class MainPanelPresenter {
 
 			}
 		});
-		
+
 	}
-	
+
 	private void bindActiveCallsSelectionHandler() {
 		view.setActiveCallsSelectionHandler(new ActiveCallsSelectionHandler() {
 
@@ -281,7 +275,7 @@ public class MainPanelPresenter {
 			}
 		});
 	}
-	
+
 	private void bindTreeButton() {
 		view.setTreeButtonClickHandler(new TreeButtonClickHandler() {
 
@@ -332,7 +326,7 @@ public class MainPanelPresenter {
 			}
 		});
 	}
-	
+
 	private void bindTreeSelectionHandler() {
 		view.setTreeSelectionHandler(new TreeDeviceSelectionHandler() {
 
@@ -348,7 +342,7 @@ public class MainPanelPresenter {
 			}
 		});
 	}
-	
+
 	private void startPolling() {
 		refreshTimer = new Timer() {
 
@@ -364,11 +358,17 @@ public class MainPanelPresenter {
 	}
 
 	private void refreshQueue() {
+		if (queueRequestInProgress) {
+			return;
+		}
+
+		queueRequestInProgress = true;
+
 		queueClient.getQueue(URL, new AsyncCallback<List<PhoneResponse>>() {
 
 			@Override
 			public void onSuccess(List<PhoneResponse> result) {
-
+				queueRequestInProgress = false;
 				if (store.updateQueue(result)) {
 					queuePresenter.refreshQueue(result);
 				}
@@ -380,6 +380,7 @@ public class MainPanelPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
+				queueRequestInProgress = false;
 				GWT.log("Ошибка обновления очереди", caught);
 				pollingError = true;
 				errorPresenter.setErrorMessage(caught.getMessage());
@@ -389,10 +390,16 @@ public class MainPanelPresenter {
 	}
 
 	private void refreshActiveCalls() {
+		if (activeCallsRequestInProgress) {
+			return;
+		}
+
+		activeCallsRequestInProgress = true;
 		activeCallsClient.getActiveCalls(URL, new AsyncCallback<List<ActiveCall>>() {
 
 			@Override
 			public void onSuccess(List<ActiveCall> result) {
+				activeCallsRequestInProgress = false;
 				if (store.updateActiveCalls(result)) {
 					activeCallsPresenter.refreshData(result);
 					if (store.getSelectedActiveCallId() != null) {
@@ -408,6 +415,7 @@ public class MainPanelPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
+				activeCallsRequestInProgress = false;
 				GWT.log("Ошибка обновления активных звонков", caught);
 				pollingError = true;
 				errorPresenter.setErrorMessage(caught.getMessage());
