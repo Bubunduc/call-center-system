@@ -2,12 +2,9 @@ openapi: 3.0.3
 info:
   title: Telephony Service API
   version: 1.0.0
-  description: 'REST API микросервиса «Телефония». API управляет очередью входящих звонков, активными разговорами, комнатами
-    и телефонными аппаратами.
-
-    '
+  description: 'REST API микросервиса «Телефония». API управляет очередью входящих звонков, активными разговорами, комнатамии телефонными аппаратами.'
 servers:
-- url: /api
+- url: "http://__PUBLIC_HOST__:__PHONE_PORT__/api"
   description: Локальный сервер Телефонии
 tags:
 - name: Queue
@@ -22,9 +19,7 @@ paths:
       tags:
       - Queue
       summary: Добавить входящий звонок в очередь
-      description: 'Добавляет входящий звонок в очередь. Звонок остаётся в очереди, пока на него не ответит внутренний аппарат.
-
-        '
+      description: 'Добавляет входящий звонок в очередь. Звонок остаётся в очереди, пока на него не ответит внутренний аппарат.'
       operationId: addCallToQueue
       parameters:
       - name: phoneNumber
@@ -72,9 +67,13 @@ paths:
     delete:
       tags:
       - Queue
-      summary: Удалить звонок из очереди
-      description: Отменяет входящий звонок и удаляет указанный номер из очереди.
-      operationId: removeCallFromQueue
+      summary: Удалить звонок из очереди или активных звонков
+      description: >
+        Отменяет входящий звонок по номеру телефона.
+        Если звонок находится в очереди, он удаляется из очереди.
+        Если звонок уже принят и находится в активном разговоре,
+        разговор также завершается.
+      operationId: cancelIncomingCall
       parameters:
       - name: phoneNumber
         in: query
@@ -85,14 +84,14 @@ paths:
         example: 8-909-589-45-82
       responses:
         '200':
-          description: Звонок удалён из очереди
+          description: Звонок успешно отменён
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
               example:
                 status: success
-                message: Звонок удален из очереди
+                message: Звонок успешно отменён
         '400':
           description: Номер не найден в очереди или запрос содержит некорректный номер телефона
           content:

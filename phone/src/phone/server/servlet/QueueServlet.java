@@ -60,7 +60,7 @@ public class QueueServlet extends HttpServlet {
 			CallRequest callRequest = new CallRequest(phoneNumber);
 
 			service.removeFromQueue(callRequest);
-			JsonResponse.successMessage(resp, HttpServletResponse.SC_OK, "Звонок удален из очереди");
+			JsonResponse.successMessage(resp, HttpServletResponse.SC_OK, "Звонок успешно отменён");
 
 		} catch (TelephonyException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());

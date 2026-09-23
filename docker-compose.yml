@@ -28,10 +28,9 @@ services:
   ats:
     build:
       context: ./ats
-      
-    image: 
-      bubunduc/ats:latest
-   
+
+    image: bubunduc/ats:latest
+
     container_name: ats
 
     ports:
@@ -47,10 +46,9 @@ services:
   phone:
     build:
       context: ./phone
-    
-    image: 
-      bubunduc/phone:latest
-    
+
+    image: bubunduc/phone:latest
+
     container_name: phone
 
     ports:
@@ -66,7 +64,7 @@ services:
       DB_URL: "jdbc:postgresql://postgres:5432/${DB_NAME}"
       DB_USERNAME: "${DB_USERNAME}"
       DB_PASSWORD: "${DB_PASSWORD}"
-      
+
       INTERNAL_TOKEN: "${INTERNAL_TOKEN}"
 
     depends_on:
@@ -75,7 +73,32 @@ services:
       ats:
         condition: service_started
 
-    restart: unless-stopped    
+    restart: unless-stopped
+
+
+  openapi-render:
+    image: alpine:3.20
+    container_name: openapi-render
+
+    environment:
+      PUBLIC_HOST: "${PUBLIC_HOST}"
+      PHONE_PORT: "${PHONE_PORT}"
+
+    volumes:
+      - ./phone/openapi.template.yaml:/template/openapi.yaml:ro
+      - swagger-spec:/spec
+
+    entrypoint: ["/bin/sh", "-c"]
+
+    command:
+      - |
+        sed -e "s|__PUBLIC_HOST__|$${PUBLIC_HOST}|g" \
+            -e "s|__PHONE_PORT__|$${PHONE_PORT}|g" \
+            /template/openapi.yaml > /spec/openapi.yaml
+
+    restart: "no"
+
+
   swagger-ui:
     image: swaggerapi/swagger-ui:v5.32.15
     container_name: swagger-ui
@@ -87,11 +110,17 @@ services:
       SWAGGER_JSON: /spec/openapi.yaml
 
     volumes:
-      - ./phone/openapi.yaml:/spec/openapi.yaml:ro
+      - swagger-spec:/spec:ro
 
     depends_on:
-      - phone
+      phone:
+        condition: service_started
+      openapi-render:
+        condition: service_completed_successfully
 
     restart: unless-stopped
+
+
 volumes:
   postgres-data:
+  swagger-spec:
