@@ -34,16 +34,15 @@ public class DeviceServlet extends HttpServlet {
 		}
 
 		final Long roomId;
-
+		
 		try {
-			try {
-				roomId = Long.parseLong(roomIdParam);
-			} catch (NumberFormatException e) {
-				JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, "Указан некорректный roomId");
-				return;
-			}
-			resp.setContentType("application/json");
-			resp.setCharacterEncoding("UTF-8");
+			roomId = Long.parseLong(roomIdParam);
+		} catch (NumberFormatException e) {
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, "Указан некорректный roomId");
+			return;
+		}
+		
+		try {
 			JsonResponse.successMessageFromList(resp, HttpServletResponse.SC_OK,
 					service.getDevicesStatusByRoom(roomId));
 		} catch (TelephonyException e) {

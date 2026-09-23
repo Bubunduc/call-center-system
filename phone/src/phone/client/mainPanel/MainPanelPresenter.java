@@ -191,6 +191,7 @@ public class MainPanelPresenter {
 				errorPresenter.setErrorMessage(caught.getMessage());
 			}
 		});
+		refreshActiveCalls();
 
 	}
 
@@ -361,7 +362,6 @@ public class MainPanelPresenter {
 		if (queueRequestInProgress) {
 			return;
 		}
-
 		queueRequestInProgress = true;
 
 		queueClient.getQueue(URL, new AsyncCallback<List<PhoneResponse>>() {
@@ -393,8 +393,8 @@ public class MainPanelPresenter {
 		if (activeCallsRequestInProgress) {
 			return;
 		}
-
 		activeCallsRequestInProgress = true;
+		
 		activeCallsClient.getActiveCalls(URL, new AsyncCallback<List<ActiveCall>>() {
 
 			@Override

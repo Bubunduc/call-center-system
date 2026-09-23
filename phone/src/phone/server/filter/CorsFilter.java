@@ -19,28 +19,29 @@ public class CorsFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) {
-		allowedOrigins.add(System.getenv("ATS_ALLOWED_ORIGIN"));
 
-		allowedOrigins.add(System.getenv("PHONE_ALLOWED_ORIGIN"));
+		addAllowedOrigin(System.getenv("SWAGGER_ALLOWED_ORIGIN"));
 
-		allowedOrigins.add(System.getenv("SWAGGER_ALLOWED_ORIGIN"));
+		addAllowedOrigin(System.getenv("ATS_ALLOWED_ORIGIN"));
+	}
+
+	private void addAllowedOrigin(String origin) {
+		if (origin != null && !origin.trim().isEmpty()) {
+			allowedOrigins.add(origin);
+		}
 	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
+
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 
 		String origin = httpRequest.getHeader("Origin");
 
-		if (origin != null) {
-
-			if (!allowedOrigins.contains(origin)) {
-				httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Origin is not allowed");
-				return;
-			}
+		if (origin != null && allowedOrigins.contains(origin)) {
 
 			httpResponse.setHeader("Access-Control-Allow-Origin", origin);
 
@@ -49,7 +50,9 @@ public class CorsFilter implements Filter {
 
 		httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
 
-		httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type");
+		httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+
+		httpResponse.setHeader("Access-Control-Max-Age", "3600");
 
 		if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
 

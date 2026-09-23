@@ -30,13 +30,13 @@ public class PhoneStorage {
 		if (isExistsInQueue(call)) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " уже существует");
 		}
-		if (isPhoneTalks(call) != null) {
+		if (findActiveCallByPhoneNumber(call) != null) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " уже разговаривает");
 		}
 		callsQueue.addLast(call);
 	}
 
-	public ActiveCall isPhoneTalks(CallRequest call) {
+	public ActiveCall findActiveCallByPhoneNumber(CallRequest call) {
 		for (ActiveCall activeCall : activeCalls.values()) {
 			if (activeCall.getPhoneNumber().equals(call.getPhoneNumber())) {
 				return activeCall;
@@ -69,7 +69,7 @@ public class PhoneStorage {
 	}
 
 	public List<String> getPhoneNumberList() {
-		if ((callsQueue == null) || (callsQueue.isEmpty())) {
+		if (callsQueue.isEmpty()) {
 			return new ArrayList<String>();
 		}
 		return callsQueue.stream().map(x -> x.getPhoneNumber()).collect(Collectors.toList());
@@ -147,7 +147,7 @@ public class PhoneStorage {
 	}
 	
 	public synchronized ActiveCall removeCall(CallRequest call) throws TelephonyException, InvalidDeviceStateException {
-	    ActiveCall currentCall = isPhoneTalks(call);
+	    ActiveCall currentCall = findActiveCallByPhoneNumber(call);
 	    if (currentCall != null) {
 	        removeActiveCall(currentCall.getDeviceNumber());
 	        return currentCall;

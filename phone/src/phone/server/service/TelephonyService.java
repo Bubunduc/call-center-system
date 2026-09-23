@@ -118,15 +118,13 @@ public class TelephonyService {
 			throws TelephonyException, InvalidDeviceStateException, AtsCommunicationException, InvalidRequestException {
 		validateAnswerCallRequest(request);
 		Device device = getDeviceByNumber(request.getDeviceNumber());
-
+		phoneStorage.addActiveCall(device, request.getPhoneNumber());
 		CallResponse toAtsData = new CallResponse(
 				request.getPhoneNumber(),
 				device.getDeviceNumber(),
 				device.getOperatorName(), 
 				new Timestamp(System.currentTimeMillis()),
 				Status.ANSWERED);
-		
-		phoneStorage.addActiveCall(device, request.getPhoneNumber());
 		try {
 			sendToAts(toAtsData);
 		} catch (AtsCommunicationException e) {
