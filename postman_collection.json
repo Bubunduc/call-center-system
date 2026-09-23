@@ -16,7 +16,19 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": ""
+              "raw": "http://127.0.0.1:8080/api/action",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "action"
+              ]
             }
           },
           "response": []
@@ -25,10 +37,15 @@
           "name": "Отправить событие",
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "X-Internal-Token",
+                "value": "some-secret-token"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n        \"phoneNumber\": \"8-909-589-45-3\",\r\n        \"deviceNumber\": null,\r\n        \"operatorName\": null,\r\n        \"timeStamp\": \"03.09.2026 13:55:13.933\",\r\n        \"status\": \"INCOMING\"\r\n    }",
+              "raw": "{\r\n        \"phoneNumber\": \"8-909-589-45-33\",\r\n        \"deviceNumber\": \"123\",\r\n        \"operatorName\": \"211\",\r\n        \"timeStamp\": \"03.09.2026 13:55:13.933\",\r\n        \"status\": \"ANSWERED\"\r\n    }",
               "options": {
                 "raw": {
                   "language": "json"
@@ -48,6 +65,13 @@
               "path": [
                 "api",
                 "action"
+              ],
+              "query": [
+                {
+                  "key": "INTERNAL_TOKEN",
+                  "value": "some-secret-token",
+                  "disabled": true
+                }
               ]
             }
           },
@@ -172,7 +196,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8081/api/queue?phoneNumber=8-950-123-11-17",
+              "raw": "http://127.0.0.1:8081/api/queue?phoneNumber=8-950-123-11-12",
               "protocol": "http",
               "host": [
                 "127",
@@ -188,7 +212,7 @@
               "query": [
                 {
                   "key": "phoneNumber",
-                  "value": "8-950-123-11-17"
+                  "value": "8-950-123-11-12"
                 }
               ]
             }
