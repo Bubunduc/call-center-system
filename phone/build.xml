@@ -3,21 +3,19 @@
 <project name="Phone" default="build" basedir=".">
 
 	<!-- ===================================================== -->
-	<!-- Local defaults                                        -->
-	<!-- В Docker переопределяются через -D                    -->
+	<!-- Build configuration                                   -->
 	<!-- ===================================================== -->
 
-	<property name="gwt.sdk" location="C:/gwt/gwt-2.7.0" />
+	<property file="local.properties" />
 
-	<property name="gwt.libs" location="C:/java/libs" />
+	<fail unless="gwt.sdk" message="Не задан gwt.sdk. Укажите его в local.properties или через -Dgwt.sdk=..." />
 
-	<!-- GWT 2.7 запускаем именно через Java 8 -->
-	<property name="gwt.java" location="C:/Program Files/Java/jdk1.8.0_241/bin/java.exe" />
+	<fail unless="gwt.libs" message="Не задан gwt.libs. Укажите его в local.properties или через -Dgwt.libs=..." />
+
+	<fail unless="gwt.java" message="Не задан gwt.java. Укажите его в local.properties или через -Dgwt.java=..." />
 
 	<property name="gwt.args" value="" />
-
 	<property name="gwt.module" value="phone.Phone" />
-
 
 	<!-- ===================================================== -->
 	<!-- Project directories                                   -->

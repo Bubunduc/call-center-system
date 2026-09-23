@@ -1,0 +1,3 @@
+gwt.sdk=/path/to/gwt-2.7.0
+gwt.libs=/path/to/java/libs
+gwt.java=/path/to/java8/bin/java
