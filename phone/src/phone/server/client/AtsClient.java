@@ -1,5 +1,8 @@
 package phone.server.client;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -9,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import phone.server.dto.CallResponse;
+import phone.server.dto.ErrorMessage;
 import phone.shared.exception.AtsCommunicationException;
 
 public class AtsClient {
@@ -16,6 +20,7 @@ public class AtsClient {
 	private final String atsUrl;
 	private final String internalToken;
 	private final Gson gson;
+
 	public AtsClient() {
 		atsUrl = getRequiredEnv("ATS_URL");
 		internalToken = getRequiredEnv("INTERNAL_TOKEN");
@@ -59,7 +64,13 @@ public class AtsClient {
 			int responseCode = conn.getResponseCode();
 
 			if (responseCode < 200 || responseCode >= 300) {
-				throw new AtsCommunicationException("АТС вернула HTTP " + responseCode);
+				String errorMessage = getErrorMessage(conn);
+
+				throw new AtsCommunicationException(
+						"АТС вернула ошибку: " 
+						+ errorMessage 
+						+ ". Код ответа: " 
+						+ responseCode);
 			}
 
 		} catch (AtsCommunicationException e) {
@@ -73,5 +84,27 @@ public class AtsClient {
 				conn.disconnect();
 			}
 		}
+	}
+
+	private String getErrorMessage(HttpURLConnection conn) throws IOException, AtsCommunicationException {
+		InputStream errorStream = conn.getErrorStream();
+
+		if (errorStream == null) {
+			return conn.getResponseMessage();
+		}
+
+		try (InputStreamReader reader = new InputStreamReader(errorStream, StandardCharsets.UTF_8)) {
+
+			ErrorMessage error = gson.fromJson(reader, ErrorMessage.class);
+
+			if (error != null && error.getMessage() != null) {
+				return error.getMessage();
+			}
+
+		} catch (Exception e) {
+			throw new AtsCommunicationException("Неожиданное тело ответа");
+		}
+
+		return conn.getResponseMessage();
 	}
 }

@@ -21,4 +21,10 @@ public class GlobalExceptionHandler {
 		ErrorMessage error = new ErrorMessage("Передано некорректное значение или неизвестный Enum");
 		return ResponseEntity.badRequest().body(error);
 	}
+	
+	@ExceptionHandler(StorageOverflowException.class)
+	public ResponseEntity<ErrorMessage> handleOverflowException(StorageOverflowException e) {
+		ErrorMessage error = new ErrorMessage(e.getMessage());
+		return ResponseEntity.badRequest().body(error);
+	}
 }

@@ -77,7 +77,7 @@ services:
 
     restart: unless-stopped    
   swagger-ui:
-    image: swaggerapi/swagger-ui:latest
+    image: swaggerapi/swagger-ui:v5.32.15
     container_name: swagger-ui
 
     ports:

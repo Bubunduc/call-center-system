@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.ats.dto.AtsEvent;
 import com.example.ats.exception.EventValidationException;
+import com.example.ats.exception.StorageOverflowException;
 import com.example.ats.storage.ActionStorage;
 
 @Service
@@ -25,7 +26,7 @@ public class ActionServiceImpl implements ActionService {
 	}
 
 	@Override
-	public void save(AtsEvent event) throws EventValidationException {
+	public void save(AtsEvent event) throws EventValidationException, StorageOverflowException {
 		if (event == null) {
 			throw new EventValidationException("Данные события отсутствуют");
 		}
@@ -41,6 +42,7 @@ public class ActionServiceImpl implements ActionService {
 		if (event.getTimeStamp() == null) {
 			event.setTimeStamp(new Timestamp(System.currentTimeMillis()));
 		}
+		
 		actionStorage.save(event);
 	}
 

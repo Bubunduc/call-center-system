@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ats.dto.AtsEvent;
 import com.example.ats.exception.EventValidationException;
+import com.example.ats.exception.StorageOverflowException;
 import com.example.ats.service.ActionService;
 
 @RestController
@@ -31,7 +32,7 @@ public class ActionController {
 
 	@PostMapping
 	public ResponseEntity<Void> saveAction(@RequestHeader(value = "X-Internal-Token", required = true) String token,
-			@RequestBody AtsEvent event) throws EventValidationException {
+			@RequestBody AtsEvent event) throws EventValidationException, StorageOverflowException {
 
 		if (internalToken.equals(token)) {
 			actionService.save(event);
