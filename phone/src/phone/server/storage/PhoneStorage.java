@@ -145,5 +145,24 @@ public class PhoneStorage {
 		}
 		callsQueue.addFirst(call);
 	}
+	
+	public synchronized ActiveCall removeCall(CallRequest call) throws TelephonyException, InvalidDeviceStateException {
+	    ActiveCall currentCall = isPhoneTalks(call);
+	    if (currentCall != null) {
+	        removeActiveCall(currentCall.getDeviceNumber());
+	        return currentCall;
+	    }
+	    removeFromQueue(call);
+	    return null;
+	}
+	
+	public synchronized ActiveCall removeActiveCallByDeviceNumber(String deviceNumber)throws InvalidDeviceStateException {
+	    ActiveCall activeCall = activeCalls.get(deviceNumber);
+	    if (activeCall == null) {
+	        throw new InvalidDeviceStateException("Аппарат свободен и ни с кем не разговаривает");
+	    }
+	    activeCalls.remove(deviceNumber);
+	    return activeCall;
+	}
 
 }

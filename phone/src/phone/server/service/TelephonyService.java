@@ -74,7 +74,7 @@ public class TelephonyService {
 		validateCallRequest(call);
 
 		CallResponse toAtsData;
-		ActiveCall currentCall = phoneStorage.isPhoneTalks(call);
+		ActiveCall currentCall = phoneStorage.removeCall(call);
 
 		if (currentCall != null) {
 			toAtsData = new CallResponse(
@@ -91,13 +91,7 @@ public class TelephonyService {
 					new Timestamp(System.currentTimeMillis()),
 					Status.CANCELED);
 		}
-
-		if (currentCall != null) {
-			phoneStorage.removeActiveCall(currentCall.getDeviceNumber());
-		} else {
-			phoneStorage.removeFromQueue(call);
-		}
-
+		
 		try {
 			sendToAts(toAtsData);
 		} catch (AtsCommunicationException e) {
@@ -159,14 +153,13 @@ public class TelephonyService {
 			throws TelephonyException, InvalidDeviceStateException, AtsCommunicationException, InvalidRequestException {
 		validateEndCallRequest(request);
 		Device device = getDeviceByNumber(request.getDeviceNumber());
-
-		ActiveCall activeCall = phoneStorage.getActiveCallByDeviceNumber(device.getDeviceNumber());
-		if (activeCall == null) {
-			throw new InvalidDeviceStateException("Аппарат свободен и ни с кем не разговаривает");
-		}
-		CallResponse toAtsData = new CallResponse(activeCall.getPhoneNumber(), device.getDeviceNumber(),
-				device.getOperatorName(), new Timestamp(System.currentTimeMillis()), Status.HANG_UP);
-		phoneStorage.removeActiveCall(device.getDeviceNumber());
+		ActiveCall activeCall = phoneStorage.removeActiveCallByDeviceNumber(device.getDeviceNumber());
+		CallResponse toAtsData = new CallResponse(
+				activeCall.getPhoneNumber(), 
+				device.getDeviceNumber(),
+				device.getOperatorName(),
+				new Timestamp(System.currentTimeMillis()),
+				Status.HANG_UP);
 		try {
 			sendToAts(toAtsData);
 		} catch (AtsCommunicationException e) {
