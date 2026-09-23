@@ -8,45 +8,44 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+import phone.server.config.AppConfig;
+
 public final class MyBatisUtil {
 
-	private static final SqlSessionFactory SQL_SESSION_FACTORY;
-
-	static {
-		try {
-			String resource = "mybatis-config.xml";
-
-			InputStream inputStream = Resources.getResourceAsStream(resource);
-
-			Properties properties = new Properties();
-
-			properties.setProperty("db.url", getRequiredEnv("DB_URL"));
-
-			properties.setProperty("db.username", getRequiredEnv("DB_USERNAME"));
-
-			properties.setProperty("db.password", getRequiredEnv("DB_PASSWORD"));
-
-			SQL_SESSION_FACTORY = new SqlSessionFactoryBuilder().build(inputStream, properties);
-
-		} catch (IOException e) {
-			throw new ExceptionInInitializerError(e);
-		}
-	}
+	private static SqlSessionFactory sqlSessionFactory;
 
 	private MyBatisUtil() {
 	}
 
-	public static SqlSessionFactory getSqlSessionFactory() {
-		return SQL_SESSION_FACTORY;
-	}
-
-	private static String getRequiredEnv(String name) {
-		String value = System.getenv(name);
-
-		if (value == null || value.trim().isEmpty()) {
-			throw new IllegalStateException("Environment variable " + name + " is not set");
+	public static void init(AppConfig config) {
+		if (sqlSessionFactory != null) {
+			return;
 		}
 
-		return value;
+		String resource = "mybatis-config.xml";
+
+		try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+
+			Properties properties = new Properties();
+
+			properties.setProperty("db.url", config.getRequired("db.url"));
+
+			properties.setProperty("db.username", config.getRequired("db.username"));
+
+			properties.setProperty("db.password", config.getRequired("db.password"));
+
+			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream, properties);
+
+		} catch (IOException e) {
+			throw new IllegalStateException("Не удалось инициализировать MyBatis", e);
+		}
+	}
+
+	public static SqlSessionFactory getSqlSessionFactory() {
+		if (sqlSessionFactory == null) {
+			throw new IllegalStateException("MyBatisUtil не инициализирован");
+		}
+
+		return sqlSessionFactory;
 	}
 }

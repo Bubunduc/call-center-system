@@ -21,7 +21,7 @@ public class QueueServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private final TelephonyService service = ApplicationContext.getTelephonyService();
+	private final TelephonyService service = ApplicationContext.getInstance().getTelephonyService();
 
 	// Добавить входящий звонок в очередь (вызов начался, но никто не взял трубку)
 	@Override

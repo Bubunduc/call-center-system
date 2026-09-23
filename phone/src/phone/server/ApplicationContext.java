@@ -1,30 +1,44 @@
 package phone.server;
 
 import phone.server.client.AtsClient;
+import phone.server.config.AppConfig;
 import phone.server.dao.DeviceDao;
 import phone.server.dao.RoomDao;
 import phone.server.dao.impl.DeviceDaoMyBatisImpl;
 import phone.server.dao.impl.RoomDaoMyBatisImpl;
+import phone.server.mybatis.MyBatisUtil;
 import phone.server.service.TelephonyService;
 import phone.server.storage.PhoneStorage;
 
 public final class ApplicationContext {
 
-	private static final RoomDao roomDao = new RoomDaoMyBatisImpl();
+	private static final ApplicationContext INSTANCE = new ApplicationContext();
 
-	private static final DeviceDao deviceDao = new DeviceDaoMyBatisImpl();
+	private final AppConfig config;
 
-	private static final AtsClient atsClient = new AtsClient();
+	private final RoomDao roomDao;
+	private final DeviceDao deviceDao;
 
-	private static final PhoneStorage phoneStorage = new PhoneStorage();
+	private final AtsClient atsClient;
+	private final PhoneStorage phoneStorage;
 
-	private static final TelephonyService telephonyService = new TelephonyService(roomDao, deviceDao, atsClient,
-			phoneStorage);
+	private final TelephonyService telephonyService;
 
 	private ApplicationContext() {
+		this.config = new AppConfig();
+		MyBatisUtil.init(config);
+		this.roomDao = new RoomDaoMyBatisImpl();
+		this.deviceDao = new DeviceDaoMyBatisImpl();
+		this.atsClient = new AtsClient(config);
+		this.phoneStorage = new PhoneStorage();
+		this.telephonyService = new TelephonyService(roomDao, deviceDao, atsClient, phoneStorage);
 	}
 
-	public static TelephonyService getTelephonyService() {
+	public static ApplicationContext getInstance() {
+		return INSTANCE;
+	}
+
+	public TelephonyService getTelephonyService() {
 		return telephonyService;
 	}
 }

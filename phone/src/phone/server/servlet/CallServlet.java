@@ -22,7 +22,7 @@ public class CallServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private final TelephonyService service = ApplicationContext.getTelephonyService();
+	private final TelephonyService service = ApplicationContext.getInstance().getTelephonyService();
 
 	// Сигнал "кто-то взял трубку аппарата" - ответили на звонок.
 	@Override

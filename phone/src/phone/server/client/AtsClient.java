@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import phone.server.config.AppConfig;
 import phone.server.dto.CallResponse;
 import phone.server.dto.ErrorMessage;
 import phone.shared.exception.AtsCommunicationException;
@@ -21,20 +22,11 @@ public class AtsClient {
 	private final String internalToken;
 	private final Gson gson;
 
-	public AtsClient() {
-		atsUrl = getRequiredEnv("ATS_URL");
-		internalToken = getRequiredEnv("INTERNAL_TOKEN");
-		gson = new GsonBuilder().setDateFormat("dd.MM.yyyy HH:mm:ss.SSS").create();
-	}
+	public AtsClient(AppConfig config) {
+		this.atsUrl = config.getRequired("ats.url");
+		this.internalToken = config.getRequired("internal.token");
 
-	private String getRequiredEnv(String name) {
-		String value = System.getenv(name);
-
-		if (value == null || value.trim().isEmpty()) {
-			throw new IllegalStateException("Environment variable " + name + " is not set");
-		}
-
-		return value;
+		this.gson = new GsonBuilder().setDateFormat("dd.MM.yyyy HH:mm:ss.SSS").create();
 	}
 
 	public void sendAction(CallResponse response) throws AtsCommunicationException {
@@ -67,10 +59,7 @@ public class AtsClient {
 				String errorMessage = getErrorMessage(conn);
 
 				throw new AtsCommunicationException(
-						"АТС вернула ошибку: " 
-						+ errorMessage 
-						+ ". Код ответа: " 
-						+ responseCode);
+						"АТС вернула ошибку: " + errorMessage + ". Код ответа: " + responseCode);
 			}
 
 		} catch (AtsCommunicationException e) {

@@ -23,4 +23,8 @@
 		<welcome-file>Phone.html</welcome-file>
 	</welcome-file-list>
 
+	<listener>
+		<listener-class>phone.server.ApplicationStartupListener</listener-class>
+	</listener>
+
 </web-app>
