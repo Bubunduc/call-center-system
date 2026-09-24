@@ -39,7 +39,7 @@ public class CallServlet extends HttpServlet {
 			JsonResponse.successMessage(resp, HttpServletResponse.SC_OK, "Звонок принят на обработку");
 
 		} catch (TelephonyException e) {
-			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
 
 		} catch (InvalidDeviceStateException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
@@ -67,7 +67,7 @@ public class CallServlet extends HttpServlet {
 			JsonResponse.successMessage(resp, HttpServletResponse.SC_OK, "Звонок окончен");// "Звонок окончен"
 
 		} catch (TelephonyException e) {
-			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			JsonResponse.errorMessage(resp, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
 		} catch (InvalidDeviceStateException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 		} catch (InvalidRequestException e) {

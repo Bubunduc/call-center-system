@@ -32,13 +32,6 @@ public class ClientPhoneStore {
 		deviceMap.put(device.getId(), device);
 	}
 
-	public void addActiveCall(ActiveCall call) {
-		if (call == null || call.getDeviceNumber() == null || call.getDeviceNumber().isEmpty()) {
-			return;
-		}
-		activeCallMap.put(call.getDeviceNumber(), call);
-	}
-
 	public void removeActiveCall(String deviceNumber) {
 		activeCallMap.remove(deviceNumber);
 	}
@@ -65,32 +58,6 @@ public class ClientPhoneStore {
 
 	public DeviceInfo getSelectedDevice() {
 		return deviceMap.get(selectedTreeDeviceId);
-	}
-
-	public void addToQueue(String phone) {
-		if (phone == null || phone.isEmpty()) {
-			return;
-		}
-		if (phonesQueue.contains(phone)) {
-			return;
-		}
-		phonesQueue.add(phone);
-	}
-
-	public void pushQueue() {
-		if (phonesQueue.isEmpty()) {
-			return;
-		}
-		phonesQueue.remove();
-
-	}
-
-	public void addToQueueList(List<PhoneResponse> phones) {
-		for (PhoneResponse phone : phones) {
-			if (phone != null) {
-				addToQueue(phone.getPhoneNumber());
-			}
-		}
 	}
 
 	public String getNext() {

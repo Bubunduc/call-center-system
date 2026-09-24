@@ -158,40 +158,9 @@ public class MainPanelPresenter {
 	}
 
 	private void loadData() {
-		queueClient.getQueue(URL, new AsyncCallback<List<PhoneResponse>>() {
-
-			@Override
-			public void onSuccess(List<PhoneResponse> result) {
-
-				store.addToQueueList(result);
-				queuePresenter.loadData(result);
-				errorPresenter.clearErrorMessage();
-			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-				GWT.log("Ошибка загрузки очереди", caught);
-				errorPresenter.setErrorMessage(caught.getMessage());
-
-			}
-		});
-		roomClient.getRooms(URL, new AsyncCallback<List<RoomResponse>>() {
-			@Override
-			public void onSuccess(List<RoomResponse> result) {
-				if (result != null && !result.isEmpty()) {
-
-					loadDevicesForRoom(result, 0);
-				}
-				errorPresenter.clearErrorMessage();
-			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-				GWT.log("Ошибка загрузки комнат", caught);
-				errorPresenter.setErrorMessage(caught.getMessage());
-			}
-		});
-		refreshActiveCalls();
+		loadQueue();
+		loadRooms();
+		loadActiveCalls();
 
 	}
 
@@ -218,6 +187,7 @@ public class MainPanelPresenter {
 			public void onFailure(Throwable caught) {
 
 				loadDevicesForRoom(rooms, index + 1);
+				errorPresenter.setErrorMessage(caught.getMessage());
 				GWT.log(caught.getMessage());
 			}
 		});
@@ -300,17 +270,6 @@ public class MainPanelPresenter {
 
 					@Override
 					public void onSuccess(Void result) {
-
-						store.pushQueue();
-						queuePresenter.pushQueue();
-
-						ActiveCall newCall = new ActiveCall(
-								selectedDevice.getId(),
-								selectedDevice.getOperatorName(),
-								number);
-
-						store.addActiveCall(newCall);
-						activeCallsPresenter.addActiveCall(newCall);
 						treePresenter.uncolorNode(selectedDevice.getId());
 						store.setSelectedTreeDeviceId(null);
 						errorPresenter.clearErrorMessage();
@@ -349,8 +308,8 @@ public class MainPanelPresenter {
 
 			@Override
 			public void run() {
-				refreshQueue();
-				refreshActiveCalls();
+				loadQueue();
+				loadActiveCalls();
 
 			}
 		};
@@ -358,7 +317,7 @@ public class MainPanelPresenter {
 		refreshTimer.scheduleRepeating(500);
 	}
 
-	private void refreshQueue() {
+	private void loadQueue() {
 		if (queueRequestInProgress) {
 			return;
 		}
@@ -381,7 +340,7 @@ public class MainPanelPresenter {
 			@Override
 			public void onFailure(Throwable caught) {
 				queueRequestInProgress = false;
-				GWT.log("Ошибка обновления очереди", caught);
+				GWT.log("Ошибка загрузки очереди", caught);
 				pollingError = true;
 				errorPresenter.setErrorMessage(caught.getMessage());
 
@@ -389,7 +348,7 @@ public class MainPanelPresenter {
 		});
 	}
 
-	private void refreshActiveCalls() {
+	private void loadActiveCalls() {
 		if (activeCallsRequestInProgress) {
 			return;
 		}
@@ -416,10 +375,29 @@ public class MainPanelPresenter {
 			@Override
 			public void onFailure(Throwable caught) {
 				activeCallsRequestInProgress = false;
-				GWT.log("Ошибка обновления активных звонков", caught);
+				GWT.log("Ошибка загрузки активных звонков", caught);
 				pollingError = true;
 				errorPresenter.setErrorMessage(caught.getMessage());
 
+			}
+		});
+	}
+	
+	private void loadRooms() {
+		roomClient.getRooms(URL, new AsyncCallback<List<RoomResponse>>() {
+			@Override
+			public void onSuccess(List<RoomResponse> result) {
+				if (result != null && !result.isEmpty()) {
+
+					loadDevicesForRoom(result, 0);
+				}
+				errorPresenter.clearErrorMessage();
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Ошибка загрузки комнат", caught);
+				errorPresenter.setErrorMessage(caught.getMessage());
 			}
 		});
 	}

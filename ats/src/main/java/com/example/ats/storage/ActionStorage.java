@@ -16,7 +16,7 @@ public class ActionStorage {
 	private static final int EVENT_LIMIT = 10000;
 
 	public void save(AtsEvent event) throws StorageOverflowException {
-		if (events.size() > EVENT_LIMIT) {
+		if (events.size() >= EVENT_LIMIT) {
 			throw new StorageOverflowException("Хранилище переполнено");
 		}
 		events.add(event);
