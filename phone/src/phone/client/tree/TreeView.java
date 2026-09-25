@@ -144,12 +144,12 @@ public class TreeView implements TreeDisplay {
 
 	private void handleTreeClick(ClickEvent event) {
 		Element clickedElement = event.getNativeEvent().getEventTarget().cast();
-		
-	    Element nodeElement = findNodeElement(clickedElement);
-	    
-	    if (nodeElement == null) {
-	        return;
-	    }
+
+		Element nodeElement = findNodeElement(clickedElement);
+
+		if (nodeElement == null) {
+			return;
+		}
 
 		String idValue = nodeElement.getAttribute("room-device-id");
 		if ((idValue == null) || (idValue.isEmpty())) {
@@ -163,13 +163,13 @@ public class TreeView implements TreeDisplay {
 
 		selectionHandler.onSelected(idValue);
 	}
-	
+
 	private Element findNodeElement(Element element) {
-	    Element current = element;
-	    while (current != null && !current.hasAttribute("room-device-id")) {
-	        current = current.getParentElement();
-	    }
-	    return current;
+		Element current = element;
+		while (current != null && !current.hasAttribute("room-device-id")) {
+			current = current.getParentElement();
+		}
+		return current;
 	}
 
 }

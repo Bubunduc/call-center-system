@@ -29,10 +29,9 @@ public class RoomServlet extends HttpServlet {
 			JsonResponse.successMessageFromList(resp, HttpServletResponse.SC_OK, service.getAllRooms());
 		} catch (IOException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка формирования json");
-		}
-		catch (PersistenceException e) {
+		} catch (PersistenceException e) {
 			JsonResponse.errorMessage(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка работы базы данных");
 		}
-	
+
 	}
 }

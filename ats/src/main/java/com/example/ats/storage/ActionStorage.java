@@ -15,7 +15,7 @@ public class ActionStorage {
 	private final List<AtsEvent> events = new CopyOnWriteArrayList<>();
 	private static final int EVENT_LIMIT = 10000;
 
-	public void save(AtsEvent event) throws StorageOverflowException {
+	public synchronized void save(AtsEvent event) throws StorageOverflowException {
 		if (events.size() >= EVENT_LIMIT) {
 			throw new StorageOverflowException("Хранилище переполнено");
 		}

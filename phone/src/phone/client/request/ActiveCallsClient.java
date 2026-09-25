@@ -56,23 +56,17 @@ public class ActiveCallsClient {
 	}
 
 	public void acceptCall(String url, String deviceNumber, String phoneNumber, final AsyncCallback<Void> callback) {
-		String requestUrl = url + 
-				ROUTE 
-				+ "?deviceNumber=" 
-				+ URL.encodeQueryString(deviceNumber)
-				+ "&phoneNumber="
-				+ URL.encodeQueryString(phoneNumber);
-		
+		String requestUrl = url + ROUTE 
+				+ "?deviceNumber=" + URL.encodeQueryString(deviceNumber) 
+				+ "&phoneNumber=" + URL.encodeQueryString(phoneNumber);
+
 		RequestBuilder request = new RequestBuilder(RequestBuilder.POST, requestUrl);
 		changeStateRequest(request, callback);
 	}
 
 	public void endCall(String url, String deviceNumber, final AsyncCallback<Void> callback) {
-		String requestUrl = url 
-				+ ROUTE
-	            + "?deviceNumber="
-				+ URL.encodeQueryString(deviceNumber);
-		
+		String requestUrl = url + ROUTE + "?deviceNumber=" + URL.encodeQueryString(deviceNumber);
+
 		RequestBuilder request = new RequestBuilder(RequestBuilder.DELETE, requestUrl);
 		changeStateRequest(request, callback);
 	}

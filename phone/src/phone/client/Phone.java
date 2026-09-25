@@ -61,7 +61,7 @@ public class Phone implements EntryPoint {
 				.store(store)
 				.view(mainPanelView)
 				.build();
-		
+
 		mainPanelPresenter.go(RootPanel.get("mainContainer"));
 	}
 }

@@ -128,15 +128,15 @@ public class MainPanelPresenter {
 		}
 
 		public MainPanelPresenter build() {
-			if (activeCallsPresenter == null
-					|| queuePresenter == null 
+			if (activeCallsPresenter == null 
+					|| queuePresenter == null
 					|| treePresenter == null
-					|| errorPresenter == null
+					|| errorPresenter == null 
 					|| view == null 
 					|| activeCallsClient == null
 					|| queueClient == null
 					|| roomClient == null
-					|| deviceClient == null
+					|| deviceClient == null 
 					|| store == null) {
 
 				throw new IllegalStateException("Не заданы все зависимости MainPanelPresenter");
@@ -353,7 +353,7 @@ public class MainPanelPresenter {
 			return;
 		}
 		activeCallsRequestInProgress = true;
-		
+
 		activeCallsClient.getActiveCalls(URL, new AsyncCallback<List<ActiveCall>>() {
 
 			@Override
@@ -382,7 +382,7 @@ public class MainPanelPresenter {
 			}
 		});
 	}
-	
+
 	private void loadRooms() {
 		roomClient.getRooms(URL, new AsyncCallback<List<RoomResponse>>() {
 			@Override

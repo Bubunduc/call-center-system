@@ -25,7 +25,7 @@ public class PhoneStorage {
 
 	public synchronized void addCallQueue(CallRequest call) throws TelephonyException {
 		if (call == null) {
-		    throw new TelephonyException("Данные звонка отсутствуют");
+			throw new TelephonyException("Данные звонка отсутствуют");
 		}
 		if (isExistsInQueue(call)) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " уже существует");
@@ -56,7 +56,7 @@ public class PhoneStorage {
 
 	public synchronized void removeFromQueue(CallRequest call) throws TelephonyException {
 		if (call == null) {
-		    throw new TelephonyException("Данные звонка отсутствуют");
+			throw new TelephonyException("Данные звонка отсутствуют");
 		}
 		if (!isExistsInQueue(call)) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " не существует");
@@ -94,10 +94,7 @@ public class PhoneStorage {
 		if (isDeviceActive(device.getDeviceNumber())) {
 			throw new InvalidDeviceStateException("Внутренний аппарат занят");
 		}
-		ActiveCall newCall = new ActiveCall(
-				device.getDeviceNumber(),
-				device.getOperatorName(),
-				number);
+		ActiveCall newCall = new ActiveCall(device.getDeviceNumber(), device.getOperatorName(), number);
 		removeFromQueue(call);
 		activeCalls.put(device.getDeviceNumber(), newCall);
 	}
@@ -138,31 +135,32 @@ public class PhoneStorage {
 
 	public synchronized void restoreCallToQueue(CallRequest call) throws TelephonyException {
 		if (call == null) {
-		    throw new TelephonyException("Данные звонка отсутствуют");
+			throw new TelephonyException("Данные звонка отсутствуют");
 		}
 		if (isExistsInQueue(call)) {
 			throw new TelephonyException("Номер " + call.getPhoneNumber() + " уже существует");
 		}
 		callsQueue.addFirst(call);
 	}
-	
+
 	public synchronized ActiveCall removeCall(CallRequest call) throws TelephonyException, InvalidDeviceStateException {
-	    ActiveCall currentCall = findActiveCallByPhoneNumber(call);
-	    if (currentCall != null) {
-	        removeActiveCall(currentCall.getDeviceNumber());
-	        return currentCall;
-	    }
-	    removeFromQueue(call);
-	    return null;
+		ActiveCall currentCall = findActiveCallByPhoneNumber(call);
+		if (currentCall != null) {
+			removeActiveCall(currentCall.getDeviceNumber());
+			return currentCall;
+		}
+		removeFromQueue(call);
+		return null;
 	}
-	
-	public synchronized ActiveCall removeActiveCallByDeviceNumber(String deviceNumber)throws InvalidDeviceStateException {
-	    ActiveCall activeCall = activeCalls.get(deviceNumber);
-	    if (activeCall == null) {
-	        throw new InvalidDeviceStateException("Аппарат свободен и ни с кем не разговаривает");
-	    }
-	    activeCalls.remove(deviceNumber);
-	    return activeCall;
+
+	public synchronized ActiveCall removeActiveCallByDeviceNumber(String deviceNumber)
+			throws InvalidDeviceStateException {
+		ActiveCall activeCall = activeCalls.get(deviceNumber);
+		if (activeCall == null) {
+			throw new InvalidDeviceStateException("Аппарат свободен и ни с кем не разговаривает");
+		}
+		activeCalls.remove(deviceNumber);
+		return activeCall;
 	}
 
 }
