@@ -11,7 +11,7 @@
       "name": "ATS",
       "item": [
         {
-          "name": "Получить события отсортированные по времени",
+          "name": "Получить события, отсортированные по времени",
           "request": {
             "method": "GET",
             "header": [],
@@ -40,7 +40,7 @@
             "header": [
               {
                 "key": "X-Internal-Token",
-                "value": "{{X-Internal-Token}}"
+                "value": "{{INTERNAL_TOKEN}}"
               }
             ],
             "body": {

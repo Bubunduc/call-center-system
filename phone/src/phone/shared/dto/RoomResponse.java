@@ -32,7 +32,7 @@ public class RoomResponse {
 
 	@Override
 	public String toString() {
-		return "Room [id=" + id + ", name=" + name + "]";
+		return "RoomResponse [id=" + id + ", name=" + name + "]";
 	}
 
 	public static List<RoomResponse> toDtoList(List<Room> rooms) {

@@ -46,8 +46,8 @@ public class DeviceResponse {
 				+ incomingNumber + "]";
 	}
 
-	public static DeviceResponse toDeviceResponse(Device deviceinfo) {
-		return new DeviceResponse(deviceinfo.getDeviceNumber(), deviceinfo.getOperatorName(), null);
+	public static DeviceResponse toDeviceResponse(Device deviceInfo) {
+		return new DeviceResponse(deviceInfo.getDeviceNumber(), deviceInfo.getOperatorName(), null);
 	}
 
 	public static DeviceResponse toDeviceResponse(ActiveCall deviceinfo) {
