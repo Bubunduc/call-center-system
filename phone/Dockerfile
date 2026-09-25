@@ -54,6 +54,10 @@ RUN ant \
 
 FROM tomcat:9-jdk8-temurin
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN rm -rf /usr/local/tomcat/webapps/*
 
 COPY --from=build \

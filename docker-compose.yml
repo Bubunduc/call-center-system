@@ -74,7 +74,13 @@ services:
         condition: service_started
 
     restart: unless-stopped
-
+    
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "--max-time", "3", "http://localhost:8080/api/rooms"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
 
   openapi-render:
     image: alpine:3.20
@@ -114,7 +120,7 @@ services:
 
     depends_on:
       phone:
-        condition: service_started
+        condition: service_healthy
       openapi-render:
         condition: service_completed_successfully
 
