@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Telephony Service API
   version: 1.0.0
-  description: 'REST API микросервиса «Телефония». API управляет очередью входящих звонков, активными разговорами, комнатамии телефонными аппаратами.'
+  description: 'REST API микросервиса «Телефония». API управляет очередью входящих звонков, активными разговорами, комнатами и телефонными аппаратами.'
 servers:
 - url: "http://__PUBLIC_HOST__:__PHONE_PORT__/api"
   description: Локальный сервер Телефонии
